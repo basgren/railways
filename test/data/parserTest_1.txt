@@ -1,0 +1,6 @@
+          photo_album_photos POST   /photo_albums/:photo_album_id/photos(.:format)           {:action=>"create", :controller=>"photos"}
+             new_photo_album GET    /photo_albums/new(.:format)                              {:action=>"new", :controller=>"photo_albums"}
+            edit_photo_album GET    /photo_albums/:id/edit(.:format)                         {:action=>"edit", :controller=>"photo_albums"}
+                 photo_album GET    /photo_albums/:id(.:format)                              {:action=>"show", :controller=>"photo_albums"}
+                             PUT    /photo_albums/:id(.:format)                              {:action=>"update", :controller=>"photo_albums"}
+                             DELETE /photo_albums/:id(.:format)                              {:action=>"destroy", :controller=>"photo_albums"}

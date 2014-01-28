@@ -1,0 +1,34 @@
+                    sms_send GET    /sms/send(.:format)                                      {:action=>"send", :controller=>"sms"}
+                   addresses GET    /addresses(.:format)                                     {:action=>"index", :controller=>"addresses"}
+                             POST   /addresses(.:format)                                     {:action=>"create", :controller=>"addresses"}
+                 new_address GET    /addresses/new(.:format)                                 {:action=>"new", :controller=>"addresses"}
+                edit_address GET    /addresses/:id/edit(.:format)                            {:action=>"edit", :controller=>"addresses"}
+                     address GET    /addresses/:id(.:format)                                 {:action=>"show", :controller=>"addresses"}
+                             PUT    /addresses/:id(.:format)                                 {:action=>"update", :controller=>"addresses"}
+                             DELETE /addresses/:id(.:format)                                 {:action=>"destroy", :controller=>"addresses"}
+                       roads GET    /roads(.:format)                                         {:action=>"index", :controller=>"roads"}
+                             POST   /roads(.:format)                                         {:action=>"create", :controller=>"roads"}
+                    new_road GET    /roads/new(.:format)                                     {:action=>"new", :controller=>"roads"}
+                        road DELETE /roads/:id(.:format)                                     {:action=>"destroy", :controller=>"roads"}
+                  localities GET    /localities(.:format)                                    {:action=>"index", :controller=>"localities"}
+                             POST   /localities(.:format)                                    {:action=>"create", :controller=>"localities"}
+                new_locality GET    /localities/new(.:format)                                {:action=>"new", :controller=>"localities"}
+                    locality DELETE /localities/:id(.:format)                                {:action=>"destroy", :controller=>"localities"}
+                      search GET    /search(.:format)                                        {:action=>"search", :controller=>"search"}
+                             POST   /search(.:format)                                        {:action=>"search", :controller=>"search"}
+            new_user_session GET    /login(.:format)                                         {:action=>"new", :controller=>"sessions"}
+                user_session POST   /login(.:format)                                         {:action=>"create", :controller=>"sessions"}
+        destroy_user_session GET    /logout(.:format)                                        {:action=>"destroy", :controller=>"sessions"}
+               user_password POST   /password(.:format)                                      {:action=>"create", :controller=>"passwords"}
+           new_user_password GET    /password/new(.:format)                                  {:action=>"new", :controller=>"passwords"}
+          edit_user_password GET    /password/edit(.:format)                                 {:action=>"edit", :controller=>"passwords"}
+                             PUT    /password(.:format)                                      {:action=>"update", :controller=>"passwords"}
+    cancel_user_registration GET    /cancel(.:format)                                        {:action=>"cancel", :controller=>"registrations"}
+                  admin_root        /admin(.:format)                                         {:action=>"index", :controller=>"admin/dashboard"}
+                 admin_users GET    /admin/users(.:format)                                   {:action=>"index", :controller=>"admin/users"}
+                             POST   /admin/users(.:format)                                   {:action=>"create", :controller=>"admin/users"}
+              new_admin_user GET    /admin/users/new(.:format)                               {:action=>"new", :controller=>"admin/users"}
+             edit_admin_user GET    /admin/users/:id/edit(.:format)                          {:action=>"edit", :controller=>"admin/users"}
+                  admin_user GET    /admin/users/:id(.:format)                               {:action=>"show", :controller=>"admin/users"}
+                             PUT    /admin/users/:id(.:format)                               {:action=>"update", :controller=>"admin/users"}
+                             DELETE /admin/users/:id(.:format)                               {:action=>"destroy", :controller=>"admin/users"}

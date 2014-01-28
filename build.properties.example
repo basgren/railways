@@ -1,0 +1,18 @@
+# This is an example properties-file for building Railways using ant
+# build-script. Just copy this file into build.properties and set properties
+# below to match your environment.
+
+# Plugin parameters
+plugin.jar_name=railways
+
+# Path to JDK (recommended to compile with JDK 6, as it's
+# compatible with wider range of RubyMine versions)
+jdk.home=/path/to/jdk
+
+# Path to IntelliJ IDEA directory in which the plugin is being
+# developed (required for compiling the project)
+idea.home=/path/to/development/ide
+
+# Path to IntelliJ Plugin SDK which is used as project
+# classpath (can be different from idea.home)
+plugin.sdk.home=/path/to/rubymine/or/other/sdk
