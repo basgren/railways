@@ -1,22 +1,23 @@
 package net.bitpot.railways.models;
 
 import net.bitpot.railways.parser.RailsRoutesParser;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import java.io.FileInputStream;
+
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
 
 /**
  * Testing table model filtration.
  */
-public class TableModelFilterTest extends Assert
+public class TableModelFilterTest
 {
     RailsRoutesParser parser = null;
     RouteTableModel model;
 
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception
     {
         parser = new RailsRoutesParser();
@@ -27,6 +28,7 @@ public class TableModelFilterTest extends Assert
         model.setRoutes(parser.getRoutes());
     }
 
+
     @Test
     public void testSimpleFilter()
     {
@@ -35,6 +37,7 @@ public class TableModelFilterTest extends Assert
 
         assertEquals(model.getRowCount(), 14);
     }
+
 
     @Test
     public void testMethodFilter()
@@ -45,6 +48,7 @@ public class TableModelFilterTest extends Assert
         assertEquals(model.getRowCount(), 2);
     }
 
+
     @Test
     public void testCaseInsensitivity()
     {
@@ -53,6 +57,4 @@ public class TableModelFilterTest extends Assert
 
         assertEquals(model.getRowCount(), 2);
     }
-
-
 }

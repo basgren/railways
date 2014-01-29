@@ -1,24 +1,26 @@
 package net.bitpot.railways.models;
 
 import net.bitpot.railways.models.routes.RequestType;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Testing table model filtration.
  */
-public class RouteTest extends Assert
+public class RouteTest
 {
     Route route;
 
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception
     {
         route = new Route();
         route.setRoute("users", "/users", RequestType.GET, "users", "index");
     }
+
 
     @Test
     public void testControllerMethodName()
@@ -27,5 +29,4 @@ public class RouteTest extends Assert
 
         assertEquals(route.getControllerMethodName(), "TestUsersController#index");
     }
-
 }
