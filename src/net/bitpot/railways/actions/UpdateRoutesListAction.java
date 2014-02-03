@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.api.Railways;
+import net.bitpot.railways.api.RoutesManager;
 import net.bitpot.railways.gui.RailwaysIcons;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,15 +33,16 @@ public class UpdateRoutesListAction extends AnAction
 
         // Get API
         Railways api = Railways.getAPI(project);
+        RoutesManager rm = api.getRoutesManager();
 
-        if (api.isRoutesUpdating())
-            api.cancelRoutesUpdate();
+        if (rm.isUpdating())
+            rm.cancelRoutesUpdate();
         else
         {
             // Save all documents to make sure that routes will be collected using actual files.
             FileDocumentManager.getInstance().saveAllDocuments();
 
-            if (api.updateRouteList())
+            if (rm.updateRouteList())
             {
                 updateBtnPresentation = e.getPresentation();
                 updatePresentation(project, e.getPresentation());
@@ -58,12 +60,12 @@ public class UpdateRoutesListAction extends AnAction
 
     private static void updatePresentation(@NotNull Project project, Presentation pres)
     {
-        //log.debug("Updating presentation: " + pres);
         Railways api = Railways.getAPI(project);
+
 
         RailwaysActionsFields fields = api.getRailwaysActionsFields();
         boolean previousState = fields.previousRoutesUpdatingState;
-        boolean newState = api.isRoutesUpdating();
+        boolean newState = api.getRoutesManager().isUpdating();
 
         // Update only when state is changed.
         if (previousState == newState)

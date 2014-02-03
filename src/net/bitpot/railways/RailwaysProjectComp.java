@@ -16,7 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- *
+ * Plugin project component. Contains minimal functionality just to provide
+ * required initialization to Railways.
  */
 public class RailwaysProjectComp implements ProjectComponent, Disposable
 {
@@ -27,8 +28,6 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
 
     private Module railsModule = null;
     private Railways railwaysAPI;
-
-    private boolean isRails = false;
 
 
     public RailwaysProjectComp(Project project)
@@ -44,12 +43,8 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
 
     public void initComponent()
     {
-        //ModuleManager modMgr = ModuleManager.getInstance(myProject);
-
-        //log.debug(">>> Init project component.");
-
-        // At this moment there's no modules added to the project. They are added somewhere later by OpenAPI.
-
+        // At this moment there's no modules added to the project. They are
+        // added somewhere later by OpenAPI.
         myProject.getMessageBus().connect(this).subscribe(ProjectTopics.MODULES,
                 new ProjectModulesListener());
         
@@ -74,7 +69,9 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
     {
         // Init routes should be run when project is initialized.
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {
-            public void run() { railwaysAPI.initRouteList(); }
+            public void run() {
+                railwaysAPI.getRoutesManager().initRouteList();
+            }
         });
     }
 
@@ -93,11 +90,6 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
         return railwaysAPI;
     }
 
-    public boolean isRailsProject()
-    {
-        return isRails;
-    }
-
     private class ProjectModulesListener extends ModuleAdapter
     {
         @Override
@@ -107,7 +99,7 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
             if (myProject != project)
                 return;
 
-            isRails = Railways.isRailsApp(module);
+            boolean isRails = Railways.isRailsApp(module);
 
             if (isRails && (railsModule == null))
             {
@@ -129,6 +121,5 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
                 railsModule = null;
             }
         }
-
     }
 }

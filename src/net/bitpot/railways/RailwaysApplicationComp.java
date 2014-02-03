@@ -5,7 +5,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *
+ * Railways application component.
  */
 public class RailwaysApplicationComp implements ApplicationComponent
 {
@@ -20,8 +20,8 @@ public class RailwaysApplicationComp implements ApplicationComponent
 
     public void initComponent()
     {
-        //log.debug("Initializing Railways...");
-        // Deny two instances of plugin. Otherwise we will get a mess-up in editor when using Code Injector.
+        // Deny two instances of the plugin. Otherwise we will get a mess-up in
+        // editor when using Code Injector.
         if (instance != null)
             throw new RuntimeException("Railways plugin already initialized.");
 

@@ -12,7 +12,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.api.Railways;
-import net.bitpot.railways.api.RailwaysListener;
+import net.bitpot.railways.api.RoutesManagerListener;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.Route;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ import java.awt.event.MouseEvent;
 /**
  * 
  */
-public class MainPanel implements RailwaysListener
+public class MainPanel implements RoutesManagerListener
 {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(MainPanel.class.getName());
@@ -174,7 +174,7 @@ public class MainPanel implements RailwaysListener
 
     private void initHandlers()
     {
-        api.addRailwaysListener(this);
+        api.getRoutesManager().addListener(this);
 
 
         // When filter field text is changed, routes table will be refiltered.

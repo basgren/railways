@@ -1,10 +1,6 @@
 package net.bitpot.railways;
 
-import com.intellij.idea.LoggerFactory;
-import com.intellij.mock.MockProject;
-import com.intellij.openapi.command.impl.DummyProject;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.parser.RailsRoutesParser;
 
@@ -12,7 +8,8 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 
 /**
- * Launcher for a form that contains Railways panel. Used for test purposes to avoid launching of sandbox IDE.
+ * Launcher for a form that contains Railways panel. Used for test purposes to
+ * avoid launching of sandbox IDE.
  */
 public class TestPanel
 {

@@ -39,9 +39,6 @@ public class Route implements NavigationItem
     private String action   = "";
 
 
-
-
-
     public Route()
     {
         this(null);
@@ -209,7 +206,7 @@ public class Route implements NavigationItem
 
     /**
      * Returns displayable name for navigation list.
-     * @return
+     * @return Display name of current route.
      */
     @Nullable
     @Override

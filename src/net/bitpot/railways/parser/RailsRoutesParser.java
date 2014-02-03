@@ -19,9 +19,6 @@ public class RailsRoutesParser extends AbstractRoutesParser
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RailsRoutesParser.class.getName());
 
-    private RouteList routes = new RouteList();
-
-
     private static final Pattern LINE_PATTERN = Pattern.compile("^\\s*([a-z0-9_]+)?\\s*(POST|GET|PUT|PATCH|DELETE)?\\s+(\\S+?)\\s+(.+?)$");
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
@@ -57,13 +54,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
         stacktrace = "";
     }
 
-    public RouteList getRoutes()
-    {
-        return routes;
-    }
-
-
-    public boolean parse(String stdOut, @Nullable String stdErr)
+    public RouteList parse(String stdOut, @Nullable String stdErr)
     {
         parseErrors(stdErr);
 
@@ -72,13 +63,11 @@ public class RailsRoutesParser extends AbstractRoutesParser
 
 
     @Override
-    public boolean parse(InputStream stream)
+    public RouteList parse(InputStream stream)
     {
-        boolean result = false;
-
         try
         {
-            routes.clear();
+            RouteList routes = new RouteList();
 
             DataInputStream ds = new DataInputStream(stream);
             BufferedReader br = new BufferedReader(new InputStreamReader(ds));
@@ -97,7 +86,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
                     routes.add(route);
             }
 
-            result = true;
+            return routes;
         }
         catch (IOException e)
         {
@@ -105,8 +94,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
             e.printStackTrace();
         }
 
-
-        return result;
+        return null;
     }
 
     /**
@@ -212,8 +200,9 @@ public class RailsRoutesParser extends AbstractRoutesParser
 
 
     /**
-     * Parses requirements string (a ruby hash). This string should end with , or }. In other words,
-     * it should be a fully qualified ruby hash, with opening and closing brackets.
+     * Parses requirements string (a ruby hash). This string should end with
+     * ',' or '}'. In other words, it should be a fully qualified ruby hash,
+     * with opening and closing brackets.
      *
      * @param reqs Requirements string to parse
      * @param r Route where to put all parsed requirements.
@@ -270,7 +259,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
     }
 
 
-    public String getStacktrace()
+    public String getErrorStacktrace()
     {
         return stacktrace;
     }
