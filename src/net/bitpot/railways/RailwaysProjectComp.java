@@ -19,14 +19,13 @@ import javax.swing.*;
  * Plugin project component. Contains minimal functionality just to provide
  * required initialization to Railways.
  */
-public class RailwaysProjectComp implements ProjectComponent, Disposable
+public class RailwaysProjectComp implements ProjectComponent
 {
     @SuppressWarnings("unused")
     private final static Logger log = Logger.getInstance(RailwaysProjectComp.class.getName());
     
     private Project myProject = null;
 
-    private Module railsModule = null;
     private Railways railwaysAPI;
 
 
@@ -43,11 +42,6 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
 
     public void initComponent()
     {
-        // At this moment there's no modules added to the project. They are
-        // added somewhere later by OpenAPI.
-        myProject.getMessageBus().connect(this).subscribe(ProjectTopics.MODULES,
-                new ProjectModulesListener());
-        
         railwaysAPI = new Railways(this);
     }
 
@@ -80,46 +74,9 @@ public class RailwaysProjectComp implements ProjectComponent, Disposable
         // called when project is being closed
     }
 
-    @Override
-    public void dispose()
-    {
-    }
 
     public Railways getRailwaysAPI()
     {
         return railwaysAPI;
-    }
-
-    private class ProjectModulesListener extends ModuleAdapter
-    {
-        @Override
-        public void moduleAdded(Project project, Module module)
-        {
-            // Ignore event not addressed to this project.
-            if (myProject != project)
-                return;
-
-            boolean isRails = Railways.isRailsApp(module);
-
-            if (isRails && (railsModule == null))
-            {
-                railsModule = module;
-
-                // It seems that pSdk.getSdkType() was absent in Ruby Mine 4.0.3.
-            }
-        }
-
-        @Override
-        public void moduleRemoved(Project project, Module module)
-        {
-            // Ignore event not addressed to this project.
-            if (myProject != project)
-                return;
-            
-            if (railsModule == module)
-            {
-                railsModule = null;
-            }
-        }
     }
 }

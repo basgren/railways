@@ -63,6 +63,6 @@ public class GotoRouteMethodAction extends GotoActionBase {
             return;
 
         Railways api = Railways.getAPI(project);
-        event.getPresentation().setEnabled(api.isRailsApp());
+        event.getPresentation().setEnabled(api.hasRailsModules());
     }
 }

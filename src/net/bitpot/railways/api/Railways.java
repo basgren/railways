@@ -1,8 +1,11 @@
 package net.bitpot.railways.api;
 
+import com.intellij.ProjectTopics;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.RailwaysProjectComp;
 import net.bitpot.railways.actions.RailwaysActionsFields;
@@ -15,15 +18,20 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 
+import java.util.ArrayList;
+
 /**
  * Class that contains all API methods for Railways plugin.
  */
-public class Railways
+public class Railways implements Disposable
 {
     @SuppressWarnings("unused")
     private final static Logger log = Logger.getInstance(Railways.class.getName());
 
-    private Project project;
+    private Project myProject;
+
+    // Contains list of Rails modules.
+    private ArrayList<Module> moduleList = new ArrayList<>();
 
     private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
 
@@ -32,8 +40,14 @@ public class Railways
 
     public Railways(RailwaysProjectComp projectComponent)
     {
-        project = projectComponent.getProject();
-        routesManager = new RoutesManager(project, getRailsApp());
+        myProject = projectComponent.getProject();
+
+        // At this moment there's no modules added to the project. They are
+        // added somewhere later by OpenAPI.
+        myProject.getMessageBus().connect(this)
+                .subscribe(ProjectTopics.MODULES, new ProjectModulesListener());
+
+        routesManager = new RoutesManager(myProject, getRailsApp());
     }
 
 
@@ -53,7 +67,12 @@ public class Railways
         return routesManager;
     }
 
-    
+
+    public boolean hasRailsModules() {
+        return moduleList.size() > 0;
+    }
+
+
     /**
      * Returns a list of parsed routes.
      * @return List of parsed routes.
@@ -83,44 +102,6 @@ public class Railways
         return railwaysActionsFields;
     }
 
-
-    /**
-     * Checks whether specified module is a Ruby On Rails module.
-     * @param module Module to check
-     * @return True if module contains Ruby On Rails project.
-     */
-    public static boolean isRailsApp(Module module)
-    {
-        return RailsApp.fromModule(module) != null;
-    }
-
-
-    /**
-     * Checks whether current project is a Rails project.
-     * Ruby On Rails projects in RubyMine have only one module and if RailsApp can be retrieved from this module,
-     * then we have RoR-project.
-     * @return True if current project is a RoR-application.
-     */
-    public boolean isRailsApp()
-    {
-        return getRailsApp() != null;
-    }
-
-
-    /**
-     * Returns RailsApp object which is returned only if opened project is a
-     * Rails Application project. Otherwise null will be returned.
-     *
-     * @return RailsApp object or null.
-     */
-    public @Nullable RailsApp getRailsApp()
-    {
-        Module[] modules = ModuleManager.getInstance(project).getModules();
-        if (modules.length < 1)
-            return null;
-
-        return RailsApp.fromModule(modules[0]);
-    }
 
     public void navigateToRouteAction(@NotNull Route route)
     {
@@ -153,4 +134,58 @@ public class Railways
                 method.navigate(requestFocus);
         }
     }
+
+
+    @Override
+    public void dispose() {
+        // Do nothing
+    }
+
+
+    /**
+     * Returns RailsApp object which is returned only if opened project is a
+     * Rails Application project. Otherwise null will be returned.
+     *
+     * @return RailsApp object or null.
+     */
+    public @Nullable RailsApp getRailsApp()
+    {
+        // TODO: rework this!!!
+        if (moduleList.size() > 0)
+            return RailsApp.fromModule(moduleList.get(0));
+
+        return null;
+    }
+
+
+    private class ProjectModulesListener extends ModuleAdapter
+    {
+        @Override
+        public void moduleAdded(Project project, Module module)
+        {
+            // Ignore event not addressed to this project.
+            if (myProject != project)
+                return;
+
+            boolean isRails = RailsApp.fromModule(module) != null;
+
+            if (isRails)
+            {
+                moduleList.add(module);
+                log.info("Rails module added: " + module.toString());
+            }
+        }
+
+        @Override
+        public void moduleRemoved(Project project, Module module)
+        {
+            // Ignore event not addressed to this project.
+            if (myProject != project)
+                return;
+
+            moduleList.remove(module);
+            log.info("Rails module removed: " + module.toString());
+        }
+    }
+
 }

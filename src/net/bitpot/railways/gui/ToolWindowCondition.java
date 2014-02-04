@@ -18,6 +18,6 @@ public class ToolWindowCondition implements Condition
     public boolean value(Object o)
     {
         Railways api = Railways.getAPI((Project)o);
-        return api.isRailsApp();
+        return api.hasRailsModules();
     }
 }
