@@ -51,7 +51,7 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
 
         // Add all modules that are already added till this moment.
         Module[] modules = ModuleManager.getInstance(myProject).getModules();
-        for(Module m: modules)
+        for (Module m : modules)
             addModulePane(m);
     }
 
@@ -72,7 +72,7 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         // Skip if RoutesView is not initialized or if added module is not
         // Rails application.
         if ((myContentManager == null) ||
-            (RailsApp.fromModule(module) == null))
+                (RailsApp.fromModule(module) == null))
             return;
 
         RoutesViewPane pane = new RoutesViewPane(myProject, module);
@@ -97,7 +97,7 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
     @Override
     public void removeModulePane(Module module) {
         // Find corresponding content by module...
-        for(RoutesViewPane pane: myPanes) {
+        for (RoutesViewPane pane : myPanes) {
             if (pane.getModule() != module) continue;
 
             // ... and remove it from panels list.

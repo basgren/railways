@@ -15,8 +15,7 @@ import java.util.Collection;
 /**
  *
  */
-public class ChooseByNameRouteFilter extends ChooseByNameFilter<RequestType>
-{
+public class ChooseByNameRouteFilter extends ChooseByNameFilter<RequestType> {
     /**
      * A constructor
      *
@@ -28,28 +27,27 @@ public class ChooseByNameRouteFilter extends ChooseByNameFilter<RequestType>
     public ChooseByNameRouteFilter(@NotNull ChooseByNamePopup popup,
                                    @NotNull FilteringGotoByModel<RequestType> model,
                                    @NotNull ChooseByNameFilterConfiguration<RequestType> filterConfiguration,
-                                   @NotNull Project project)
-    {
+                                   @NotNull Project project) {
         super(popup, model, filterConfiguration, project);
     }
 
+
     @Override
-    protected String textForFilterValue(@NotNull RequestType value)
-    {
+    protected String textForFilterValue(@NotNull RequestType value) {
         return value.getName();
     }
 
+
     @Nullable
     @Override
-    protected Icon iconForFilterValue(@NotNull RequestType value)
-    {
+    protected Icon iconForFilterValue(@NotNull RequestType value) {
         return value.getIcon();
     }
 
+
     @NotNull
     @Override
-    protected Collection<RequestType> getAllFilterValues()
-    {
+    protected Collection<RequestType> getAllFilterValues() {
         return RequestType.getAllRequestTypes();
     }
 }

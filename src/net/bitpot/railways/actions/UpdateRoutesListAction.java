@@ -14,19 +14,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Updates the list of routes.
  */
-public class UpdateRoutesListAction extends AnAction
-{
+public class UpdateRoutesListAction extends AnAction {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(UpdateRoutesListAction.class.getName());
 
     // Presentation is stored to be used when asynchronous action icon needs to be updated.
     private static Presentation updateBtnPresentation = null;
 
-    @Override
-    public void actionPerformed(AnActionEvent e)
-    {
-        //log.debug("Updating presentation: " + e.getPresentation());
 
+    @Override
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
         if (project == null)
             return;
@@ -39,13 +36,11 @@ public class UpdateRoutesListAction extends AnAction
 
         if (rm.isUpdating())
             rm.cancelRoutesUpdate();
-        else
-        {
+        else {
             // Save all documents to make sure that routes will be collected using actual files.
             FileDocumentManager.getInstance().saveAllDocuments();
 
-            if (rm.updateRouteList())
-            {
+            if (rm.updateRouteList()) {
                 updateBtnPresentation = e.getPresentation();
                 updatePresentation(project, e.getPresentation());
             }
@@ -53,15 +48,13 @@ public class UpdateRoutesListAction extends AnAction
     }
 
 
-    public static void updateIcon(@NotNull Project project)
-    {
+    public static void updateIcon(@NotNull Project project) {
         if (updateBtnPresentation != null)
             updatePresentation(project, updateBtnPresentation);
     }
 
 
-    private static void updatePresentation(@NotNull Project project, Presentation pres)
-    {
+    private static void updatePresentation(@NotNull Project project, Presentation pres) {
         Railways api = Railways.getAPI(project);
         RoutesManager routesManager = api.getActiveRoutesManager();
         if (routesManager == null)
@@ -75,14 +68,11 @@ public class UpdateRoutesListAction extends AnAction
         if (previousState == newState)
             return;
 
-        if (newState)
-        {
+        if (newState) {
             pres.setIcon(RailwaysIcons.SUSPEND);
             pres.setText("Cancel routes list update");
             pres.setDescription("Stops updating the list of routes");
-        }
-        else
-        {
+        } else {
             pres.setIcon(RailwaysIcons.UPDATE);
             pres.setText("Update routes list");
             pres.setDescription("Update the list of routes");
@@ -108,11 +98,9 @@ public class UpdateRoutesListAction extends AnAction
      * @param e Carries information on the invocation place and data available
      */
     @Override
-    public void update(AnActionEvent e)
-    {
+    public void update(AnActionEvent e) {
         Project project = e.getProject();
-        if (project == null)
-            return;
+        if (project == null) return;
 
         updatePresentation(project, e.getPresentation());
     }

@@ -11,23 +11,20 @@ import java.io.FileNotFoundException;
  * Launcher for a form that contains Railways panel. Used for test purposes to
  * avoid launching of sandbox IDE.
  */
-public class TestPanel
-{
+public class TestPanel {
     /**
      * Testing dialog
+     *
      * @param args launch arguments
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         //Logger.setFactory(LoggerFactory.getInstance());
 
         @SuppressWarnings("unused")
         Logger log = Logger.getInstance(TestPanel.class.getName());
 
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
                 TestPanel testPanel = new TestPanel();
                 testPanel.run();
             }
@@ -35,9 +32,7 @@ public class TestPanel
     }
 
 
-
-    public void run()
-    {
+    public void run() {
         JFrame frame = new JFrame("Railways test frame");
 
 
@@ -52,8 +47,7 @@ public class TestPanel
     }
 
 
-    private void initFrame(JFrame f)
-    {
+    private void initFrame(JFrame f) {
         f.pack();
         f.setSize(300, 200);
         f.setLocationRelativeTo(null);
@@ -61,16 +55,13 @@ public class TestPanel
     }
 
 
-    private void initRouteList()
-    {
+    private void initRouteList() {
         RailsRoutesParser parser = new RailsRoutesParser();
-        try
-        {
+        try {
 
             parser.parseFile("test/data/parserTest_1.txt");
 
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 

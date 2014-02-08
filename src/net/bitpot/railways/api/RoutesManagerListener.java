@@ -3,8 +3,8 @@ package net.bitpot.railways.api;
 /**
  *
  */
-public interface RoutesManagerListener
-{
+public interface RoutesManagerListener {
+
     /**
      * Invoked when routes are updated.
      */

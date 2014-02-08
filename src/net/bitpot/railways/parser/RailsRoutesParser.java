@@ -14,8 +14,7 @@ import java.util.regex.Pattern;
 /**
  * Class parses text and retrieves RouteNode
  */
-public class RailsRoutesParser extends AbstractRoutesParser
-{
+public class RailsRoutesParser extends AbstractRoutesParser {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RailsRoutesParser.class.getName());
 
@@ -38,24 +37,22 @@ public class RailsRoutesParser extends AbstractRoutesParser
     private final Project project;
 
 
-    public RailsRoutesParser()
-    {
+    public RailsRoutesParser() {
         this(null);
     }
 
-    public RailsRoutesParser(@Nullable Project project)
-    {
+
+    public RailsRoutesParser(@Nullable Project project) {
         this.project = project;
     }
-    
-    
-    public void clearErrors()
-    {
+
+
+    public void clearErrors() {
         stacktrace = "";
     }
 
-    public RouteList parse(String stdOut, @Nullable String stdErr)
-    {
+
+    public RouteList parse(String stdOut, @Nullable String stdErr) {
         parseErrors(stdErr);
 
         return parse(new ByteArrayInputStream(stdOut.getBytes()));
@@ -63,10 +60,8 @@ public class RailsRoutesParser extends AbstractRoutesParser
 
 
     @Override
-    public RouteList parse(InputStream stream)
-    {
-        try
-        {
+    public RouteList parse(InputStream stream) {
+        try {
             RouteList routes = new RouteList();
 
             DataInputStream ds = new DataInputStream(stream);
@@ -76,8 +71,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
             Route route;
 
             //Read File Line By Line
-            while ((strLine = br.readLine()) != null)
-            {
+            while ((strLine = br.readLine()) != null) {
                 if (isInvalidRouteLine(strLine))
                     continue;
 
@@ -87,9 +81,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
             }
 
             return routes;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             //log.debug("Failed to read line.");
             e.printStackTrace();
         }
@@ -97,13 +89,14 @@ public class RailsRoutesParser extends AbstractRoutesParser
         return null;
     }
 
+
     /**
      * Tests if the line is invalid, i.e. route cannot be parsed.
+     *
      * @param line Line from rake routes.
      * @return false if line is correct.
      */
-    public boolean isInvalidRouteLine(String line)
-    {
+    public boolean isInvalidRouteLine(String line) {
         Matcher matcher = HEADER_LINE.matcher(line);
         return matcher.find();
     }
@@ -112,16 +105,15 @@ public class RailsRoutesParser extends AbstractRoutesParser
     /**
      * Parses standard line from the output of rake 'routes' task. If this line contains route information,
      * new Route will be created and its fields set with appropriate parsed values.
+     *
      * @param line Line from 'rake routes' output
      * @return Route object, if line contains route information, null if parsing failed.
      */
-    public Route parseLine(String line)
-    {
+    public Route parseLine(String line) {
         // 1. Break line into 3 groups - [name]+[verb], path, conditions(action, controller)
         Matcher groups = LINE_PATTERN.matcher(line);
 
-        if (groups.matches())
-        {
+        if (groups.matches()) {
             Route r = new Route(project);
 
             r.setRouteName(getGroup(groups, 1));
@@ -133,16 +125,13 @@ public class RailsRoutesParser extends AbstractRoutesParser
             String[] actionInfo = conditions.split("#", 2);
 
             // Process new format of output: 'controller#action'
-            if (actionInfo.length == 2)
-            {
+            if (actionInfo.length == 2) {
                 r.setController(actionInfo[0]);
 
                 // In this case second part can contain additional requirements. Example:
                 // "index {:user_agent => /something/}"
                 r.setAction(extractRouteRequirements(actionInfo[1], r));
-            }
-            else
-            {
+            } else {
                 // Older format - all route requirements are in the single hash
                 parseRequirements(conditions, r);
 
@@ -160,32 +149,28 @@ public class RailsRoutesParser extends AbstractRoutesParser
             }
 
 
-            if (r.isValid())
-            {
+            if (r.isValid()) {
                 r.updateType();
                 return r;
-            }
-            else
-            {
+            } else {
                 // TODO: process somehow this error.
             }
-        }
-        else
-        {
+        } else {
             // TODO: string not matched. Should log this error somehow.
         }
 
         return null;
     }
 
+
     /**
      * Extracts requirements from second part and fills route information.
+     *
      * @param actionWithReq Action with possible requirements part
-     * @param r Route
+     * @param r             Route
      * @return Route action name without requirements.
      */
-    private String extractRouteRequirements(String actionWithReq, Route r)
-    {
+    private String extractRouteRequirements(String actionWithReq, Route r) {
         String requirements = captureGroup(REQUIREMENTS_PATTERN, actionWithReq);
 
         // Remove outer braces to make regexp simplier.
@@ -205,10 +190,9 @@ public class RailsRoutesParser extends AbstractRoutesParser
      * with opening and closing brackets.
      *
      * @param reqs Requirements string to parse
-     * @param r Route where to put all parsed requirements.
+     * @param r    Route where to put all parsed requirements.
      */
-    private void parseRequirements(String reqs, Route r)
-    {
+    private void parseRequirements(String reqs, Route r) {
         // Just skip parsing of
 
         // Maybe, more complex parser should be written, because this one is very basic and
@@ -221,21 +205,20 @@ public class RailsRoutesParser extends AbstractRoutesParser
     }
 
 
-
-    private String getGroup(Matcher matcher, int groupNum)
-    {
+    private String getGroup(Matcher matcher, int groupNum) {
         String s = matcher.group(groupNum);
         return (s != null) ? s.trim() : "";
     }
 
+
     /**
      * Captures first group in subject
+     *
      * @param pattern Regex pattern
      * @param subject Subject string
      * @return Captured group or an empty string.
      */
-    private String captureGroup(Pattern pattern, String subject)
-    {
+    private String captureGroup(Pattern pattern, String subject) {
         Matcher m = pattern.matcher(subject);
         if (m.find())
             return m.group(1);
@@ -244,8 +227,7 @@ public class RailsRoutesParser extends AbstractRoutesParser
     }
 
 
-    public void parseErrors(@Nullable String stdErr)
-    {
+    public void parseErrors(@Nullable String stdErr) {
         clearErrors();
 
         if (stdErr == null)
@@ -259,13 +241,12 @@ public class RailsRoutesParser extends AbstractRoutesParser
     }
 
 
-    public String getErrorStacktrace()
-    {
+    public String getErrorStacktrace() {
         return stacktrace;
     }
 
-    public boolean isErrorReported()
-    {
+
+    public boolean isErrorReported() {
         return !stacktrace.equals("");
     }
 }

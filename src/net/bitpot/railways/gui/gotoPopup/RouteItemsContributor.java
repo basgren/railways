@@ -8,10 +8,9 @@ import net.bitpot.railways.models.RouteList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
-public class RouteItemsContributor implements ChooseByNameContributor
-{
+public class RouteItemsContributor implements ChooseByNameContributor {
 
     /**
      * Returns the list of names for the specified project to which it is possible to navigate
@@ -24,8 +23,7 @@ public class RouteItemsContributor implements ChooseByNameContributor
      */
     @NotNull
     @Override
-    public String[] getNames(Project project, boolean includeNonProjectItems)
-    {
+    public String[] getNames(Project project, boolean includeNonProjectItems) {
         RouteList routes = Railways.getAPI(project).getRoutes();
         int count = routes.size();
         String[] data = new String[count];
@@ -49,8 +47,7 @@ public class RouteItemsContributor implements ChooseByNameContributor
      */
     @NotNull
     @Override
-    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems)
-    {
+    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
         RouteList list = Railways.getAPI(project).getRoutes();
         return list.getRoutesByName(name);
     }

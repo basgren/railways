@@ -14,8 +14,7 @@ import java.awt.*;
 /**
  *
  */
-public class RouteTableCellRenderer implements TableCellRenderer
-{
+public class RouteTableCellRenderer implements TableCellRenderer {
     private static final SimpleTextAttributes HIGHLIGHTED_TEXT_ATTR = new SimpleTextAttributes(Color.YELLOW, Color.BLACK, null, SimpleTextAttributes.STYLE_PLAIN);
 
     // Contains formatted text.
@@ -23,8 +22,7 @@ public class RouteTableCellRenderer implements TableCellRenderer
     private RoutesFilter filter;
 
 
-    public RouteTableCellRenderer(@NotNull RoutesFilter filter)
-    {
+    public RouteTableCellRenderer(@NotNull RoutesFilter filter) {
         this.filter = filter;
 
         cellRenderer = new SimpleColoredComponent();
@@ -32,8 +30,7 @@ public class RouteTableCellRenderer implements TableCellRenderer
 
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-    {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         String text;
         cellRenderer.clear();
 
@@ -42,19 +39,15 @@ public class RouteTableCellRenderer implements TableCellRenderer
         if (value == null)
             return cellRenderer;
 
-        if (value instanceof Route)
-        {
-            text = ((Route)value).getPath();
-            cellRenderer.setIcon(((Route)value).getIcon());
-        }
-        else
-        {
+        if (value instanceof Route) {
+            text = ((Route) value).getPath();
+            cellRenderer.setIcon(((Route) value).getIcon());
+        } else {
             text = value.toString();
             cellRenderer.setIcon(null);
         }
 
-        if (isSelected)
-        {
+        if (isSelected) {
             /*
                 IMPORTANT!!! In RubyMine 6.0 developers changed API for SimpleColoredComponent.append method:
                 was
@@ -73,9 +66,7 @@ public class RouteTableCellRenderer implements TableCellRenderer
             cellRenderer.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
             cellRenderer.setBackground(UIUtil.getTableSelectionBackground());
             cellRenderer.setForeground(UIUtil.getTableSelectionForeground());
-        }
-        else
-        {
+        } else {
             cellRenderer.setBackground(UIUtil.getTableBackground());
             cellRenderer.setForeground(UIUtil.getTableForeground());
             appendHighlighted(text, filter.getPathFilter());
@@ -86,30 +77,26 @@ public class RouteTableCellRenderer implements TableCellRenderer
     }
 
 
-
-    private void appendHighlighted(String value, String highlight)
-    {
-        if (highlight.equals(""))
-        {
+    private void appendHighlighted(String value, String highlight) {
+        if (highlight.equals("")) {
             cellRenderer.append(value, SimpleTextAttributes.REGULAR_ATTRIBUTES);
             return;
         }
-        
+
         int fromIndex = 0;
         int pos;
         String lowCaseValue = value.toLowerCase();
-        
-        while ((pos = lowCaseValue.indexOf(highlight, fromIndex)) >= 0)
-        {
+
+        while ((pos = lowCaseValue.indexOf(highlight, fromIndex)) >= 0) {
             cellRenderer.append(value.substring(fromIndex, pos), SimpleTextAttributes.REGULAR_ATTRIBUTES);
 
             // Highlighted part must be taken from the value as its character case can differ from highlight parameter.
             cellRenderer.append(value.substring(pos, pos + highlight.length()), HIGHLIGHTED_TEXT_ATTR);
-            
+
             fromIndex = pos + highlight.length();
         }
-        
+
         cellRenderer.append(value.substring(fromIndex), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
-    
+
 }

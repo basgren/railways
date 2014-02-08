@@ -14,5 +14,6 @@ public abstract class RoutesView {
 
 
     public abstract void addModulePane(Module module);
+
     public abstract void removeModulePane(Module module);
 }

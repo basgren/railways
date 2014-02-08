@@ -8,23 +8,21 @@ import java.util.Collection;
 import java.util.Vector;
 
 /**
- * User: tox
+ * @author Basil Gren
  */
-public abstract class RequestType
-{
-    public static final RequestType GET    = new GetRequestType();
-    public static final RequestType POST   = new PostRequestType();
-    public static final RequestType PUT    = new PutRequestType();
-    public static final RequestType PATCH  = new PatchRequestType();
+public abstract class RequestType {
+    public static final RequestType GET = new GetRequestType();
+    public static final RequestType POST = new PostRequestType();
+    public static final RequestType PUT = new PutRequestType();
+    public static final RequestType PATCH = new PatchRequestType();
     public static final RequestType DELETE = new DeleteRequestType();
-    public static final RequestType ANY    = new AnyRequestType();
+    public static final RequestType ANY = new AnyRequestType();
 
 
     private static Collection<RequestType> routeTypes = createRouteTypesList();
 
 
-    private static Collection<RequestType> createRouteTypesList()
-    {
+    private static Collection<RequestType> createRouteTypesList() {
         Vector<RequestType> types = new Vector<RequestType>();
         types.add(GET);
         types.add(POST);
@@ -36,6 +34,7 @@ public abstract class RequestType
         return types;
     }
 
+
     /**
      * Returns the icon used for showing routes of the type.
      *
@@ -45,6 +44,7 @@ public abstract class RequestType
 
     /**
      * Returns the name of the route type. The name must be unique among all route types.
+     *
      * @return The route type name.
      */
     @NotNull
@@ -52,8 +52,7 @@ public abstract class RequestType
     public abstract String getName();
 
 
-    public static Collection<RequestType> getAllRequestTypes()
-    {
+    public static Collection<RequestType> getAllRequestTypes() {
         return routeTypes;
     }
 }

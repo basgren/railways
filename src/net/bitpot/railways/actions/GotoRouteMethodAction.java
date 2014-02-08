@@ -25,6 +25,7 @@ public class GotoRouteMethodAction extends GotoActionBase {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(GotoRouteMethodAction.class.getName());
 
+
     @Override
     protected void gotoActionPerformed(AnActionEvent e) {
 
@@ -39,15 +40,14 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
             @Nullable
             @Override
-            protected ChooseByNameFilter<RequestType> createFilter(@NotNull ChooseByNamePopup popup)
-            {
+            protected ChooseByNameFilter<RequestType> createFilter(@NotNull ChooseByNamePopup popup) {
                 return new ChooseByNameRouteFilter(popup, model,
                         GotoRouteConfiguration.getInstance(project), project);
             }
 
+
             @Override
-            public void elementChosen(ChooseByNamePopup popup, Object element)
-            {
+            public void elementChosen(ChooseByNamePopup popup, Object element) {
                 if (element instanceof Route)
                     ((Route) element).navigate(true);
             }
@@ -56,8 +56,7 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
 
     @Override
-    public void update(AnActionEvent event)
-    {
+    public void update(AnActionEvent event) {
         Project project = event.getProject();
         if (project == null)
             return;

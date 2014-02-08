@@ -22,8 +22,7 @@ import java.util.ArrayList;
 /**
  * Class that contains all API methods for Railways plugin.
  */
-public class Railways implements Disposable
-{
+public class Railways implements Disposable {
     @SuppressWarnings("unused")
     private final static Logger log = Logger.getInstance(Railways.class.getName());
 
@@ -36,8 +35,7 @@ public class Railways implements Disposable
     private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
 
 
-    public Railways(RailwaysProjectComp projectComponent)
-    {
+    public Railways(RailwaysProjectComp projectComponent) {
         myProject = projectComponent.getProject();
 
         // At this moment there's no modules added to the project. They are
@@ -49,11 +47,11 @@ public class Railways implements Disposable
 
     /**
      * Returns Railways API methods for specified project.
+     *
      * @param project Project
      * @return Railways API object.
      */
-    public static Railways getAPI(@NotNull Project project)
-    {
+    public static Railways getAPI(@NotNull Project project) {
         RailwaysProjectComp comp = project.getComponent(RailwaysProjectComp.class);
         return comp.getRailwaysAPI();
     }
@@ -66,16 +64,19 @@ public class Railways implements Disposable
 
     /**
      * Returns a list of parsed routes.
+     *
      * @return List of parsed routes.
      */
-    public RouteList getRoutes()
-    {
+    public RouteList getRoutes() {
         // TODO: Debug stub. Rework!
         // Just to avoid many code changes at once.
         return getActiveRoutesManager().getRouteList();
     }
 
-    public @Nullable RoutesManager getActiveRoutesManager() {
+
+    public
+    @Nullable
+    RoutesManager getActiveRoutesManager() {
         if (routesManagerList.isEmpty())
             return null;
 
@@ -87,8 +88,7 @@ public class Railways implements Disposable
     /**
      * Shows a dialog with error info.
      */
-    public void showErrorInfo()
-    {
+    public void showErrorInfo() {
         // TODO: Debug stub. Rework!
         ErrorInfoDlg.showError("Error information:",
                 routesManagerList.get(0).getParseErrorStacktrace());
@@ -97,18 +97,18 @@ public class Railways implements Disposable
 
     /**
      * Returns an object with information used internally by plugin actions.
+     *
      * @return Object with info
      */
-    public RailwaysActionsFields getRailwaysActionsFields()
-    {
+    public RailwaysActionsFields getRailwaysActionsFields() {
         return railwaysActionsFields;
     }
 
 
-    public void navigateToRouteAction(@NotNull Route route)
-    {
+    public void navigateToRouteAction(@NotNull Route route) {
         navigateToRouteAction(route, false);
     }
+
 
     /**
      * Opens controller source file and moves cursor to the method that is
@@ -116,8 +116,7 @@ public class Railways implements Disposable
      *
      * @param route Route which controller action should be navigated to.
      */
-    public void navigateToRouteAction(@NotNull Route route, boolean requestFocus)
-    {
+    public void navigateToRouteAction(@NotNull Route route, boolean requestFocus) {
         if (route.getType() == Route.REDIRECT || route.getType() == Route.MOUNTED)
             return;
 
@@ -129,8 +128,7 @@ public class Railways implements Disposable
         if (controller == null)
             return;
 
-        if (!route.getAction().isEmpty())
-        {
+        if (!route.getAction().isEmpty()) {
             RMethod method = controller.getAction(route.getAction());
             if (method != null)
                 method.navigate(requestFocus);
@@ -150,8 +148,9 @@ public class Railways implements Disposable
      *
      * @return RailsApp object or null.
      */
-    public @Nullable RailsApp getRailsApp()
-    {
+    public
+    @Nullable
+    RailsApp getRailsApp() {
         // TODO: rework this!!!
         if (routesManagerList.size() > 0)
             return RailsApp.fromModule(routesManagerList.get(0).getModule());
@@ -160,11 +159,9 @@ public class Railways implements Disposable
     }
 
 
-    private class ProjectModulesListener extends ModuleAdapter
-    {
+    private class ProjectModulesListener extends ModuleAdapter {
         @Override
-        public void moduleAdded(Project project, Module module)
-        {
+        public void moduleAdded(Project project, Module module) {
             // Ignore event not addressed to this project.
             if (myProject != project)
                 return;
@@ -175,17 +172,16 @@ public class Railways implements Disposable
                 routesManagerList.add(new RoutesManager(project, module));
         }
 
+
         @Override
-        public void moduleRemoved(Project project, Module module)
-        {
+        public void moduleRemoved(Project project, Module module) {
             // Ignore event not addressed to this project.
             if (myProject != project)
                 return;
 
             // Find routes manager by module and remove it
-            for (RoutesManager rm: routesManagerList)
-                if (rm.getModule() == module)
-                {
+            for (RoutesManager rm : routesManagerList)
+                if (rm.getModule() == module) {
                     routesManagerList.remove(rm);
                     break;
                 }

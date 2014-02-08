@@ -9,13 +9,12 @@ import com.intellij.openapi.project.Project;
 import net.bitpot.railways.models.routes.RequestType;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
 @State(
         name = "GotoRouteConfiguration",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-public class GotoRouteConfiguration extends ChooseByNameFilterConfiguration<RequestType>
-{
+public class GotoRouteConfiguration extends ChooseByNameFilterConfiguration<RequestType> {
 
     public static ChooseByNameFilterConfiguration<RequestType> getInstance(Project project) {
         return ServiceManager.getService(project, GotoRouteConfiguration.class);
@@ -23,8 +22,7 @@ public class GotoRouteConfiguration extends ChooseByNameFilterConfiguration<Requ
 
 
     @Override
-    protected String nameForElement(RequestType type)
-    {
+    protected String nameForElement(RequestType type) {
         return type.getName();
     }
 }

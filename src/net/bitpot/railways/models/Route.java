@@ -18,13 +18,12 @@ import java.util.Map;
 /**
  *
  */
-public class Route implements NavigationItem
-{
+public class Route implements NavigationItem {
     // Route types
-    public final static int DEFAULT  = 0;
+    public final static int DEFAULT = 0;
     public final static int REDIRECT = 1; // Route redirects, so it's hard to determine where it will be routed
-                                          // as rake routes does not show this info.
-    public final static int MOUNTED  = 2; // Mounted rack application.
+    // as rake routes does not show this info.
+    public final static int MOUNTED = 2; // Mounted rack application.
 
 
     private Project project = null;
@@ -33,31 +32,31 @@ public class Route implements NavigationItem
     private RequestType requestType = RequestType.ANY;
     private HashMap<String, String> requirements = null;
 
-    private String path     = "";
-    private String routeName     = "";
+    private String path = "";
+    private String routeName = "";
     private String controller = "";
-    private String action   = "";
+    private String action = "";
 
 
-    public Route()
-    {
+    public Route() {
         this(null);
     }
 
-    public Route(@Nullable Project project)
-    {
+
+    public Route(@Nullable Project project) {
         this.project = project;
     }
 
 
     /**
      * Sets request type for the route.
+     *
      * @param value Request type.
      */
-    public void setRequestType(@NotNull RequestType value)
-    {
+    public void setRequestType(@NotNull RequestType value) {
         requestType = value;
     }
+
 
     /**
      * Sets request type by its string representation. Available values: "get", "post", "put', "delete".
@@ -65,33 +64,30 @@ public class Route implements NavigationItem
      *
      * @param verb String name of request type.
      */
-    public void setRequestType(String verb)
-    {
+    public void setRequestType(String verb) {
         verb = verb.toLowerCase();
 
-        if (verb.equals("get"))           requestType = RequestType.GET;
-        else if (verb.equals("post"))     requestType = RequestType.POST;
-        else if (verb.equals("put"))      requestType = RequestType.PUT;
-        else if (verb.equals("patch"))    requestType = RequestType.PATCH;
-        else if (verb.equals("delete"))   requestType = RequestType.DELETE;
+        if (verb.equals("get")) requestType = RequestType.GET;
+        else if (verb.equals("post")) requestType = RequestType.POST;
+        else if (verb.equals("put")) requestType = RequestType.PUT;
+        else if (verb.equals("patch")) requestType = RequestType.PATCH;
+        else if (verb.equals("delete")) requestType = RequestType.DELETE;
         else
             requestType = RequestType.ANY;
     }
 
 
-    public RequestType getRequestType()
-    {
+    public RequestType getRequestType() {
         return requestType;
     }
 
-    public boolean isValid()
-    {
+
+    public boolean isValid() {
         return !path.isEmpty() && !controller.isEmpty();
     }
 
 
-    public void setRoute(String name, String path, @NotNull RequestType type, String controller, String action)
-    {
+    public void setRoute(String name, String path, @NotNull RequestType type, String controller, String action) {
         this.routeName = name;
         this.path = path;
         this.requestType = type;
@@ -101,24 +97,21 @@ public class Route implements NavigationItem
     }
 
 
-    public int getType()
-    {
+    public int getType() {
         return routeType;
     }
+
 
     /**
      * Tries to determine route type and set inner field. Should be called after all fields of the route is set.
      */
-    public void updateType()
-    {
-        if (!controller.isEmpty() && action.isEmpty())
-        {
+    public void updateType() {
+        if (!controller.isEmpty() && action.isEmpty()) {
             routeType = MOUNTED;
             return;
         }
 
-        if (controller != null && controller.equals(":controller") && action != null && action.equals(":action"))
-        {
+        if (controller != null && controller.equals(":controller") && action != null && action.equals(":action")) {
             routeType = REDIRECT;
             return;
         }
@@ -127,16 +120,15 @@ public class Route implements NavigationItem
     }
 
 
-    public Map<String, String> getRequirements()
-    {
+    public Map<String, String> getRequirements() {
         if (requirements == null)
             requirements = new HashMap<String, String>();
 
         return requirements;
     }
 
-    public boolean hasRequirements()
-    {
+
+    public boolean hasRequirements() {
         return (requirements != null) && (requirements.size() > 0);
     }
 
@@ -147,8 +139,7 @@ public class Route implements NavigationItem
      *
      * @return Fully qualified method name.
      */
-    public String getControllerMethodName()
-    {
+    public String getControllerMethodName() {
         if (controller.isEmpty() || routeType == REDIRECT)
             return "";
 
@@ -161,27 +152,31 @@ public class Route implements NavigationItem
 
     /**
      * Returns displayable text for route action. If route leads to mounted Rack application, it will return base class.
+     *
      * @return Displayable text for route action, ex. users#create
      */
-    public String getActionText()
-    {
-        switch (routeType){
-            case MOUNTED: return controller;
-            case REDIRECT: return "[redirect]";
-            default: return String.format("%s#%s", controller, action);
+    public String getActionText() {
+        switch (routeType) {
+            case MOUNTED:
+                return controller;
+            case REDIRECT:
+                return "[redirect]";
+            default:
+                return String.format("%s#%s", controller, action);
         }
     }
 
+
     /**
      * Converts string to camel case.
-     * @param value String to convert
+     *
+     * @param value              String to convert
      * @param startWithLowerCase Set to true if first letter should remain lower-case.
      * @return String in CamelCase
      */
-    private static String toCamelCase(String value, boolean startWithLowerCase)
-    {
+    private static String toCamelCase(String value, boolean startWithLowerCase) {
         String[] strings = value.toLowerCase().split("_");
-        for (int i = startWithLowerCase ? 1 : 0; i < strings.length; i++){
+        for (int i = startWithLowerCase ? 1 : 0; i < strings.length; i++) {
             strings[i] = StringUtil.capitalize(strings[i]);
         }
 
@@ -195,8 +190,7 @@ public class Route implements NavigationItem
      *
      * @return Route icon.
      */
-    public Icon getIcon()
-    {
+    public Icon getIcon() {
         if (routeType == MOUNTED)
             return RailwaysIcons.RACK_APPLICATION;
 
@@ -206,6 +200,7 @@ public class Route implements NavigationItem
 
     /**
      * Returns displayable name for navigation list.
+     *
      * @return Display name of current route.
      */
     @Nullable
@@ -213,7 +208,6 @@ public class Route implements NavigationItem
     public String getName() {
         return path;
     }
-
 
 
     @Nullable
@@ -224,18 +218,25 @@ public class Route implements NavigationItem
         return new ItemPresentation() {
             @Nullable
             @Override
-            public String getPresentableText() { return path; }
+            public String getPresentableText() {
+                return path;
+            }
+
 
             @Nullable
             @Override
-            public String getLocationString() { return getActionText(); }
+            public String getLocationString() {
+                return getActionText();
+            }
+
 
             @Nullable
             @Override
-            public Icon getIcon(boolean unused) { return route.getIcon(); }
+            public Icon getIcon(boolean unused) {
+                return route.getIcon();
+            }
         };
     }
-
 
 
     @Override
@@ -245,54 +246,55 @@ public class Route implements NavigationItem
             Railways.getAPI(project).navigateToRouteAction(this, requestFocus);
     }
 
+
     @Override
     public boolean canNavigate() {
         return true;
     }
+
 
     @Override
     public boolean canNavigateToSource() {
         return true;
     }
 
-    public String getPath()
-    {
+
+    public String getPath() {
         return path;
     }
 
-    public void setPath(String path)
-    {
+
+    public void setPath(String path) {
         this.path = path;
     }
 
-    public String getRouteName()
-    {
+
+    public String getRouteName() {
         return routeName;
     }
 
-    public void setRouteName(String name)
-    {
+
+    public void setRouteName(String name) {
         this.routeName = name;
     }
 
 
-    public void setController(String value)
-    {
+    public void setController(String value) {
         controller = value;
     }
 
-    public void setAction(String value)
-    {
+
+    public void setAction(String value) {
         action = value;
     }
 
-    public String getController()
-    {
+
+    public String getController() {
         return controller;
     }
 
-    public String getAction()
-    {
+
+    public String getAction() {
         return action;
     }
 }

@@ -47,36 +47,34 @@ public class RoutesManager {
     private Module module = null;
 
 
-    public RoutesManager(Project project, Module railsModule)
-    {
+    public RoutesManager(Project project, Module railsModule) {
         this.project = project;
         parser = new RailsRoutesParser(project);
         module = railsModule;
     }
 
 
-    public Module getModule()
-    {
+    public Module getModule() {
         return module;
     }
 
 
     // API methods
 
-    public void addListener(RoutesManagerListener listener)
-    {
+
+    public void addListener(RoutesManagerListener listener) {
         listeners.add(listener);
     }
 
 
     @SuppressWarnings("unused")
-    public boolean removeListener(RoutesManagerListener listener)
-    {
+    public boolean removeListener(RoutesManagerListener listener) {
         return listeners.remove(listener);
     }
 
-    public @Nullable RouteList getRouteList()
-    {
+
+    @Nullable
+    public RouteList getRouteList() {
         return routeList;
     }
 
@@ -86,24 +84,21 @@ public class RoutesManager {
      * When cache is enabled, tries to get routes from cache and if not found
      * tries to update routes.
      */
-    public void initRouteList()
-    {
+    public void initRouteList() {
         String cachedOutput = getCachedOutput();
-        if (cachedOutput != null)
-        {
+        if (cachedOutput != null) {
             parseRakeRoutesOutput(cachedOutput, null);
-        }
-        else
+        } else
             updateRouteList();
     }
 
 
     /**
      * Returns true if routes update task is in progress.
+     *
      * @return True if routes are being updated.
      */
-    public boolean isUpdating()
-    {
+    public boolean isUpdating() {
         return routesUpdateIndicator != null;
     }
 
@@ -111,8 +106,7 @@ public class RoutesManager {
     /**
      * Cancels route update if the task is in progress.
      */
-    public void cancelRoutesUpdate()
-    {
+    public void cancelRoutesUpdate() {
         if (!isUpdating())
             return;
 
@@ -126,12 +120,11 @@ public class RoutesManager {
      *
      * @return True if update task is started, false if new task is not started because routes update is in progress.
      */
-    public boolean updateRouteList()
-    {
+    public boolean updateRouteList() {
         if (isUpdating())
             return false;
 
-        for(RoutesManagerListener l: listeners)
+        for (RoutesManagerListener l : listeners)
             l.beforeRoutesUpdate();
 
         // Start background task.
@@ -140,8 +133,7 @@ public class RoutesManager {
     }
 
 
-    public String getParseErrorStacktrace()
-    {
+    public String getParseErrorStacktrace() {
         return parser.getErrorStacktrace();
     }
 
@@ -149,11 +141,9 @@ public class RoutesManager {
     /**
      * Internal class that is responsible for updating routes list.
      */
-    private class UpdateRoutesTask extends Task.Backgroundable
-    {
+    private class UpdateRoutesTask extends Task.Backgroundable {
 
-        public UpdateRoutesTask()
-        {
+        public UpdateRoutesTask() {
             super(project, "Rake task", true);
 
             setCancelText("Cancel task");
@@ -161,8 +151,7 @@ public class RoutesManager {
 
 
         @Override
-        public void run(@NotNull ProgressIndicator indicator)
-        {
+        public void run(@NotNull ProgressIndicator indicator) {
             indicator.setText("Updating routes list...");
             indicator.setFraction(0.0);
 
@@ -175,16 +164,16 @@ public class RoutesManager {
             output = queryRakeRoutes(modules[0]);
 
             if (output == null)
-                for(RoutesManagerListener l: listeners)
+                for (RoutesManagerListener l : listeners)
                     l.routesUpdated();
 
 
             indicator.setFraction(1.0);
         }
 
+
         @Override
-        public void onSuccess()
-        {
+        public void onSuccess() {
             routesUpdateIndicator = null;
 
             if ((output == null) || (!myProject.isOpen()) || myProject.isDisposed())
@@ -193,12 +182,12 @@ public class RoutesManager {
             parseRakeRoutesOutput(output.getStdout(), output.getStderr());
         }
 
+
         @Override
-        public void onCancel()
-        {
+        public void onCancel() {
             routesUpdateIndicator = null;
 
-            for(RoutesManagerListener l: listeners)
+            for (RoutesManagerListener l : listeners)
                 l.routesUpdated();
 
             super.onCancel();
@@ -209,11 +198,12 @@ public class RoutesManager {
     /**
      * Internally used method that runs rake task and gets its output. This method should be called
      * from backgroundable task.
+     *
      * @param module Module for which rake task should be run.
      * @return Output of 'rake routes'.
      */
-    private static @Nullable ProcessOutput queryRakeRoutes(Module module)
-    {
+    @Nullable
+    private static ProcessOutput queryRakeRoutes(Module module) {
         String errorTitle = "Error in rake command.";
 
         // Here several options are possible:
@@ -227,16 +217,14 @@ public class RoutesManager {
 
         ModuleRootManager mManager = ModuleRootManager.getInstance(module);
         Sdk sdk = mManager.getSdk();
-        if (sdk == null)
-        {
+        if (sdk == null) {
             Notifications.Bus.notify(new Notification("Railways", "Railways Error",
                     "Cannot update routes list, because SDK is not specified for the current project", NotificationType.ERROR)
                     , module.getProject());
             return null;
         }
 
-        try
-        {
+        try {
             // TODO: Think about dropping support of older RubyMine versions.
 
             //  !!! Note!!! Since RubyMine 5 EAP (Build 122.633) runGemsExecutableScript
@@ -258,11 +246,9 @@ public class RoutesManager {
                         moduleContentRoot,
                         new ExecutionModes.SameThreadMode(), false,
                         errorTitle, params);
-            }
-            catch (NoSuchMethodException e) { /* Do nothing */ }
+            } catch (NoSuchMethodException e) { /* Do nothing */ }
 
-            if (method == null)
-            {
+            if (method == null) {
                 // Try to find and invoke by declaration which was introduced since build 122.782
                 method = GemsRunner.class.getDeclaredMethod("runGemsExecutableScript",
                         Sdk.class, Module.class, String.class, String.class,
@@ -298,14 +284,13 @@ public class RoutesManager {
             // but since 122.633 build it is ProcessOutput type.
             ProcessOutput processOutput;
             if (output instanceof Output)
-                processOutput = convertToProcessOutput((Output)output);
+                processOutput = convertToProcessOutput((Output) output);
             else
-                processOutput = (ProcessOutput)output;
+                processOutput = (ProcessOutput) output;
 
 
             return processOutput;
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -315,11 +300,11 @@ public class RoutesManager {
 
     /**
      * Converts Output object to ProcessOutput.
+     *
      * @param output Output object to convert
      * @return ProcessOutput object
      */
-    private static ProcessOutput convertToProcessOutput(@NotNull Output output)
-    {
+    private static ProcessOutput convertToProcessOutput(@NotNull Output output) {
         ProcessOutput res = new ProcessOutput();
 
         // Unfortunately, methods setExitCode, appendStdout and
@@ -327,8 +312,7 @@ public class RoutesManager {
         // So we will try to use reflection to call them.
 
         Method method;
-        try
-        {
+        try {
             method = ProcessOutput.class.getDeclaredMethod("setExitCode", int.class);
             method.setAccessible(true);
             method.invoke(res, output.getExitCode());
@@ -341,8 +325,7 @@ public class RoutesManager {
             method.setAccessible(true);
             method.invoke(res, output.getStderr());
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return null;
         }
 
@@ -352,11 +335,11 @@ public class RoutesManager {
 
     /**
      * Parses 'rake routes' output and notifies all listeners that route list was updated.
+     *
      * @param stdOut Rake routes result.
      * @param stdErr Rake routes stderr output. Can be null.
      */
-    private void parseRakeRoutesOutput(String stdOut, @Nullable String stdErr)
-    {
+    private void parseRakeRoutesOutput(String stdOut, @Nullable String stdErr) {
         routeList = parser.parse(stdOut, stdErr);
 
         // After routes parsing we can have several situations:
@@ -365,16 +348,13 @@ public class RoutesManager {
         // 3. parser contains routes and isErrorReported = true. In the most cases it's warnings (deprecation etc),
         //    so everything is OK.
         // TODO: possibly, we should report about warnings somehow.
-        if (routeList.size() == 0 && parser.isErrorReported())
-        {
-            for(RoutesManagerListener l: listeners)
+        if (routeList.size() == 0 && parser.isErrorReported()) {
+            for (RoutesManagerListener l : listeners)
                 l.routesUpdateError();
-        }
-        else
-        {
+        } else {
             cacheOutput(stdOut);
 
-            for(RoutesManagerListener l: listeners)
+            for (RoutesManagerListener l : listeners)
                 l.routesUpdated();
         }
     }
@@ -385,18 +365,14 @@ public class RoutesManager {
      *
      * @param output String that contains stdout of 'rake routes' command.
      */
-    private void cacheOutput(String output)
-    {
-        try
-        {
+    private void cacheOutput(String output) {
+        try {
             long routesMTime = getRoutesFileMTime();
 
             File f = new File(getCacheFileName());
             FileUtil.writeToFile(f, output.getBytes(), false);
             f.setLastModified(routesMTime);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // Do nothing
             //e.printStackTrace();
         }
@@ -408,8 +384,7 @@ public class RoutesManager {
      *
      * @return Modification time of routes.rb file or 0 if it cannot be retrieved.
      */
-    private long getRoutesFileMTime()
-    {
+    private long getRoutesFileMTime() {
         RailsApp railsApp = Railways.getAPI(project).getRailsApp();
         if (railsApp == null || railsApp.getRoutesFile() == null)
             return 0;
@@ -425,12 +400,11 @@ public class RoutesManager {
      * routes.rb file of current project.
      *
      * @return String that contains cached output or null if no valid cache
-     *         date is found.
+     * date is found.
      */
-    private @Nullable String getCachedOutput()
-    {
-        try
-        {
+    @Nullable
+    private String getCachedOutput() {
+        try {
             String fileName = getCacheFileName();
             File f = new File(fileName);
 
@@ -441,9 +415,7 @@ public class RoutesManager {
                 return null;
 
             return FileUtil.loadFile(f);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -454,8 +426,7 @@ public class RoutesManager {
      *
      * @return Name of the cache file.
      */
-    private String getCacheFileName()
-    {
+    private String getCacheFileName() {
         VirtualFile projectFile = project.getProjectFile();
         if (projectFile == null || projectFile.getParent() == null)
             return null;

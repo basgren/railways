@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
-public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType>
-{
+public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType> {
     private static RouteItemsContributor[] contributors = {new RouteItemsContributor()};
+
 
     public GotoRouteMethodModel(Project project) {
         super(project, contributors);
@@ -26,20 +26,24 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType>
         return (item instanceof Route) ? ((Route) item).getRequestType() : null;
     }
 
+
     @Override
     public String getPromptText() {
         return "Enter URL part";
     }
+
 
     @Override
     public String getNotInMessage() {
         return "No matches found";
     }
 
+
     @Override
     public String getNotFoundMessage() {
         return "No matches found";
     }
+
 
     @Nullable
     @Override
@@ -47,20 +51,24 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType>
         return null;
     }
 
+
     @Override
     public char getCheckBoxMnemonic() {
         return 0;
     }
+
 
     @Override
     public boolean loadInitialCheckBoxState() {
         return false;
     }
 
+
     @Override
     public void saveInitialCheckBoxState(boolean state) {
         // Do nothing
     }
+
 
     @NotNull
     @Override
@@ -68,11 +76,13 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType>
         return new String[0];
     }
 
+
     @Nullable
     @Override
     public String getFullName(Object element) {
-        return ((Route)element).getPath();
+        return ((Route) element).getPath();
     }
+
 
     @Override
     public boolean willOpenEditor() {
