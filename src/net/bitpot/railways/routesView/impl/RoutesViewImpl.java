@@ -10,6 +10,8 @@ import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
+import com.intellij.ui.content.ContentManagerAdapter;
+import com.intellij.ui.content.ContentManagerEvent;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -53,6 +55,27 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         Module[] modules = ModuleManager.getInstance(myProject).getModules();
         for (Module m : modules)
             addModulePane(m);
+
+        // Add listener to update mainPanel when different module is selected
+        myContentManager.addContentManagerListener(new ContentManagerAdapter() {
+            @Override
+            public void selectionChanged(ContentManagerEvent event) {
+                // When user selects a module from tool window combo,
+                // selectionChanges is called twice:
+                // 1. With 'remove' operation -  for previously selected item,
+                // 2. With 'add' operation - for newly selected item.
+                if (event.getOperation() == ContentManagerEvent.ContentOperation.add)
+                    viewSelectionChanged();
+            }
+        });
+    }
+
+
+    private void viewSelectionChanged() {
+        Content content = myContentManager.getSelectedContent();
+        if (content == null) return;
+
+        // TODO: implement route panels switching.
     }
 
 
