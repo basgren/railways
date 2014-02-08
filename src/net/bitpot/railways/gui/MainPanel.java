@@ -13,8 +13,8 @@ import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.api.Railways;
 import net.bitpot.railways.api.RoutesManagerListener;
-import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -58,6 +58,7 @@ public class MainPanel implements RoutesManagerListener
     private JPanel topPanel;
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
+    private JComboBox modulesCombo;
 
 
     private CardLayout cardLayout;
@@ -84,7 +85,9 @@ public class MainPanel implements RoutesManagerListener
         initHandlers();
 
         model = new RouteTableModel();
-        model.setRoutes(api.getRoutes());
+
+        // TODO: should we set routes here?
+        //model.setRoutes(api.getRoutes());
         routesTable.setModel(model);
 
         model.addTableModelListener(new TableModelListener()
@@ -108,13 +111,11 @@ public class MainPanel implements RoutesManagerListener
         // Update route info panel
         showRouteInfo(null);
 
-
         //PopupHandler.installPopupHandler(routesTable, "railways.PopupMenu", ActionPlaces.UNKNOWN);
 
 
         //api.initRouteList();
     }
-
 
 
 
@@ -174,7 +175,8 @@ public class MainPanel implements RoutesManagerListener
 
     private void initHandlers()
     {
-        api.getRoutesManager().addListener(this);
+        // TODO: restore listeners.
+        //api.getRoutesManager().addListener(this);
 
 
         // When filter field text is changed, routes table will be refiltered.

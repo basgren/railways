@@ -1,19 +1,12 @@
 package net.bitpot.railways;
 
-import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import net.bitpot.railways.api.Railways;
-import org.jdesktop.swingx.action.ActionManager;
+import net.bitpot.railways.api.RoutesManager;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * Plugin project component. Contains minimal functionality just to provide
@@ -46,8 +39,6 @@ public class RailwaysProjectComp implements ProjectComponent
     }
 
 
-
-
     public void disposeComponent()
     {
         // Do nothing now
@@ -64,7 +55,9 @@ public class RailwaysProjectComp implements ProjectComponent
         // Init routes should be run when project is initialized.
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {
             public void run() {
-                railwaysAPI.getRoutesManager().initRouteList();
+                RoutesManager rm = railwaysAPI.getActiveRoutesManager();
+                if (rm != null)
+                    rm.initRouteList();
             }
         });
     }

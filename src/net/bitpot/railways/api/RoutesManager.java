@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 /**
- * Class
+ * Class provides manipulation routines for a Rails module.
  */
 public class RoutesManager {
 
@@ -43,11 +43,21 @@ public class RoutesManager {
     private RailsRoutesParser parser;
     private RouteList routeList = null;
 
+    // Rails module
+    private Module module = null;
 
-    public RoutesManager(Project project, RailsApp railsApp)
+
+    public RoutesManager(Project project, Module railsModule)
     {
         this.project = project;
         parser = new RailsRoutesParser(project);
+        module = railsModule;
+    }
+
+
+    public Module getModule()
+    {
+        return module;
     }
 
 

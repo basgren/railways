@@ -4,7 +4,6 @@ import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.RailwaysProjectComp;
@@ -31,11 +30,10 @@ public class Railways implements Disposable
     private Project myProject;
 
     // Contains list of Rails modules.
-    private ArrayList<Module> moduleList = new ArrayList<>();
+    private ArrayList<RoutesManager> routesManagerList = new ArrayList<>();
+    private int activeRoutesManager = -1;
 
     private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
-
-    private RoutesManager routesManager;
 
 
     public Railways(RailwaysProjectComp projectComponent)
@@ -46,8 +44,6 @@ public class Railways implements Disposable
         // added somewhere later by OpenAPI.
         myProject.getMessageBus().connect(this)
                 .subscribe(ProjectTopics.MODULES, new ProjectModulesListener());
-
-        routesManager = new RoutesManager(myProject, getRailsApp());
     }
 
 
@@ -62,14 +58,9 @@ public class Railways implements Disposable
         return comp.getRailwaysAPI();
     }
 
-    public RoutesManager getRoutesManager()
-    {
-        return routesManager;
-    }
-
 
     public boolean hasRailsModules() {
-        return moduleList.size() > 0;
+        return routesManagerList.size() > 0;
     }
 
 
@@ -79,7 +70,17 @@ public class Railways implements Disposable
      */
     public RouteList getRoutes()
     {
-        return getRoutesManager().getRouteList();
+        // TODO: Debug stub. Rework!
+        // Just to avoid many code changes at once.
+        return getActiveRoutesManager().getRouteList();
+    }
+
+    public @Nullable RoutesManager getActiveRoutesManager() {
+        if (routesManagerList.isEmpty())
+            return null;
+
+        // TODO: WIP - remove this stub
+        return routesManagerList.get(0);
     }
 
 
@@ -88,8 +89,9 @@ public class Railways implements Disposable
      */
     public void showErrorInfo()
     {
+        // TODO: Debug stub. Rework!
         ErrorInfoDlg.showError("Error information:",
-                getRoutesManager().getParseErrorStacktrace());
+                routesManagerList.get(0).getParseErrorStacktrace());
     }
 
 
@@ -151,8 +153,8 @@ public class Railways implements Disposable
     public @Nullable RailsApp getRailsApp()
     {
         // TODO: rework this!!!
-        if (moduleList.size() > 0)
-            return RailsApp.fromModule(moduleList.get(0));
+        if (routesManagerList.size() > 0)
+            return RailsApp.fromModule(routesManagerList.get(0).getModule());
 
         return null;
     }
@@ -170,10 +172,7 @@ public class Railways implements Disposable
             boolean isRails = RailsApp.fromModule(module) != null;
 
             if (isRails)
-            {
-                moduleList.add(module);
-                log.info("Rails module added: " + module.toString());
-            }
+                routesManagerList.add(new RoutesManager(project, module));
         }
 
         @Override
@@ -183,8 +182,13 @@ public class Railways implements Disposable
             if (myProject != project)
                 return;
 
-            moduleList.remove(module);
-            log.info("Rails module removed: " + module.toString());
+            // Find routes manager by module and remove it
+            for (RoutesManager rm: routesManagerList)
+                if (rm.getModule() == module)
+                {
+                    routesManagerList.remove(rm);
+                    break;
+                }
         }
     }
 

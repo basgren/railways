@@ -33,7 +33,9 @@ public class UpdateRoutesListAction extends AnAction
 
         // Get API
         Railways api = Railways.getAPI(project);
-        RoutesManager rm = api.getRoutesManager();
+        RoutesManager rm = api.getActiveRoutesManager();
+        if (rm == null)
+            return;
 
         if (rm.isUpdating())
             rm.cancelRoutesUpdate();
@@ -61,11 +63,13 @@ public class UpdateRoutesListAction extends AnAction
     private static void updatePresentation(@NotNull Project project, Presentation pres)
     {
         Railways api = Railways.getAPI(project);
-
+        RoutesManager routesManager = api.getActiveRoutesManager();
+        if (routesManager == null)
+            return;
 
         RailwaysActionsFields fields = api.getRailwaysActionsFields();
         boolean previousState = fields.previousRoutesUpdatingState;
-        boolean newState = api.getRoutesManager().isUpdating();
+        boolean newState = routesManager.isUpdating();
 
         // Update only when state is changed.
         if (previousState == newState)
