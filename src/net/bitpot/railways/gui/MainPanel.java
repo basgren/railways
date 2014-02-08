@@ -58,7 +58,6 @@ public class MainPanel implements RoutesManagerListener
     private JPanel topPanel;
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
-    private JComboBox modulesCombo;
 
 
     private CardLayout cardLayout;
