@@ -1,57 +1,56 @@
 package net.bitpot.railways;
 
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import net.bitpot.railways.api.Railways;
 import net.bitpot.railways.api.RoutesManager;
+import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Plugin project component. Contains minimal functionality just to provide
  * required initialization to Railways.
  */
-public class RailwaysProjectComp implements ProjectComponent
-{
+public class RailwaysProjectComp implements ProjectComponent {
     @SuppressWarnings("unused")
     private final static Logger log = Logger.getInstance(RailwaysProjectComp.class.getName());
-    
-    private Project myProject = null;
 
+    private Project myProject;
     private Railways railwaysAPI;
 
 
-    public RailwaysProjectComp(Project project)
-    {
-        this.myProject = project;
+    public RailwaysProjectComp(Project project) {
+        myProject = project;
     }
 
-    
-    public Project getProject()
-    {
+
+    public Project getProject() {
         return myProject;
     }
 
-    public void initComponent()
-    {
+
+    public void initComponent() {
         railwaysAPI = new Railways(this);
     }
 
 
-    public void disposeComponent()
-    {
+    public void disposeComponent() {
         // Do nothing now
     }
 
+
     @NotNull
-    public String getComponentName()
-    {
+    public String getComponentName() {
         return "Railways.ProjectComponent";
     }
 
-    public void projectOpened()
-    {
+
+    public void projectOpened() {
         // Init routes should be run when project is initialized.
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {
             public void run() {
@@ -60,16 +59,40 @@ public class RailwaysProjectComp implements ProjectComponent
                     rm.initRouteList();
             }
         });
+
+        myProject.getMessageBus().connect()
+                .subscribe(ProjectTopics.MODULES, new ProjectModulesListener());
     }
 
-    public void projectClosed()
-    {
+
+    public void projectClosed() {
         // called when project is being closed
     }
 
 
-    public Railways getRailwaysAPI()
-    {
+    public Railways getRailwaysAPI() {
         return railwaysAPI;
+    }
+
+
+    private class ProjectModulesListener extends ModuleAdapter {
+        @Override
+        public void moduleAdded(Project project, Module module) {
+            if (project != myProject) return;
+
+            // Notify RoutesView
+            RoutesView routesView = RoutesView.getInstance(project);
+            routesView.addModulePane(module);
+        }
+
+
+        @Override
+        public void moduleRemoved(Project project, Module module) {
+            if (project != myProject) return;
+
+            // Notify RoutesView
+            RoutesView routesView = RoutesView.getInstance(project);
+            routesView.removeModulePane(module);
+        }
     }
 }

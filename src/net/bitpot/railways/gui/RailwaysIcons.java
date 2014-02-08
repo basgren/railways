@@ -23,6 +23,7 @@ public class RailwaysIcons
     public static final Icon HTTP_METHOD_PUT    = pluginIcon("method_put.png");
     public static final Icon HTTP_METHOD_DELETE = pluginIcon("method_delete.png");
     public static final Icon RACK_APPLICATION   = pluginIcon("rack_application.png");
+    public static final Icon RUBY_ON_RAILS      = pluginIcon("ruby_on_rails.png");
 
     public static final Icon UPDATE = IconLoader.getIcon("/actions/sync.png");
     public static final Icon SUSPEND = IconLoader.getIcon("/actions/suspend.png");

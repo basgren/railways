@@ -92,10 +92,11 @@
         <toolWindow id="Routes"
                     icon="/net/bitpot/railways/icons/railways_toolwindow.png"
                     anchor="right"
-                    factoryClass="net.bitpot.railways.gui.RailwaysFactory"
-                    conditionClass="net.bitpot.railways.gui.ToolWindowCondition">
+                    factoryClass="net.bitpot.railways.routesView.impl.RoutesViewToolWindowFactory"
+                    conditionClass="net.bitpot.railways.routesView.impl.RoutesViewToolWindowCondition"/>
 
-        </toolWindow>
+        <projectService serviceInterface="net.bitpot.railways.routesView.RoutesView"
+                        serviceImplementation="net.bitpot.railways.routesView.impl.RoutesViewImpl"/>
 
         <projectService serviceInterface="net.bitpot.railways.gui.gotoPopup.GotoRouteConfiguration"
                         serviceImplementation="net.bitpot.railways.gui.gotoPopup.GotoRouteConfiguration"/>
