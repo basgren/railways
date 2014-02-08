@@ -29,5 +29,7 @@ Features:
    Project > Project SDK". Choose the plugin SDK you have created at the
    previous step.
 
-6. Use "Run > Run 'Railways in RubyMine'" menu to test plugin inside RubyMine.
+6. Use "Run > Run 'Railways'" menu to test plugin inside RubyMine.
+
+7. Use "Run > Run 'All tests'" menu to run all tests for Railways.
 
