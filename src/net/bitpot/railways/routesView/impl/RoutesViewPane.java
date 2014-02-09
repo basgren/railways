@@ -3,7 +3,10 @@ package net.bitpot.railways.routesView.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.Content;
+import net.bitpot.railways.api.RoutesManager;
 import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.models.RouteList;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -18,6 +21,8 @@ public class RoutesViewPane {
 
     private Content myContent;
 
+    private RoutesManager myRoutesManager;
+
 
     /**
      * Creates a separate panel for Rails module.
@@ -28,6 +33,9 @@ public class RoutesViewPane {
     public RoutesViewPane(Project project, Module module) {
         myProject = project;
         myModule = module;
+
+        myRoutesManager = new RoutesManager(project, module);
+        myRoutesManager.initRouteList();
     }
 
 
@@ -53,5 +61,15 @@ public class RoutesViewPane {
 
     public Icon getIcon() {
         return RailwaysIcons.RUBY_ON_RAILS;
+    }
+
+
+    public RoutesManager getRoutesManager() {
+        return myRoutesManager;
+    }
+
+    @Nullable
+    public RouteList getRoutesList() {
+        return myRoutesManager.getRouteList();
     }
 }

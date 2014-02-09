@@ -1,18 +1,20 @@
 package net.bitpot.railways.models;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.table.AbstractTableModel;
 
 /**
  * Table models.
  */
 public class RouteTableModel extends AbstractTableModel {
-    private RouteList routes;
+    private RouteList myRouteList;
     private RouteList filteredRoutes;
     private RoutesFilter filter;
 
 
     public RouteTableModel() {
-        routes = new RouteList();
+        myRouteList = new RouteList();
         filteredRoutes = new RouteList();
 
         filter = new RoutesFilter(this);
@@ -20,8 +22,11 @@ public class RouteTableModel extends AbstractTableModel {
     }
 
 
-    public void setRoutes(RouteList routes) {
-        this.routes = routes;
+    public void setRoutes(@Nullable RouteList routes) {
+        if (routes == null)
+            routes = new RouteList();
+
+        this.myRouteList = routes;
         filterChanged();
     }
 
@@ -77,7 +82,7 @@ public class RouteTableModel extends AbstractTableModel {
 
     public void filterChanged() {
         // Here we should update model.
-        filter.applyFilter(routes, filteredRoutes);
+        filter.applyFilter(myRouteList, filteredRoutes);
         this.fireTableDataChanged();
     }
 
@@ -98,6 +103,6 @@ public class RouteTableModel extends AbstractTableModel {
      * @return Number of parsed routes.
      */
     public int getTotalRoutesCount() {
-        return routes.size();
+        return myRouteList.size();
     }
 }

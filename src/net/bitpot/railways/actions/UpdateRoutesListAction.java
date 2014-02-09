@@ -9,6 +9,8 @@ import com.intellij.openapi.project.Project;
 import net.bitpot.railways.api.Railways;
 import net.bitpot.railways.api.RoutesManager;
 import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.routesView.RoutesView;
+import net.bitpot.railways.routesView.impl.RoutesViewPane;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,14 +27,10 @@ public class UpdateRoutesListAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
-        if (project == null)
-            return;
+        if (project == null) return;
 
-        // Get API
-        Railways api = Railways.getAPI(project);
-        RoutesManager rm = api.getActiveRoutesManager();
-        if (rm == null)
-            return;
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null) return;
 
         if (rm.isUpdating())
             rm.cancelRoutesUpdate();
@@ -55,14 +53,15 @@ public class UpdateRoutesListAction extends AnAction {
 
 
     private static void updatePresentation(@NotNull Project project, Presentation pres) {
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null) return;
+
+        // TODO: get rid of Railways class.
         Railways api = Railways.getAPI(project);
-        RoutesManager routesManager = api.getActiveRoutesManager();
-        if (routesManager == null)
-            return;
 
         RailwaysActionsFields fields = api.getRailwaysActionsFields();
         boolean previousState = fields.previousRoutesUpdatingState;
-        boolean newState = routesManager.isUpdating();
+        boolean newState = rm.isUpdating();
 
         // Update only when state is changed.
         if (previousState == newState)

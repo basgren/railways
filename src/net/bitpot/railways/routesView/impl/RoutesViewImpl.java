@@ -12,8 +12,10 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
+import net.bitpot.railways.api.RoutesManager;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.routesView.RoutesView;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
 import javax.swing.*;
@@ -30,7 +32,7 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
     private MainPanel mainPanel;
 
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
-
+    private RoutesViewPane currentPane = null;
 
     public RoutesViewImpl(Project project) {
         myProject = project;
@@ -56,7 +58,8 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         for (Module m : modules)
             addModulePane(m);
 
-        // Add listener to update mainPanel when different module is selected
+        // Add listener to update mainPanel when a module is selected from
+        // tool window header.
         myContentManager.addContentManagerListener(new ContentManagerAdapter() {
             @Override
             public void selectionChanged(ContentManagerEvent event) {
@@ -75,7 +78,15 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         Content content = myContentManager.getSelectedContent();
         if (content == null) return;
 
-        // TODO: implement route panels switching.
+        // Find selected pane by content.
+        RoutesViewPane pane = null;
+        for(RoutesViewPane p: myPanes)
+            if (p.getContent() == content) {
+                pane = p;
+                break;
+            }
+
+        setCurrentPane(pane);
     }
 
 
@@ -87,6 +98,21 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
 
     private JComponent getComponent() {
         return mainPanel.getRootPanel();
+    }
+
+
+    @Override
+    @Nullable
+    public RoutesManager getCurrentRoutesManager() {
+        return (currentPane == null) ? null : currentPane.getRoutesManager();
+    }
+
+
+    public void setCurrentPane(RoutesViewPane pane) {
+        currentPane = pane;
+
+        if (pane != null)
+            mainPanel.setDataSource(pane);
     }
 
 
@@ -114,6 +140,10 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         // Bind content with pane for further use
         pane.setContent(content);
         myPanes.add(pane);
+
+        // And select pane if it's the first one.
+        if (myPanes.size() == 1)
+            setCurrentPane(pane);
     }
 
 
@@ -126,6 +156,8 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
             // ... and remove it from panels list.
             myContentManager.removeContent(pane.getContent(), true);
             myPanes.remove(pane);
+
+            // TODO: handle currentPane if it's removed.
             break;
         }
     }

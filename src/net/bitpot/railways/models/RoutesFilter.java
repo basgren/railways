@@ -53,7 +53,7 @@ public class RoutesFilter {
      * @param source Source route list
      * @param target Target route list.
      */
-    public void applyFilter(RouteList source, RouteList target) {
+    public void applyFilter(@NotNull RouteList source, @NotNull RouteList target) {
         target.clear();
 
         if (isFiltersEmpty()) {

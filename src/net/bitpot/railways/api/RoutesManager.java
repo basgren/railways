@@ -8,7 +8,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -155,13 +154,10 @@ public class RoutesManager {
             indicator.setText("Updating routes list...");
             indicator.setFraction(0.0);
 
-            ModuleManager modMgr = ModuleManager.getInstance(getProject());
-            final Module[] modules = modMgr.getModules();
-
             // Save indicator to be able to cancel task execution.
             routesUpdateIndicator = indicator;
 
-            output = queryRakeRoutes(modules[0]);
+            output = queryRakeRoutes(getModule());
 
             if (output == null)
                 for (RoutesManagerListener l : listeners)
@@ -199,20 +195,19 @@ public class RoutesManager {
      * Internally used method that runs rake task and gets its output. This method should be called
      * from backgroundable task.
      *
-     * @param module Module for which rake task should be run.
+     * @param module Rails module for which rake task should be run.
      * @return Output of 'rake routes'.
      */
     @Nullable
     private static ProcessOutput queryRakeRoutes(Module module) {
         String errorTitle = "Error in rake command.";
 
-        // Here several options are possible:
-        // 1) project.getLocation() - it is present in all versions, but it's
-        //    already deprecated.
-        // 2) project.getBasePath() - is absent in RubyMine 4.0.1.
-        // 3) project.getPresentableUrl() - works fine.
-        // The last option is used.
-        String moduleContentRoot = module.getProject().getPresentableUrl();
+        // Get root path of Rails application from module.
+        RailsApp app = RailsApp.fromModule(module);
+        if ((app == null) || (app.getRailsApplicationRoot() == null))
+            return null;
+
+        String moduleContentRoot = app.getRailsApplicationRoot().getPresentableUrl();
 
 
         ModuleRootManager mManager = ModuleRootManager.getInstance(module);
@@ -404,7 +399,10 @@ public class RoutesManager {
      */
     @Nullable
     private String getCachedOutput() {
-        try {
+        // TODO: enable cache after debug is over.
+        return null;
+
+        /*try {
             String fileName = getCacheFileName();
             File f = new File(fileName);
 
@@ -417,7 +415,7 @@ public class RoutesManager {
             return FileUtil.loadFile(f);
         } catch (Exception e) {
             return null;
-        }
+        }*/
     }
 
 
