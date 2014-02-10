@@ -1,4 +1,4 @@
-package net.bitpot.railways.api;
+package net.bitpot.railways.routesView;
 
 /**
  *

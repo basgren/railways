@@ -6,11 +6,10 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.api.Railways;
-import net.bitpot.railways.api.RoutesManager;
+import net.bitpot.railways.utils.RailwaysUtils;
+import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.routesView.RoutesView;
-import net.bitpot.railways.routesView.impl.RoutesViewPane;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -57,7 +56,7 @@ public class UpdateRoutesListAction extends AnAction {
         if (rm == null) return;
 
         // TODO: get rid of Railways class.
-        Railways api = Railways.getAPI(project);
+        RailwaysUtils api = RailwaysUtils.getAPI(project);
 
         RailwaysActionsFields fields = api.getRailwaysActionsFields();
         boolean previousState = fields.previousRoutesUpdatingState;

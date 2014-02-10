@@ -3,8 +3,6 @@ package net.bitpot.railways.routesView;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.api.RoutesManager;
-import net.bitpot.railways.routesView.impl.RoutesViewPane;
 import org.jetbrains.annotations.Nullable;
 
 /**

@@ -7,8 +7,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import net.bitpot.railways.api.Railways;
-import net.bitpot.railways.api.RoutesManager;
+import net.bitpot.railways.utils.RailwaysUtils;
+import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class RailwaysProjectComp implements ProjectComponent {
     private final static Logger log = Logger.getInstance(RailwaysProjectComp.class.getName());
 
     private Project myProject;
-    private Railways railwaysAPI;
+    private RailwaysUtils railwaysAPI;
 
 
     public RailwaysProjectComp(Project project) {
@@ -35,7 +35,7 @@ public class RailwaysProjectComp implements ProjectComponent {
 
 
     public void initComponent() {
-        railwaysAPI = new Railways(this);
+        railwaysAPI = new RailwaysUtils(this);
     }
 
 
@@ -70,7 +70,7 @@ public class RailwaysProjectComp implements ProjectComponent {
     }
 
 
-    public Railways getRailwaysAPI() {
+    public RailwaysUtils getRailwaysAPI() {
         return railwaysAPI;
     }
 

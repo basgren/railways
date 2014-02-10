@@ -5,7 +5,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import net.bitpot.railways.api.Railways;
+import net.bitpot.railways.utils.RailwaysUtils;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestType;
 import org.jetbrains.annotations.NotNull;
@@ -243,7 +243,7 @@ public class Route implements NavigationItem {
     public void navigate(boolean requestFocus) {
         // Do nothing now
         if (project != null)
-            Railways.getAPI(project).navigateToRouteAction(this, requestFocus);
+            RailwaysUtils.getAPI(project).navigateToRouteAction(this, requestFocus);
     }
 
 

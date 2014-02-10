@@ -2,7 +2,8 @@ package net.bitpot.railways.routesView.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import net.bitpot.railways.api.Railways;
+import net.bitpot.railways.routesView.RoutesView;
+import net.bitpot.railways.utils.RailwaysUtils;
 
 /**
  * Defines a condition when Railways tool window is showed.
@@ -17,7 +18,6 @@ public class RoutesViewToolWindowCondition implements Condition {
      */
     @Override
     public boolean value(Object o) {
-        Railways api = Railways.getAPI((Project) o);
-        return api.hasRailsModules();
+        return RailwaysUtils.hasRailsModules((Project) o);
     }
 }

@@ -12,7 +12,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
-import net.bitpot.railways.api.RoutesManager;
+import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.Nullable;

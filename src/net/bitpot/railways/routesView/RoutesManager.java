@@ -1,4 +1,4 @@
-package net.bitpot.railways.api;
+package net.bitpot.railways.routesView;
 
 import com.intellij.execution.ExecutionMode;
 import com.intellij.execution.ExecutionModes;
@@ -15,6 +15,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import net.bitpot.railways.utils.RailwaysUtils;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import org.jetbrains.annotations.NotNull;
@@ -380,7 +381,7 @@ public class RoutesManager {
      * @return Modification time of routes.rb file or 0 if it cannot be retrieved.
      */
     private long getRoutesFileMTime() {
-        RailsApp railsApp = Railways.getAPI(project).getRailsApp();
+        RailsApp railsApp = RailwaysUtils.getAPI(project).getRailsApp();
         if (railsApp == null || railsApp.getRoutesFile() == null)
             return 0;
 

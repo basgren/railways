@@ -11,8 +11,8 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.api.Railways;
-import net.bitpot.railways.api.RoutesManagerListener;
+import net.bitpot.railways.utils.RailwaysUtils;
+import net.bitpot.railways.routesView.RoutesManagerListener;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
@@ -65,7 +65,7 @@ public class MainPanel implements RoutesManagerListener {
 
 
     private Project project;
-    private Railways api;
+    private RailwaysUtils api;
 
     // A pane that is used as a data source for the Routes panel.
     private RoutesViewPane myDataSource = null;
@@ -78,7 +78,7 @@ public class MainPanel implements RoutesManagerListener {
     public MainPanel(Project project) {
         this.project = project;
 
-        api = Railways.getAPI(project);
+        api = RailwaysUtils.getAPI(project);
 
         initToolbar();
 
@@ -161,7 +161,7 @@ public class MainPanel implements RoutesManagerListener {
 
     private void initHandlers() {
         // TODO: restore listeners.
-        //api.getRoutesManager().addListener(this);
+        //utils.getRoutesManager().addListener(this);
 
 
         // When filter field text is changed, routes table will be refiltered.
@@ -198,7 +198,7 @@ public class MainPanel implements RoutesManagerListener {
         showErrorLink.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
-                Railways.getAPI(project).showErrorInfo();
+                RailwaysUtils.getAPI(project).showErrorInfo();
             }
         });
 

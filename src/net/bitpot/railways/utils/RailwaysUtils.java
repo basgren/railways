@@ -1,9 +1,10 @@
-package net.bitpot.railways.api;
+package net.bitpot.railways.utils;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.RailwaysProjectComp;
@@ -11,6 +12,7 @@ import net.bitpot.railways.actions.RailwaysActionsFields;
 import net.bitpot.railways.gui.ErrorInfoDlg;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -22,20 +24,19 @@ import java.util.ArrayList;
 /**
  * Class that contains all API methods for Railways plugin.
  */
-public class Railways implements Disposable {
+public class RailwaysUtils implements Disposable {
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getInstance(Railways.class.getName());
+    private final static Logger log = Logger.getInstance(RailwaysUtils.class.getName());
 
     private Project myProject;
 
     // Contains list of Rails modules.
     private ArrayList<RoutesManager> routesManagerList = new ArrayList<>();
-    private int activeRoutesManager = -1;
 
     private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
 
 
-    public Railways(RailwaysProjectComp projectComponent) {
+    public RailwaysUtils(RailwaysProjectComp projectComponent) {
         myProject = projectComponent.getProject();
 
         // At this moment there's no modules added to the project. They are
@@ -46,19 +47,32 @@ public class Railways implements Disposable {
 
 
     /**
+     * Returns true if specified project has at least one Ruby on Rails module.
+     *
+     * @param project Project which should be checked for Rails modules.
+     * @return True if a project has at least one Ruby on Rails module.
+     */
+    public static boolean hasRailsModules(Project project) {
+        Module[] modules = ModuleManager.getInstance(project).getModules();
+        for (Module m : modules)
+            if (RailsApp.fromModule(m) != null)
+                return true;
+
+        return false;
+    }
+
+
+
+
+    /**
      * Returns Railways API methods for specified project.
      *
      * @param project Project
      * @return Railways API object.
      */
-    public static Railways getAPI(@NotNull Project project) {
+    public static RailwaysUtils getAPI(@NotNull Project project) {
         RailwaysProjectComp comp = project.getComponent(RailwaysProjectComp.class);
         return comp.getRailwaysAPI();
-    }
-
-
-    public boolean hasRailsModules() {
-        return routesManagerList.size() > 0;
     }
 
 

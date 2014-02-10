@@ -9,6 +9,6 @@ package net.bitpot.railways.actions;
  * project.
  */
 public class RailwaysActionsFields {
-    // Field is used to store previous value of Railways.isUpdating()
+    // Field is used to store previous value of RailwaysUtils.isUpdating()
     public boolean previousRoutesUpdatingState = false;
 }
