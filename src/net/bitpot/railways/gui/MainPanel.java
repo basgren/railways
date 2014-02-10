@@ -9,14 +9,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.utils.RailwaysUtils;
-import net.bitpot.railways.routesView.RoutesManagerListener;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.routesView.impl.RoutesViewPane;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -28,7 +26,7 @@ import java.awt.event.MouseEvent;
 /**
  *
  */
-public class MainPanel implements RoutesManagerListener {
+public class MainPanel {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(MainPanel.class.getName());
 
@@ -160,10 +158,6 @@ public class MainPanel implements RoutesManagerListener {
 
 
     private void initHandlers() {
-        // TODO: restore listeners.
-        //utils.getRoutesManager().addListener(this);
-
-
         // When filter field text is changed, routes table will be refiltered.
         pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
@@ -171,7 +165,6 @@ public class MainPanel implements RoutesManagerListener {
                 myTableModel.getFilter().setPathFilter(pathFilterField.getText());
             }
         });
-
 
         // Register mouse handler to handle double-clicks.
         // Double clicking a row will navigate to the action of selected route.
@@ -201,7 +194,6 @@ public class MainPanel implements RoutesManagerListener {
                 RailwaysUtils.getAPI(project).showErrorInfo();
             }
         });
-
 
         actionLbl.addHyperlinkListener(new HyperlinkListener() {
             @Override
@@ -300,39 +292,22 @@ public class MainPanel implements RoutesManagerListener {
     //         Railways event handlers
 
 
-    @Override
-    public void routesUpdated() {
-        // Railways can invoke this event from another thread
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                myTableModel.setRoutes(api.getRoutes());
-                showRoutesPanel();
-                UpdateRoutesListAction.updateIcon(project);
-            }
-        });
+
+    public void setUpdatedRoutes(RouteList routeList) {
+        myTableModel.setRoutes(routeList);
+        showRoutesPanel();
+        UpdateRoutesListAction.updateIcon(project);
     }
 
 
-    @Override
-    public void beforeRoutesUpdate() {
-        // Railways can invoke this event from another thread
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                showMessagePanel("Loading routes...");
-            }
-        });
+    public void showLoading() {
+        showMessagePanel("Loading routes...");
     }
 
 
-    @Override
-    public void routesUpdateError() {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-                showErrorPanel();
-                UpdateRoutesListAction.updateIcon(project);
-            }
-        });
+    public void showRoutesUpdateError() {
+        showErrorPanel();
+        UpdateRoutesListAction.updateIcon(project);
     }
 
 
@@ -375,8 +350,6 @@ public class MainPanel implements RoutesManagerListener {
             if (id >= 0)
                 route = model.getRoute(id);
 
-            //log.debug(String.format("Selected first index: %d, myTableModel index: %d, route: %s, %s, %s, %s", e.getFirstIndex(), table.convertRowIndexToModel(e.getFirstIndex()),
-            //        route.path, route.controller + "#" + route.action, route.httpMethod, route.name));
             showRouteInfo(route);
         }
     }

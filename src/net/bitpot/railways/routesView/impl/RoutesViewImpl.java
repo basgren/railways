@@ -12,8 +12,11 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
-import net.bitpot.railways.routesView.RoutesManager;
+import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.gui.MainPanel;
+import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.routesView.RoutesManager;
+import net.bitpot.railways.routesView.RoutesManagerListener;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -141,6 +144,9 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         pane.setContent(content);
         myPanes.add(pane);
 
+        // Subscribe to RoutesManager events.
+        pane.getRoutesManager().addListener(new MyRoutesManagerListener());
+
         // And select pane if it's the first one.
         if (myPanes.size() == 1)
             setCurrentPane(pane);
@@ -161,4 +167,44 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
             break;
         }
     }
+
+
+    // TODO: implement main panel updating using RoutesManager status.
+    private class MyRoutesManagerListener implements RoutesManagerListener {
+
+        @Override
+        public void routesUpdated(final RoutesManager routesManager) {
+            // Railways can invoke this event from another thread, so manipulate
+            // UI from UI thread.
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+                public void run() {
+                    RouteList routeList = routesManager.getRouteList();
+                    mainPanel.setUpdatedRoutes(routeList);
+                }
+            });
+        }
+
+
+        @Override
+        public void beforeRoutesUpdate(RoutesManager routesManager) {
+            // Railways can invoke this event from another thread
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+                public void run() {
+                    mainPanel.showLoading();
+                }
+            });
+        }
+
+
+        @Override
+        public void routesUpdateError(RoutesManager routesManager) {
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+                @Override
+                public void run() {
+                    mainPanel.showRoutesUpdateError();
+                }
+            });
+        }
+    }
+
 }

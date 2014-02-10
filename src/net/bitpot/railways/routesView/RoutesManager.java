@@ -125,10 +125,10 @@ public class RoutesManager {
             return false;
 
         for (RoutesManagerListener l : listeners)
-            l.beforeRoutesUpdate();
+            l.beforeRoutesUpdate(this);
 
         // Start background task.
-        (new UpdateRoutesTask()).queue();
+        (new UpdateRoutesTask(this)).queue();
         return true;
     }
 
@@ -143,9 +143,12 @@ public class RoutesManager {
      */
     private class UpdateRoutesTask extends Task.Backgroundable {
 
-        public UpdateRoutesTask() {
+        private RoutesManager routesManager;
+
+        public UpdateRoutesTask(RoutesManager rm) {
             super(project, "Rake task", true);
 
+            routesManager = rm;
             setCancelText("Cancel task");
         }
 
@@ -163,7 +166,7 @@ public class RoutesManager {
 
             if (output == null)
                 for (RoutesManagerListener l : listeners)
-                    l.routesUpdated();
+                    l.routesUpdated(routesManager);
 
             indicator.setFraction(1.0);
         }
@@ -185,7 +188,7 @@ public class RoutesManager {
             routesUpdateIndicator = null;
 
             for (RoutesManagerListener l : listeners)
-                l.routesUpdated();
+                l.routesUpdated(routesManager);
 
             super.onCancel();
         }
@@ -209,12 +212,12 @@ public class RoutesManager {
         // TODO: possibly, we should report about warnings somehow.
         if (routeList.size() == 0 && parser.isErrorReported()) {
             for (RoutesManagerListener l : listeners)
-                l.routesUpdateError();
+                l.routesUpdateError(this);
         } else {
             cacheOutput(stdOut);
 
             for (RoutesManagerListener l : listeners)
-                l.routesUpdated();
+                l.routesUpdated(this);
         }
     }
 
