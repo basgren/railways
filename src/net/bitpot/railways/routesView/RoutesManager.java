@@ -152,7 +152,8 @@ public class RoutesManager {
 
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-            indicator.setText("Updating routes list...");
+            indicator.setText("Updating routes list for module "  +
+                    getModule().getName() + "...");
             indicator.setFraction(0.0);
 
             // Save indicator to be able to cancel task execution.
