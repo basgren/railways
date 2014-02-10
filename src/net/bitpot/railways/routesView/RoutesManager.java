@@ -263,10 +263,7 @@ public class RoutesManager {
      */
     @Nullable
     private String getCachedOutput() {
-        // TODO: enable cache after debug is over.
-        return null;
-
-        /*try {
+        try {
             String fileName = getCacheFileName();
             File f = new File(fileName);
 
@@ -279,7 +276,7 @@ public class RoutesManager {
             return FileUtil.loadFile(f);
         } catch (Exception e) {
             return null;
-        }*/
+        }
     }
 
 
@@ -289,11 +286,12 @@ public class RoutesManager {
      * @return Name of the cache file.
      */
     private String getCacheFileName() {
-        VirtualFile projectFile = project.getProjectFile();
-        if (projectFile == null || projectFile.getParent() == null)
+        // TODO: check where cache file is placed in IntelliJ IDEA
+        VirtualFile moduleFile = getModule().getModuleFile();
+        if (moduleFile == null || moduleFile.getParent() == null)
             return null;
 
-        return projectFile.getParent().getPresentableUrl() +
+        return moduleFile.getParent().getPresentableUrl() +
                 File.separator + "railways.cache";
     }
 }
