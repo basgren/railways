@@ -226,14 +226,14 @@ public class RoutesManager {
      */
     private void cacheOutput(String output) {
         try {
-            long routesMTime = getRoutesFileMTime();
-
+            // Cache output
             File f = new File(getCacheFileName());
             FileUtil.writeToFile(f, output.getBytes(), false);
-            f.setLastModified(routesMTime);
+
+            // Set cache file modification date/time the same as for routes.rb
+            f.setLastModified(getRoutesFileMTime());
         } catch (Exception e) {
             // Do nothing
-            //e.printStackTrace();
         }
     }
 
@@ -244,7 +244,7 @@ public class RoutesManager {
      * @return Modification time of routes.rb file or 0 if it cannot be retrieved.
      */
     private long getRoutesFileMTime() {
-        RailsApp railsApp = RailwaysUtils.getAPI(project).getRailsApp();
+        RailsApp railsApp = RailsApp.fromModule(module);
         if (railsApp == null || railsApp.getRoutesFile() == null)
             return 0;
 
