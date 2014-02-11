@@ -55,10 +55,9 @@ public class UpdateRoutesListAction extends AnAction {
         RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
         if (rm == null) return;
 
-        // TODO: get rid of Railways class.
-        RailwaysUtils api = RailwaysUtils.getAPI(project);
+        RailwaysActionsFields fields =
+                RoutesView.getInstance(project).getRailwaysActionsFields();
 
-        RailwaysActionsFields fields = api.getRailwaysActionsFields();
         boolean previousState = fields.previousRoutesUpdatingState;
         boolean newState = rm.isUpdating();
 

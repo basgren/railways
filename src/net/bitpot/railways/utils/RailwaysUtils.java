@@ -44,7 +44,7 @@ public class RailwaysUtils implements Disposable {
     // Contains list of Rails modules.
     private ArrayList<RoutesManager> routesManagerList = new ArrayList<>();
 
-    private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
+
 
 
     public RailwaysUtils(RailwaysProjectComp projectComponent) {
@@ -246,22 +246,14 @@ public class RailwaysUtils implements Disposable {
 
 
     /**
-     * Shows a dialog with error info.
-     */
-    public void showErrorInfo() {
-        // TODO: Debug stub. Rework!
-        ErrorInfoDlg.showError("Error information:",
-                routesManagerList.get(0).getParseErrorStacktrace());
-    }
-
-
-    /**
-     * Returns an object with information used internally by plugin actions.
+     * Shows a dialog with 'rake routes' error stacktrace.
      *
-     * @return Object with info
+     * @param routesManager RoutesManager which error stacktrace should be
+     *                      displayed.
      */
-    public RailwaysActionsFields getRailwaysActionsFields() {
-        return railwaysActionsFields;
+    public static void showErrorInfo(@NotNull RoutesManager routesManager) {
+        ErrorInfoDlg.showError("Error information:",
+                routesManager.getParseErrorStacktrace());
     }
 
 

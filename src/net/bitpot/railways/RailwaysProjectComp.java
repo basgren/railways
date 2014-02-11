@@ -51,15 +51,6 @@ public class RailwaysProjectComp implements ProjectComponent {
 
 
     public void projectOpened() {
-        // Init routes should be run when project is initialized.
-        StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {
-            public void run() {
-                RoutesManager rm = railwaysAPI.getActiveRoutesManager();
-                if (rm != null)
-                    rm.initRouteList();
-            }
-        });
-
         myProject.getMessageBus().connect()
                 .subscribe(ProjectTopics.MODULES, new ProjectModulesListener());
     }

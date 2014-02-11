@@ -13,6 +13,8 @@ import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.routesView.RoutesManager;
+import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.impl.RoutesViewPane;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
@@ -186,12 +188,15 @@ public class MainPanel {
         });
 
         // Bind handler that
-        routesTable.getSelectionModel().addListSelectionListener(new RouteSelectionListener(routesTable));
+        routesTable.getSelectionModel().addListSelectionListener(
+                new RouteSelectionListener(routesTable));
 
         showErrorLink.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
-                RailwaysUtils.getAPI(project).showErrorInfo();
+                RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+                if (rm != null)
+                    RailwaysUtils.showErrorInfo(rm);
             }
         });
 
