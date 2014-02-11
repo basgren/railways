@@ -13,6 +13,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.UIUtil;
+import net.bitpot.railways.actions.RailwaysActionsFields;
+import net.bitpot.railways.gui.ErrorInfoDlg;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesManagerListener;
@@ -35,6 +37,9 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
 
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
     private RoutesViewPane currentPane = null;
+
+    // Hmmm... I don't remember why I needed this... Some glitches with action state update?
+    private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
 
     public RoutesViewImpl(Project project) {
         myProject = project;
@@ -170,6 +175,17 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
             // TODO: handle currentPane if it's removed.
             break;
         }
+    }
+
+
+    /**
+     * Returns an object with information used internally by plugin actions.
+     *
+     * @return Object with info
+     */
+    @Override
+    public RailwaysActionsFields getRailwaysActionsFields() {
+        return railwaysActionsFields;
     }
 
 
