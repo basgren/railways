@@ -3,6 +3,7 @@ package net.bitpot.railways.models;
 
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import net.bitpot.railways.utils.RailwaysUtils;
@@ -10,6 +11,9 @@ import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.plugins.ruby.rails.model.RailsApp;
+import org.jetbrains.plugins.ruby.rails.model.RailsController;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -25,8 +29,8 @@ public class Route implements NavigationItem {
     // as rake routes does not show this info.
     public final static int MOUNTED = 2; // Mounted rack application.
 
+    private Module module = null;
 
-    private Project project = null;
 
     private int routeType = DEFAULT;
     private RequestType requestType = RequestType.ANY;
@@ -43,8 +47,8 @@ public class Route implements NavigationItem {
     }
 
 
-    public Route(@Nullable Project project) {
-        this.project = project;
+    public Route(@Nullable Module module) {
+        this.module = module;
     }
 
 
@@ -241,9 +245,22 @@ public class Route implements NavigationItem {
 
     @Override
     public void navigate(boolean requestFocus) {
-        // Do nothing now
-        if (project != null)
-            RailwaysUtils.getAPI(project).navigateToRouteAction(this, requestFocus);
+        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
+            return;
+
+        RailsApp app = RailsApp.fromModule(module);
+        if ((app == null) || controller.isEmpty())
+            return;
+
+        RailsController ctrl = app.findController(controller);
+        if (ctrl == null)
+            return;
+
+        if (!action.isEmpty()) {
+            RMethod method = ctrl.getAction(action);
+            if (method != null)
+                method.navigate(requestFocus);
+        }
     }
 
 

@@ -65,7 +65,6 @@ public class MainPanel {
 
 
     private Project project;
-    private RailwaysUtils api;
 
     // A pane that is used as a data source for the Routes panel.
     private RoutesViewPane myDataSource = null;
@@ -77,8 +76,6 @@ public class MainPanel {
 
     public MainPanel(Project project) {
         this.project = project;
-
-        api = RailwaysUtils.getAPI(project);
 
         initToolbar();
 
@@ -182,7 +179,7 @@ public class MainPanel {
 
                     int row = target.convertRowIndexToModel(viewRow);
                     Route route = myTableModel.getRoute(row);
-                    api.navigateToRouteAction(route);
+                    route.navigate(false);
                 }
             }
         });
@@ -204,7 +201,7 @@ public class MainPanel {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (currentRoute != null)
-                    api.navigateToRouteAction(currentRoute);
+                    currentRoute.navigate(false);
             }
         });
     }

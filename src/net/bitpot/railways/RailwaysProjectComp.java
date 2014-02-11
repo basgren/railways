@@ -6,9 +6,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
-import net.bitpot.railways.utils.RailwaysUtils;
-import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +18,6 @@ public class RailwaysProjectComp implements ProjectComponent {
     private final static Logger log = Logger.getInstance(RailwaysProjectComp.class.getName());
 
     private Project myProject;
-    private RailwaysUtils railwaysAPI;
 
 
     public RailwaysProjectComp(Project project) {
@@ -34,14 +30,8 @@ public class RailwaysProjectComp implements ProjectComponent {
     }
 
 
-    public void initComponent() {
-        railwaysAPI = new RailwaysUtils(this);
-    }
-
-
-    public void disposeComponent() {
-        // Do nothing now
-    }
+    public void initComponent() { /* Do nothing now */ }
+    public void disposeComponent() { /* Do nothing now */ }
 
 
     @NotNull
@@ -58,11 +48,6 @@ public class RailwaysProjectComp implements ProjectComponent {
 
     public void projectClosed() {
         // called when project is being closed
-    }
-
-
-    public RailwaysUtils getRailwaysAPI() {
-        return railwaysAPI;
     }
 
 

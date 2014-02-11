@@ -55,7 +55,7 @@ public class RoutesManager {
     private Project project;
 
     private RailsRoutesParser parser;
-    private RouteList routeList = null;
+    private RouteList routeList = new RouteList();
 
     // Rails module
     private Module module = null;
@@ -63,7 +63,7 @@ public class RoutesManager {
 
     public RoutesManager(Project project, Module railsModule) {
         this.project = project;
-        parser = new RailsRoutesParser(project);
+        parser = new RailsRoutesParser(railsModule);
         module = railsModule;
     }
 
@@ -106,7 +106,7 @@ public class RoutesManager {
     }
 
 
-    @Nullable
+    @NotNull
     public RouteList getRouteList() {
         return routeList;
     }

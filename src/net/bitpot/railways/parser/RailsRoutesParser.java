@@ -1,7 +1,7 @@
 package net.bitpot.railways.parser;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +34,8 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     private String stacktrace;
 
-    private final Project project;
+    //private final Project project;
+    private Module myModule;
 
 
     public RailsRoutesParser() {
@@ -42,8 +43,8 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     }
 
 
-    public RailsRoutesParser(@Nullable Project project) {
-        this.project = project;
+    public RailsRoutesParser(@Nullable Module module) {
+        myModule = module;
     }
 
 
@@ -114,7 +115,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         Matcher groups = LINE_PATTERN.matcher(line);
 
         if (groups.matches()) {
-            Route r = new Route(project);
+            Route r = new Route(myModule);
 
             r.setRouteName(getGroup(groups, 1));
             r.setPath(getGroup(groups, 3));

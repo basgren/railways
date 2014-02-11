@@ -3,6 +3,8 @@ package net.bitpot.railways.gui.gotoPopup;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
+import net.bitpot.railways.routesView.RoutesManager;
+import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.utils.RailwaysUtils;
 import net.bitpot.railways.models.RouteList;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +26,14 @@ public class RouteItemsContributor implements ChooseByNameContributor {
     @NotNull
     @Override
     public String[] getNames(Project project, boolean includeNonProjectItems) {
-        RouteList routes = RailwaysUtils.getAPI(project).getRoutes();
+        // TODO: aggregate all routes from different modules.
+        // Debug stub
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null)
+            return new String[0];
+
+        RouteList routes = rm.getRouteList();
+
         int count = routes.size();
         String[] data = new String[count];
 
@@ -48,7 +57,15 @@ public class RouteItemsContributor implements ChooseByNameContributor {
     @NotNull
     @Override
     public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
-        RouteList list = RailwaysUtils.getAPI(project).getRoutes();
-        return list.getRoutesByName(name);
+
+        // TODO: implementation
+        // Debug stub
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null)
+            return new NavigationItem[0];
+
+        RouteList routes = rm.getRouteList();
+
+        return routes.getRoutesByName(name);
     }
 }
