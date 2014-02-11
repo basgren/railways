@@ -14,7 +14,6 @@ import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.gui.MainPanel;
-import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesManagerListener;
 import net.bitpot.railways.routesView.RoutesView;
@@ -112,10 +111,15 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
 
 
     public void setCurrentPane(RoutesViewPane pane) {
+        if (currentPane == pane)
+            return;
+
         currentPane = pane;
 
-        if (pane != null)
+        if (pane != null) {
             mainPanel.setDataSource(pane);
+            syncPanelWithRoutesManager(pane.getRoutesManager());
+        }
     }
 
 
@@ -169,42 +173,38 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
     }
 
 
-    // TODO: implement main panel updating using RoutesManager status.
-    private class MyRoutesManagerListener implements RoutesManagerListener {
+    /**
+     * Synchronizes appearance of MainPanel with the state of RoutesManager.
+     *
+     * @param routesManager Routes manager which state will be used for
+     *                      appearance sync.
+     */
+    private void syncPanelWithRoutesManager(RoutesManager routesManager) {
+        switch(routesManager.getState()) {
+            case RoutesManager.UPDATING:
+                mainPanel.showLoading();
+                break;
 
-        @Override
-        public void routesUpdated(final RoutesManager routesManager) {
-            // Railways can invoke this event from another thread, so manipulate
-            // UI from UI thread.
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-                public void run() {
-                    RouteList routeList = routesManager.getRouteList();
-                    mainPanel.setUpdatedRoutes(routeList);
-                }
-            });
+            case RoutesManager.UPDATED:
+                mainPanel.setUpdatedRoutes(routesManager.getRouteList());
+                break;
+
+            case RoutesManager.ERROR:
+                mainPanel.showRoutesUpdateError();
+                break;
         }
+    }
 
 
+    private class MyRoutesManagerListener implements RoutesManagerListener {
         @Override
-        public void beforeRoutesUpdate(RoutesManager routesManager) {
+        public void stateChanged(final RoutesManager routesManager) {
             // Railways can invoke this event from another thread
             UIUtil.invokeLaterIfNeeded(new Runnable() {
                 public void run() {
-                    mainPanel.showLoading();
-                }
-            });
-        }
-
-
-        @Override
-        public void routesUpdateError(RoutesManager routesManager) {
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-                @Override
-                public void run() {
-                    mainPanel.showRoutesUpdateError();
+                    syncPanelWithRoutesManager(routesManager);
                 }
             });
         }
     }
-
 }

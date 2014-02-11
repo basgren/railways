@@ -32,6 +32,20 @@ import java.util.LinkedList;
  */
 public class RoutesManager {
 
+    // Default state - set just after RoutesManager is created.
+    public static final int DEFAULT     = 0;
+
+    // Requesting routes.
+    public static final int UPDATING    = 1;
+
+    // Routes are received and parsed.
+    public static final int UPDATED     = 2;
+
+    // Routes are not received because of error.
+    public static final int ERROR       = 3;
+
+    private int myState = DEFAULT;
+
     private LinkedList<RoutesManagerListener> listeners = new LinkedList<RoutesManagerListener>();
 
     // This field is set only when route update task is being executed.
@@ -53,13 +67,32 @@ public class RoutesManager {
         module = railsModule;
     }
 
+    public int getState() {
+        return myState;
+    }
+
+
+    /**
+     * Sets new state of RoutesManager and notifies all listeners if the state
+     * was changed.
+     *
+     * @param newState New state of RouteManager.
+     */
+    private void setState(int newState) {
+        if (myState == newState)
+            return;
+
+        myState = newState;
+
+        // Notify listeners.
+        for (RoutesManagerListener l : listeners)
+            l.stateChanged(this);
+    }
+
 
     public Module getModule() {
         return module;
     }
-
-
-    // API methods
 
 
     public void addListener(RoutesManagerListener listener) {
@@ -124,8 +157,7 @@ public class RoutesManager {
         if (isUpdating())
             return false;
 
-        for (RoutesManagerListener l : listeners)
-            l.beforeRoutesUpdate(this);
+        setState(UPDATING);
 
         // Start background task.
         (new UpdateRoutesTask(this)).queue();
@@ -165,8 +197,7 @@ public class RoutesManager {
             output = RailwaysUtils.queryRakeRoutes(getModule());
 
             if (output == null)
-                for (RoutesManagerListener l : listeners)
-                    l.routesUpdated(routesManager);
+                setState(UPDATED);
 
             indicator.setFraction(1.0);
         }
@@ -187,8 +218,7 @@ public class RoutesManager {
         public void onCancel() {
             routesUpdateIndicator = null;
 
-            for (RoutesManagerListener l : listeners)
-                l.routesUpdated(routesManager);
+            setState(UPDATED);
 
             super.onCancel();
         }
@@ -211,13 +241,10 @@ public class RoutesManager {
         //    so everything is OK.
         // TODO: possibly, we should report about warnings somehow.
         if (routeList.size() == 0 && parser.isErrorReported()) {
-            for (RoutesManagerListener l : listeners)
-                l.routesUpdateError(this);
+            setState(ERROR);
         } else {
             cacheOutput(stdOut);
-
-            for (RoutesManagerListener l : listeners)
-                l.routesUpdated(this);
+            setState(UPDATED);
         }
     }
 

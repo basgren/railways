@@ -74,8 +74,8 @@ public class RailwaysUtils implements Disposable {
 
 
     /**
-     * Internally used method that runs rake task and gets its output. This method should be called
-     * from backgroundable task.
+     * Internally used method that runs rake task and gets its output. This
+     * method should be called from backgroundable task.
      *
      * @param module Rails module for which rake task should be run.
      * @return Output of 'rake routes'.
