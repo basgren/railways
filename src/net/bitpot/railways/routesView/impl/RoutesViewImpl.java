@@ -45,7 +45,7 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
     /**
      * Initializes tool window.
      *
-     * @param toolWindow
+     * @param toolWindow Tool window to initialize.
      */
     public synchronized void initToolWindow(final ToolWindow toolWindow) {
         myContentManager = toolWindow.getContentManager();
@@ -174,7 +174,7 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
 
 
     /**
-     * Synchronizes appearance of MainPanel with the state of RoutesManager.
+     * Updates appearance of MainPanel according to the state of RoutesManager.
      *
      * @param routesManager Routes manager which state will be used for
      *                      appearance sync.
@@ -202,7 +202,10 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
             // Railways can invoke this event from another thread
             UIUtil.invokeLaterIfNeeded(new Runnable() {
                 public void run() {
-                    syncPanelWithRoutesManager(routesManager);
+                    // Synchronize with routesManager only if it belongs to
+                    // currently selected pane.
+                    if (routesManager == getCurrentRoutesManager())
+                        syncPanelWithRoutesManager(routesManager);
                 }
             });
         }
