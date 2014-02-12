@@ -12,11 +12,9 @@ import org.jetbrains.annotations.Nullable;
  * @author Basil Gren
  */
 public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType> {
-    private static RouteItemsContributor[] contributors = {new RouteItemsContributor()};
-
 
     public GotoRouteMethodModel(Project project) {
-        super(project, contributors);
+        super(project, ChooseByRouteRegistry.getInstance(project).getRouteContributors());
     }
 
 

@@ -14,8 +14,8 @@ import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.RailwaysActionsFields;
-import net.bitpot.railways.gui.ErrorInfoDlg;
 import net.bitpot.railways.gui.MainPanel;
+import net.bitpot.railways.navigation.ChooseByRouteRegistry;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesManagerListener;
 import net.bitpot.railways.routesView.RoutesView;
@@ -153,6 +153,10 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
         pane.setContent(content);
         myPanes.add(pane);
 
+        // Register contributor
+        ChooseByRouteRegistry.getInstance(myProject)
+                .addContributorFor(pane.getRoutesManager());
+
         // Subscribe to RoutesManager events.
         pane.getRoutesManager().addListener(new MyRoutesManagerListener());
 
@@ -171,6 +175,10 @@ public class RoutesViewImpl extends RoutesView implements Disposable {
             // ... and remove it from panels list.
             myContentManager.removeContent(pane.getContent(), true);
             myPanes.remove(pane);
+
+            // Register contributor
+            ChooseByRouteRegistry.getInstance(myProject)
+                    .removeContributor(pane.getRoutesManager());
 
             // TODO: handle currentPane if it's removed.
             break;

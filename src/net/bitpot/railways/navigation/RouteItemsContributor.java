@@ -13,6 +13,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RouteItemsContributor implements ChooseByNameContributor {
 
+    private RoutesManager myRoutesManager;
+
+    public RouteItemsContributor(RoutesManager routesManager) {
+        myRoutesManager = routesManager;
+    }
+
+
+    public RoutesManager getRoutesManager() {
+        return myRoutesManager;
+    }
+
+
     /**
      * Returns the list of names for the specified project to which it is possible to navigate
      * by name.
@@ -25,13 +37,7 @@ public class RouteItemsContributor implements ChooseByNameContributor {
     @NotNull
     @Override
     public String[] getNames(Project project, boolean includeNonProjectItems) {
-        // TODO: aggregate all routes from different modules.
-        // Debug stub
-        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
-        if (rm == null)
-            return new String[0];
-
-        RouteList routes = rm.getRouteList();
+        RouteList routes = myRoutesManager.getRouteList();
 
         int count = routes.size();
         String[] data = new String[count];
@@ -56,14 +62,7 @@ public class RouteItemsContributor implements ChooseByNameContributor {
     @NotNull
     @Override
     public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
-
-        // TODO: implementation
-        // Debug stub
-        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
-        if (rm == null)
-            return new NavigationItem[0];
-
-        RouteList routes = rm.getRouteList();
+        RouteList routes = myRoutesManager.getRouteList();
 
         return routes.getRoutesByName(name);
     }
