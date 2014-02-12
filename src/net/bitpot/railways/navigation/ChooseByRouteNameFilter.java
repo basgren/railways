@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  *
  */
-public class ChooseByNameRouteFilter extends ChooseByNameFilter<RequestType> {
+public class ChooseByRouteNameFilter extends ChooseByNameFilter<RequestType> {
     /**
      * A constructor
      *
@@ -24,7 +24,7 @@ public class ChooseByNameRouteFilter extends ChooseByNameFilter<RequestType> {
      * @param filterConfiguration storage for selected filter values
      * @param project             a context project
      */
-    public ChooseByNameRouteFilter(@NotNull ChooseByNamePopup popup,
+    public ChooseByRouteNameFilter(@NotNull ChooseByNamePopup popup,
                                    @NotNull FilteringGotoByModel<RequestType> model,
                                    @NotNull ChooseByNameFilterConfiguration<RequestType> filterConfiguration,
                                    @NotNull Project project) {

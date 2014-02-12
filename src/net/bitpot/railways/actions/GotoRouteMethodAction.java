@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import net.bitpot.railways.navigation.ChooseByNameRouteFilter;
+import net.bitpot.railways.navigation.ChooseByRouteNameFilter;
 import net.bitpot.railways.navigation.GotoRouteFilterConfiguration;
 import net.bitpot.railways.navigation.GotoRouteMethodModel;
 import net.bitpot.railways.models.routes.RequestType;
@@ -41,7 +41,7 @@ public class GotoRouteMethodAction extends GotoActionBase {
             @Nullable
             @Override
             protected ChooseByNameFilter<RequestType> createFilter(@NotNull ChooseByNamePopup popup) {
-                return new ChooseByNameRouteFilter(popup, model,
+                return new ChooseByRouteNameFilter(popup, model,
                         GotoRouteFilterConfiguration.getInstance(project), project);
             }
 
