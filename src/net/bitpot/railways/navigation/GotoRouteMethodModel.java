@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui.gotoPopup;
+package net.bitpot.railways.navigation;
 
 import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.navigation.NavigationItem;

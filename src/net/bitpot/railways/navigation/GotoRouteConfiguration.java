@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui.gotoPopup;
+package net.bitpot.railways.navigation;
 
 import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.openapi.components.ServiceManager;
