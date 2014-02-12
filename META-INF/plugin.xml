@@ -98,8 +98,8 @@
         <projectService serviceInterface="net.bitpot.railways.routesView.RoutesView"
                         serviceImplementation="net.bitpot.railways.routesView.impl.RoutesViewImpl"/>
 
-        <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteConfiguration"
-                        serviceImplementation="net.bitpot.railways.navigation.GotoRouteConfiguration"/>
+        <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
+                        serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
     </extensions>
 
 

@@ -12,12 +12,12 @@ import net.bitpot.railways.models.routes.RequestType;
  * @author Basil Gren
  */
 @State(
-        name = "GotoRouteConfiguration",
+        name = "GotoRouteFilterConfiguration",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-public class GotoRouteConfiguration extends ChooseByNameFilterConfiguration<RequestType> {
+public class GotoRouteFilterConfiguration extends ChooseByNameFilterConfiguration<RequestType> {
 
     public static ChooseByNameFilterConfiguration<RequestType> getInstance(Project project) {
-        return ServiceManager.getService(project, GotoRouteConfiguration.class);
+        return ServiceManager.getService(project, GotoRouteFilterConfiguration.class);
     }
 
 
