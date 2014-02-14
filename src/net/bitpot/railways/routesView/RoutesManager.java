@@ -1,48 +1,51 @@
 package net.bitpot.railways.routesView;
 
-import com.intellij.execution.ExecutionMode;
-import com.intellij.execution.ExecutionModes;
-import com.intellij.execution.Output;
 import com.intellij.execution.process.ProcessOutput;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import net.bitpot.railways.utils.RailwaysUtils;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.parser.RailsRoutesParser;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.ruby.gem.GemsRunner;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 /**
- * Class provides manipulation routines for a Rails module.
+ * Class is responsible for receiving and storing the list of routes for
+ * a Rails module.
  */
 public class RoutesManager {
 
-    // Default state - set just after RoutesManager is created.
+    /**
+     * Default state. It is set just after RoutesManager is created.
+     */
     public static final int DEFAULT     = 0;
 
-    // Requesting routes.
+
+    /**
+     * This state is set when RoutesManager is requested routes and awaiting
+     * for result.
+     */
     public static final int UPDATING    = 1;
 
-    // Routes are received and parsed.
+    /**
+     * The state is set when routes were successfully parsed and RouteList
+     * created.
+     */
     public static final int UPDATED     = 2;
 
-    // Routes are not received because of error.
+    /**
+     * This state is set when routes couldn't be retrieved by some reasons
+     */
     public static final int ERROR       = 3;
+
 
     private int myState = DEFAULT;
 
@@ -61,35 +64,35 @@ public class RoutesManager {
     private Module module = null;
 
 
+    /**
+     * Constructor of RoutesManager.
+     *
+     * @param project A project for which RoutesManager is created.
+     * @param railsModule Rails module which routes will be served by
+     *                    RoutesManager. Specified module should be a Rails
+     *                    application module.
+     */
     public RoutesManager(Project project, Module railsModule) {
         this.project = project;
         parser = new RailsRoutesParser(railsModule);
         module = railsModule;
     }
 
+
+    /**
+     * Returns current state of RouteManager.
+     * @return Current state.
+     */
     public int getState() {
         return myState;
     }
 
 
     /**
-     * Sets new state of RoutesManager and notifies all listeners if the state
-     * was changed.
+     * Returns a module which is served by the RoutesManager.
      *
-     * @param newState New state of RouteManager.
+     * @return Linked module.
      */
-    private void setState(int newState) {
-        if (myState == newState)
-            return;
-
-        myState = newState;
-
-        // Notify listeners.
-        for (RoutesManagerListener l : listeners)
-            l.stateChanged(this);
-    }
-
-
     public Module getModule() {
         return module;
     }
@@ -106,6 +109,11 @@ public class RoutesManager {
     }
 
 
+    /**
+     * Returns current RouteList. Returned value is always valid RouteList
+     * object, but this object is recreated each time routes are updated.
+     * @return Current route list.
+     */
     @NotNull
     public RouteList getRouteList() {
         return routeList;
@@ -160,27 +168,48 @@ public class RoutesManager {
         setState(UPDATING);
 
         // Start background task.
-        (new UpdateRoutesTask(this)).queue();
+        (new UpdateRoutesTask()).queue();
         return true;
     }
 
 
+    /**
+     * Returns ruby exception stacktrace from output of executed rake-task.
+     *
+     * @return Error stacktrace.
+     */
     public String getParseErrorStacktrace() {
         return parser.getErrorStacktrace();
     }
 
 
     /**
-     * Internal class that is responsible for updating routes list.
+     * Sets new state of RoutesManager and notifies all listeners if the state
+     * was changed.
+     *
+     * @param newState New state of RouteManager.
+     */
+    private void setState(int newState) {
+        if (myState == newState)
+            return;
+
+        myState = newState;
+
+        // Notify listeners.
+        for (RoutesManagerListener l : listeners)
+            l.stateChanged(this);
+    }
+
+
+    /**
+     * Internal class that is responsible for executing rake task and receiving
+     * its output.
      */
     private class UpdateRoutesTask extends Task.Backgroundable {
 
-        private RoutesManager routesManager;
-
-        public UpdateRoutesTask(RoutesManager rm) {
+        public UpdateRoutesTask() {
             super(project, "Rake task", true);
 
-            routesManager = rm;
             setCancelText("Cancel task");
         }
 

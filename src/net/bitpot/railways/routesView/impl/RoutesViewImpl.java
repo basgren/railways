@@ -26,7 +26,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 /**
- * TODO: write doc
+ * Implements tool window logic. Synchronizes the number of tool window panes
+ * with the number of opened Rails modules in the project.
  */
 public class RoutesViewImpl extends RoutesView implements Disposable {
 

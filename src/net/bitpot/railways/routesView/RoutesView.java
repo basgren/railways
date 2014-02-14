@@ -6,9 +6,6 @@ import com.intellij.openapi.project.Project;
 import net.bitpot.railways.actions.RailwaysActionsFields;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * TODO: write doc
- */
 public abstract class RoutesView {
     public static RoutesView getInstance(Project project) {
         return ServiceManager.getService(project, RoutesView.class);
