@@ -169,20 +169,17 @@ public class RoutesView implements Disposable {
 
     public void removeModulePane(Module module) {
         // Find corresponding content by module...
-        for (RoutesViewPane pane : myPanes) {
-            if (pane.getModule() != module) continue;
+        for (RoutesViewPane pane : myPanes)
+            if (pane.getModule() == module) {
+                // ... and remove it from panels list.
+                myContentManager.removeContent(pane.getContent(), true);
+                myPanes.remove(pane);
 
-            // ... and remove it from panels list.
-            myContentManager.removeContent(pane.getContent(), true);
-            myPanes.remove(pane);
-
-            // Register contributor
-            ChooseByRouteRegistry.getInstance(myProject)
-                    .removeContributor(pane.getRoutesManager());
-
-            // TODO: handle currentPane if it's removed.
-            break;
-        }
+                // Remove contributor
+                ChooseByRouteRegistry.getInstance(myProject)
+                        .removeContributor(pane.getRoutesManager());
+                break;
+            }
     }
 
 
