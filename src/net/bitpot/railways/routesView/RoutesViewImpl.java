@@ -1,4 +1,4 @@
-package net.bitpot.railways.routesView.impl;
+package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -16,9 +16,6 @@ import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.RailwaysActionsFields;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
-import net.bitpot.railways.routesView.RoutesManager;
-import net.bitpot.railways.routesView.RoutesManagerListener;
-import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 

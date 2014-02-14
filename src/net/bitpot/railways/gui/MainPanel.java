@@ -15,7 +15,7 @@ import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
-import net.bitpot.railways.routesView.impl.RoutesViewPane;
+import net.bitpot.railways.routesView.RoutesViewPane;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 

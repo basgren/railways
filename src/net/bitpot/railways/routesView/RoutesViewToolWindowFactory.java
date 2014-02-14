@@ -1,9 +1,8 @@
-package net.bitpot.railways.routesView.impl;
+package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import net.bitpot.railways.routesView.RoutesView;
 
 /**
  * @author Basil Gren
