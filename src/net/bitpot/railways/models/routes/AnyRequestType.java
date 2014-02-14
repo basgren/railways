@@ -6,21 +6,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * @author tox
- * @since 01.02.13
+ * @author Basil Gren
  */
-public class AnyRequestType extends RequestType
-{
+public class AnyRequestType extends RequestType {
     @Override
-    public Icon getIcon()
-    {
+    public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_ANY;
     }
 
+
     @NotNull
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Any";
     }
 }

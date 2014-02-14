@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui.gotoPopup;
+package net.bitpot.railways.navigation;
 
 import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.openapi.components.ServiceManager;
@@ -9,22 +9,20 @@ import com.intellij.openapi.project.Project;
 import net.bitpot.railways.models.routes.RequestType;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
 @State(
-        name = "GotoRouteConfiguration",
+        name = "GotoRouteFilterConfiguration",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-public class GotoRouteConfiguration extends ChooseByNameFilterConfiguration<RequestType>
-{
+public class GotoRouteFilterConfiguration extends ChooseByNameFilterConfiguration<RequestType> {
 
     public static ChooseByNameFilterConfiguration<RequestType> getInstance(Project project) {
-        return ServiceManager.getService(project, GotoRouteConfiguration.class);
+        return ServiceManager.getService(project, GotoRouteFilterConfiguration.class);
     }
 
 
     @Override
-    protected String nameForElement(RequestType type)
-    {
+    protected String nameForElement(RequestType type) {
         return type.getName();
     }
 }

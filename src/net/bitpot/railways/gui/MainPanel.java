@@ -9,12 +9,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.api.Railways;
-import net.bitpot.railways.api.RailwaysListener;
-import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.routesView.RoutesManager;
+import net.bitpot.railways.routesView.RoutesView;
+import net.bitpot.railways.routesView.RoutesViewPane;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -24,10 +26,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * 
+ *
  */
-public class MainPanel implements RailwaysListener
-{
+public class MainPanel {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(MainPanel.class.getName());
 
@@ -38,8 +39,8 @@ public class MainPanel implements RailwaysListener
 
     private final static String NO_INFO = "-";
 
-    private RouteTableModel model;
-    
+    private RouteTableModel myTableModel;
+
     private JPanel rootPanel;
     private JTable routesTable;
     private JTextField pathFilterField;
@@ -47,7 +48,6 @@ public class MainPanel implements RailwaysListener
     private HyperlinkLabel showErrorLink;
     private JLabel infoLbl;
     private JLabel routesCounterLbl;
-
 
 
     private JPanel routeInfoPnl;
@@ -65,41 +65,38 @@ public class MainPanel implements RailwaysListener
 
 
     private Project project;
-    private Railways api;
 
+    // A pane that is used as a data source for the Routes panel.
+    private RoutesViewPane myDataSource = null;
 
-    // Contains route which information is shown in the info panel. Contains null if no route is selected.
+    // Contains route which information is shown in the info panel.
+    // Contains null if no route is selected.
     private Route currentRoute;
 
 
-    public MainPanel(Project project)
-    {
+    public MainPanel(Project project) {
         this.project = project;
-
-        api = Railways.getAPI(project);
 
         initToolbar();
 
         // Init handlers after everything is initialized
         initHandlers();
 
-        model = new RouteTableModel();
-        model.setRoutes(api.getRoutes());
-        routesTable.setModel(model);
+        myTableModel = new RouteTableModel();
+        routesTable.setModel(myTableModel);
 
-        model.addTableModelListener(new TableModelListener()
-        {
+        myTableModel.addTableModelListener(new TableModelListener() {
             @Override
-            public void tableChanged(TableModelEvent e)
-            {
+            public void tableChanged(TableModelEvent e) {
                 updateCounterLabel();
             }
         });
 
-        routesTable.setDefaultRenderer(Object.class, new RouteTableCellRenderer(model.getFilter()));
+        routesTable.setDefaultRenderer(Object.class,
+                new RouteTableCellRenderer(myTableModel.getFilter()));
         routesTable.setRowHeight(20);
 
-        cardLayout = (CardLayout)(cardsPanel.getLayout());
+        cardLayout = (CardLayout) (cardsPanel.getLayout());
 
         showErrorLink.setHyperlinkText("Show details");
 
@@ -107,15 +104,7 @@ public class MainPanel implements RailwaysListener
 
         // Update route info panel
         showRouteInfo(null);
-
-
-        //PopupHandler.installPopupHandler(routesTable, "railways.PopupMenu", ActionPlaces.UNKNOWN);
-
-
-        //api.initRouteList();
     }
-
-
 
 
     /**
@@ -123,8 +112,7 @@ public class MainPanel implements RailwaysListener
      *
      * @param message Message to show.
      */
-    private void showMessagePanel(String message)
-    {
+    private void showMessagePanel(String message) {
         infoLbl.setText(message);
         showErrorLink.setVisible(false);
         routesHidden = true;
@@ -134,11 +122,11 @@ public class MainPanel implements RailwaysListener
         cardLayout.show(cardsPanel, INFO_CARD_NAME);
     }
 
+
     /**
      * Hides routes panel and shows panel with error message and with link that shows dialog with error details
      */
-    private void showErrorPanel()
-    {
+    private void showErrorPanel() {
         infoLbl.setText("Failed to load routes");
         showErrorLink.setVisible(true);
         routesCounterLbl.setVisible(false);
@@ -153,8 +141,7 @@ public class MainPanel implements RailwaysListener
     /**
      * Show panel that contains routes table, hiding any other panel (information or error).
      */
-    private void showRoutesPanel()
-    {
+    private void showRoutesPanel() {
         routesHidden = false;
         updateCounterLabel();
         setControlsEnabled(true);
@@ -164,131 +151,110 @@ public class MainPanel implements RailwaysListener
     }
 
 
-
-    private void createUIComponents()
-    {
+    private void createUIComponents() {
         routesTable = new RoutesTable();
     }
 
 
-
-    private void initHandlers()
-    {
-        api.addRailwaysListener(this);
-
-
+    private void initHandlers() {
         // When filter field text is changed, routes table will be refiltered.
-        pathFilterField.getDocument().addDocumentListener(new DocumentAdapter()
-        {
+        pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(DocumentEvent e)
-            {
-                model.getFilter().setPathFilter(pathFilterField.getText());
+            protected void textChanged(DocumentEvent e) {
+                myTableModel.getFilter().setPathFilter(pathFilterField.getText());
             }
         });
 
-
         // Register mouse handler to handle double-clicks.
         // Double clicking a row will navigate to the action of selected route.
-        routesTable.addMouseListener(new MouseAdapter()
-        {
+        routesTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e)
-            {
+            public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
 
-                    JTable target = (JTable)e.getSource();
+                    JTable target = (JTable) e.getSource();
                     int viewRow = target.rowAtPoint(e.getPoint());
                     if (viewRow < 0)
                         return;
 
                     int row = target.convertRowIndexToModel(viewRow);
-                    Route route = model.getRoute(row);
-                    api.navigateToRouteAction(route);
+                    Route route = myTableModel.getRoute(row);
+                    route.navigate(false);
                 }
             }
         });
 
         // Bind handler that
-        routesTable.getSelectionModel().addListSelectionListener(new RouteSelectionListener(routesTable));
+        routesTable.getSelectionModel().addListSelectionListener(
+                new RouteSelectionListener(routesTable));
 
-        showErrorLink.addHyperlinkListener(new HyperlinkListener()
-        {
+        showErrorLink.addHyperlinkListener(new HyperlinkListener() {
             @Override
-            public void hyperlinkUpdate(HyperlinkEvent e)
-            {
-                Railways.getAPI(project).showErrorInfo();
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+                if (rm != null)
+                    RailwaysUtils.showErrorInfo(rm);
             }
         });
 
-
-        actionLbl.addHyperlinkListener(new HyperlinkListener()
-        {
+        actionLbl.addHyperlinkListener(new HyperlinkListener() {
             @Override
-            public void hyperlinkUpdate(HyperlinkEvent e)
-            {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (currentRoute != null)
-                    api.navigateToRouteAction(currentRoute);
+                    currentRoute.navigate(false);
             }
         });
     }
 
 
-
-
-    private void setControlsEnabled(boolean value)
-    {
+    private void setControlsEnabled(boolean value) {
         pathFilterField.setEnabled(value);
         routesCounterLbl.setEnabled(value);
     }
 
 
     /**
-     * Updates text of routes counter label. Sets text to undefined when routes list is not visible
-     * (info or error panels are shown)
+     * Updates text of routes counter label. Sets text to undefined when routes
+     * list is not visible (info or error panels are shown)
      */
-    private void updateCounterLabel()
-    {
+    private void updateCounterLabel() {
         if (routesHidden)
             routesCounterLbl.setText("--/--");
         else
-            routesCounterLbl.setText(String.format("%d/%d", model.getRowCount(), model.getTotalRoutesCount()));
+            routesCounterLbl.setText(String.format("%d/%d",
+                    myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
     }
 
 
-    private void initToolbar()
-    {
+    private void initToolbar() {
         ActionManager am = ActionManager.getInstance();
 
         // The toolbar is registered in plugin.xml
-        ActionGroup actionGroup = (ActionGroup)am.getAction("railways.MainToolbar");
+        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
 
         // Create railways toolbar.
         ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
-
-        //toolbar.setTargetComponent(rootPanel);
-        //rootPanel.add(toolbar.getComponent(), BorderLayout.NORTH);
 
         toolbar.setTargetComponent(actionsPanel);
         actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
     }
 
-    public JPanel getRootPanel()
-    {
+
+    public JPanel getRootPanel() {
         return rootPanel;
     }
 
 
     /**
      * Shows additional info in information panel.
-     * @param route Route which info should be showed or nil if info should be hidden.
+     *
+     * @param route Route which info should be showed or nil if info should be
+     *              hidden.
      */
-    private void showRouteInfo(@Nullable Route route)
-    {
+    private void showRouteInfo(@Nullable Route route) {
         currentRoute = route;
 
-        if (route == null)
-        {
+        if (route == null) {
             routeLbl.setText(NO_INFO);
             methodLbl.setText(NO_INFO);
             methodLbl.setIcon(null);
@@ -297,15 +263,12 @@ public class MainPanel implements RailwaysListener
             actionLbl.setText(NO_INFO);
 
             nameLbl.setText(NO_INFO);
-        }
-        else
-        {
+        } else {
             routeLbl.setText(route.getPath());
             methodLbl.setText(route.getRequestType().getName());
             methodLbl.setIcon(route.getIcon());
 
-            switch (route.getType())
-            {
+            switch (route.getType()) {
                 case Route.MOUNTED:
                     actionLbl.setText(String.format("%s (mounted)", route.getControllerMethodName()));
                     break;
@@ -327,68 +290,61 @@ public class MainPanel implements RailwaysListener
     }
 
 
-
     // ----------------------------------------
     //         Railways event handlers
 
-    @Override
-    public void routesUpdated()
-    {
-        // Railways can invoke this event from another thread
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                model.setRoutes(api.getRoutes());
-                showRoutesPanel();
-                UpdateRoutesListAction.updateIcon(project);
-            }
-        });
-    }
 
-    @Override
-    public void beforeRoutesUpdate()
-    {
-        // Railways can invoke this event from another thread
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                showMessagePanel("Loading routes...");
-            }
-        });
-    }
 
-    @Override
-    public void routesUpdateError()
-    {
-        UIUtil.invokeLaterIfNeeded(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                showErrorPanel();
-                UpdateRoutesListAction.updateIcon(project);
-            }
-        });
+    public void setUpdatedRoutes(RouteList routeList) {
+        myTableModel.setRoutes(routeList);
+        showRoutesPanel();
+        UpdateRoutesListAction.updateIcon(project);
     }
 
 
+    public void showLoading() {
+        showMessagePanel("Loading routes...");
+    }
 
 
-    private class RouteSelectionListener implements ListSelectionListener
-    {
+    public void showRoutesUpdateError() {
+        showErrorPanel();
+        UpdateRoutesListAction.updateIcon(project);
+    }
+
+
+    /**
+     * Sets RoutesViewPane as a source of all data that should be displayed in
+     * the tool window.
+     *
+     * @param dataSource A pane which data should be displayed in the tool window.
+     */
+    public void setDataSource(RoutesViewPane dataSource) {
+        if (myDataSource == dataSource) return;
+
+        myDataSource = dataSource;
+
+        RouteList routes =
+                (dataSource != null) ? dataSource.getRoutesManager().getRouteList() : null;
+        myTableModel.setRoutes(routes);
+    }
+
+
+    private class RouteSelectionListener implements ListSelectionListener {
         private JTable table;
 
 
-        public RouteSelectionListener(JTable table)
-        {
+        public RouteSelectionListener(JTable table) {
             this.table = table;
         }
 
+
         @Override
-        public void valueChanged(ListSelectionEvent e)
-        {
+        public void valueChanged(ListSelectionEvent e) {
             if (e.getValueIsAdjusting())
                 return;
 
-            RouteTableModel model = (RouteTableModel)table.getModel();
+            RouteTableModel model = (RouteTableModel) table.getModel();
 
             int id = table.convertRowIndexToModel(table.getSelectedRow());
             Route route = null;
@@ -396,8 +352,6 @@ public class MainPanel implements RailwaysListener
             if (id >= 0)
                 route = model.getRoute(id);
 
-            //log.debug(String.format("Selected first index: %d, model index: %d, route: %s, %s, %s, %s", e.getFirstIndex(), table.convertRowIndexToModel(e.getFirstIndex()),
-            //        route.path, route.controller + "#" + route.action, route.httpMethod, route.name));
             showRouteInfo(route);
         }
     }

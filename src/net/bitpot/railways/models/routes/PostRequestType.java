@@ -6,20 +6,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
-public class PostRequestType extends RequestType
-{
+public class PostRequestType extends RequestType {
     @Override
-    public Icon getIcon()
-    {
+    public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_POST;
     }
 
+
     @NotNull
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "POST";
     }
 }

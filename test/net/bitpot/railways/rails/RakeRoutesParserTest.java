@@ -31,10 +31,9 @@ public class RakeRoutesParserTest
     @Test
     public void testParse() throws Exception
     {
-        boolean result = parser.parseFile("test/data/parserTest_1.txt");
-        RouteList routes = parser.getRoutes();
+        RouteList routes = parser.parseFile("test/data/parserTest_1.txt");
 
-        assertTrue(result);
+        assertNotNull(routes);
         assertEquals(routes.size(), 6);
     }
 
@@ -45,7 +44,7 @@ public class RakeRoutesParserTest
         String stdErr = readFile("test/data/sample_stderr.txt");
 
         parser.parseErrors(stdErr);
-        String stack = parser.getStacktrace();
+        String stack = parser.getErrorStacktrace();
 
         assertTrue(stack.length() > 0);
         assertFalse("Rake error wasn't cleaned from unnecessary text.",
@@ -60,7 +59,7 @@ public class RakeRoutesParserTest
                    "** Invoke environment (first_time)";
 
         parser.parseErrors(s);
-        String stack = parser.getStacktrace();
+        String stack = parser.getErrorStacktrace();
 
         assertEquals(stack.length(), 0);
     }

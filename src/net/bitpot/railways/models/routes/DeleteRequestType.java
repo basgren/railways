@@ -6,20 +6,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
-public class DeleteRequestType extends RequestType
-{
+public class DeleteRequestType extends RequestType {
     @Override
-    public Icon getIcon()
-    {
+    public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_DELETE;
     }
 
+
     @NotNull
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "DELETE";
     }
 }

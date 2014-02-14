@@ -6,20 +6,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * @author toXXIc
+ * @author Basil Gren
  */
-public class PatchRequestType extends RequestType
-{
+public class PatchRequestType extends RequestType {
     @Override
-    public Icon getIcon()
-    {
+    public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_PUT;
     }
 
+
     @NotNull
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "PATCH";
     }
 }

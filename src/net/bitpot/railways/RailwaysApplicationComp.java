@@ -5,23 +5,22 @@ import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *
+ * Railways application component.
  */
-public class RailwaysApplicationComp implements ApplicationComponent
-{
+public class RailwaysApplicationComp implements ApplicationComponent {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RailwaysApplicationComp.class.getName());
 
     private static RailwaysApplicationComp instance = null;
 
-    public RailwaysApplicationComp()
-    {
+
+    public RailwaysApplicationComp() {
     }
 
-    public void initComponent()
-    {
-        //log.debug("Initializing Railways...");
-        // Deny two instances of plugin. Otherwise we will get a mess-up in editor when using Code Injector.
+
+    public void initComponent() {
+        // Deny two instances of the plugin. Otherwise we will get a mess-up in
+        // editor when using Code Injector.
         if (instance != null)
             throw new RuntimeException("Railways plugin already initialized.");
 
@@ -29,14 +28,14 @@ public class RailwaysApplicationComp implements ApplicationComponent
         instance = this;
     }
 
-    public void disposeComponent()
-    {
+
+    public void disposeComponent() {
         // Do nothing now
     }
 
+
     @NotNull
-    public String getComponentName()
-    {
+    public String getComponentName() {
         return "Railways.ApplicationComponent";
     }
 }

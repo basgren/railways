@@ -4,36 +4,33 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ErrorInfoDlg extends JDialog
-{
+public class ErrorInfoDlg extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JLabel errorTitleLbl;
     private JTextPane errorText;
     private JScrollPane scrollPane;
 
-    public ErrorInfoDlg()
-    {
+
+    public ErrorInfoDlg() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        buttonOK.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        buttonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 onOK();
             }
         });
     }
 
-    private void onOK()
-    {
+
+    private void onOK() {
         dispose();
     }
 
-    public static void showError(String title, String text)
-    {
+
+    public static void showError(String title, String text) {
         ErrorInfoDlg dialog = new ErrorInfoDlg();
 
         dialog.setTitle("Routes update error");
@@ -44,19 +41,18 @@ public class ErrorInfoDlg extends JDialog
         dialog.setErrorInfo(title, text);
 
 
-
         dialog.setVisible(true);
     }
 
-    private void setErrorInfo(String title, String text)
-    {
+
+    private void setErrorInfo(String title, String text) {
         errorTitleLbl.setText(title);
         errorText.setText(text);
         errorText.setCaretPosition(0);
     }
 
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         ErrorInfoDlg dialog = new ErrorInfoDlg();
         dialog.pack();
         dialog.setVisible(true);

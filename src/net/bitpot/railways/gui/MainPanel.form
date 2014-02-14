@@ -15,7 +15,6 @@
         </border>
         <children>
           <grid id="23e59" binding="topPanel" layout-manager="FormLayout">
-            <rowspec value="center:d:grow"/>
             <rowspec value="center:max(p;4px):noGrow"/>
             <colspec value="fill:p:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
@@ -30,7 +29,7 @@
             <children>
               <component id="a98dd" class="javax.swing.JTextField" binding="pathFilterField">
                 <constraints>
-                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
@@ -41,7 +40,7 @@
               </component>
               <component id="22ee8" class="javax.swing.JLabel" binding="routesCounterLbl">
                 <constraints>
-                  <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties>
@@ -53,7 +52,7 @@
               </component>
               <grid id="aae23" binding="actionsPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -137,7 +136,7 @@
                           <forms/>
                         </constraints>
                         <properties>
-                          <minimumSize width="4" height="14"/>
+                          <minimumSize width="4" height="17"/>
                         </properties>
                       </component>
                       <component id="79496" class="javax.swing.JLabel" binding="routeLbl">

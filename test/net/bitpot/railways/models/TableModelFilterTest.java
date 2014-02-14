@@ -22,10 +22,10 @@ public class TableModelFilterTest
     {
         parser = new RailsRoutesParser();
         FileInputStream is = new FileInputStream("test/data/TableModelFilterTest.data.txt");
-        parser.parse(is);
+        RouteList routes = parser.parse(is);
 
         model = new RouteTableModel();
-        model.setRoutes(parser.getRoutes());
+        model.setRoutes(routes);
     }
 
 

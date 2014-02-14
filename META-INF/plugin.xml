@@ -92,13 +92,22 @@
         <toolWindow id="Routes"
                     icon="/net/bitpot/railways/icons/railways_toolwindow.png"
                     anchor="right"
-                    factoryClass="net.bitpot.railways.gui.RailwaysFactory"
-                    conditionClass="net.bitpot.railways.gui.ToolWindowCondition">
+                    factoryClass="net.bitpot.railways.routesView.RoutesViewToolWindowFactory"
+                    conditionClass="net.bitpot.railways.routesView.RoutesViewToolWindowCondition"/>
 
-        </toolWindow>
+        <!-- Register own ModuleRenderingFactory to render module names for Route objects in navigation popups
+            We set order="first" to insert extension BEFORE DefaultModuleRenderingFactory, which handles
+            all objects. -->
+        <moduleRendererFactory implementation="net.bitpot.railways.navigation.RouteModuleRendererFactory" order="first"/>
 
-        <projectService serviceInterface="net.bitpot.railways.gui.gotoPopup.GotoRouteConfiguration"
-                        serviceImplementation="net.bitpot.railways.gui.gotoPopup.GotoRouteConfiguration"/>
+        <projectService serviceInterface="net.bitpot.railways.routesView.RoutesView"
+                        serviceImplementation="net.bitpot.railways.routesView.RoutesView"/>
+
+        <projectService serviceInterface="net.bitpot.railways.navigation.ChooseByRouteRegistry"
+                        serviceImplementation="net.bitpot.railways.navigation.ChooseByRouteRegistry"/>
+
+        <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
+                        serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
     </extensions>
 
 

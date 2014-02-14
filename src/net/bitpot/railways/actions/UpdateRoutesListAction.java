@@ -6,42 +6,37 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.api.Railways;
 import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.routesView.RoutesManager;
+import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Updates the list of routes.
  */
-public class UpdateRoutesListAction extends AnAction
-{
+public class UpdateRoutesListAction extends AnAction {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(UpdateRoutesListAction.class.getName());
 
     // Presentation is stored to be used when asynchronous action icon needs to be updated.
     private static Presentation updateBtnPresentation = null;
 
+
     @Override
-    public void actionPerformed(AnActionEvent e)
-    {
-        //log.debug("Updating presentation: " + e.getPresentation());
-
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
-        if (project == null)
-            return;
+        if (project == null) return;
 
-        // Get API
-        Railways api = Railways.getAPI(project);
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null) return;
 
-        if (api.isRoutesUpdating())
-            api.cancelRoutesUpdate();
-        else
-        {
+        if (rm.isUpdating())
+            rm.cancelRoutesUpdate();
+        else {
             // Save all documents to make sure that routes will be collected using actual files.
             FileDocumentManager.getInstance().saveAllDocuments();
 
-            if (api.updateRouteList())
-            {
+            if (rm.updateRouteList()) {
                 updateBtnPresentation = e.getPresentation();
                 updatePresentation(project, e.getPresentation());
             }
@@ -49,34 +44,31 @@ public class UpdateRoutesListAction extends AnAction
     }
 
 
-    public static void updateIcon(@NotNull Project project)
-    {
+    public static void updateIcon(@NotNull Project project) {
         if (updateBtnPresentation != null)
             updatePresentation(project, updateBtnPresentation);
     }
 
 
-    private static void updatePresentation(@NotNull Project project, Presentation pres)
-    {
-        //log.debug("Updating presentation: " + pres);
-        Railways api = Railways.getAPI(project);
+    private static void updatePresentation(@NotNull Project project, Presentation pres) {
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null) return;
 
-        RailwaysActionsFields fields = api.getRailwaysActionsFields();
+        RailwaysActionsFields fields =
+                RoutesView.getInstance(project).getRailwaysActionsFields();
+
         boolean previousState = fields.previousRoutesUpdatingState;
-        boolean newState = api.isRoutesUpdating();
+        boolean newState = rm.isUpdating();
 
         // Update only when state is changed.
         if (previousState == newState)
             return;
 
-        if (newState)
-        {
+        if (newState) {
             pres.setIcon(RailwaysIcons.SUSPEND);
             pres.setText("Cancel routes list update");
             pres.setDescription("Stops updating the list of routes");
-        }
-        else
-        {
+        } else {
             pres.setIcon(RailwaysIcons.UPDATE);
             pres.setText("Update routes list");
             pres.setDescription("Update the list of routes");
@@ -102,11 +94,9 @@ public class UpdateRoutesListAction extends AnAction
      * @param e Carries information on the invocation place and data available
      */
     @Override
-    public void update(AnActionEvent e)
-    {
+    public void update(AnActionEvent e) {
         Project project = e.getProject();
-        if (project == null)
-            return;
+        if (project == null) return;
 
         updatePresentation(project, e.getPresentation());
     }

@@ -8,12 +8,12 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import net.bitpot.railways.api.Railways;
-import net.bitpot.railways.gui.gotoPopup.ChooseByNameRouteFilter;
-import net.bitpot.railways.gui.gotoPopup.GotoRouteConfiguration;
-import net.bitpot.railways.gui.gotoPopup.GotoRouteMethodModel;
+import net.bitpot.railways.navigation.ChooseByRouteNameFilter;
+import net.bitpot.railways.navigation.GotoRouteFilterConfiguration;
+import net.bitpot.railways.navigation.GotoRouteMethodModel;
 import net.bitpot.railways.models.routes.RequestType;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +24,7 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(GotoRouteMethodAction.class.getName());
+
 
     @Override
     protected void gotoActionPerformed(AnActionEvent e) {
@@ -39,15 +40,14 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
             @Nullable
             @Override
-            protected ChooseByNameFilter<RequestType> createFilter(@NotNull ChooseByNamePopup popup)
-            {
-                return new ChooseByNameRouteFilter(popup, model,
-                        GotoRouteConfiguration.getInstance(project), project);
+            protected ChooseByNameFilter<RequestType> createFilter(@NotNull ChooseByNamePopup popup) {
+                return new ChooseByRouteNameFilter(popup, model,
+                        GotoRouteFilterConfiguration.getInstance(project), project);
             }
 
+
             @Override
-            public void elementChosen(ChooseByNamePopup popup, Object element)
-            {
+            public void elementChosen(ChooseByNamePopup popup, Object element) {
                 if (element instanceof Route)
                     ((Route) element).navigate(true);
             }
@@ -56,13 +56,11 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
 
     @Override
-    public void update(AnActionEvent event)
-    {
+    public void update(AnActionEvent event) {
         Project project = event.getProject();
         if (project == null)
             return;
 
-        Railways api = Railways.getAPI(project);
-        event.getPresentation().setEnabled(api.isRailsApp());
+        event.getPresentation().setEnabled(RailwaysUtils.hasRailsModules(project));
     }
 }
