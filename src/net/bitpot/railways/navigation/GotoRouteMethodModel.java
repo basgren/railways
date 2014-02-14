@@ -1,31 +1,20 @@
 package net.bitpot.railways.navigation;
 
 import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
-import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import net.bitpot.railways.models.routes.RequestType;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.routes.RequestType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Basil Gren
  */
 public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType> {
 
-    private final int myMaxSize;
-
     public GotoRouteMethodModel(Project project) {
         super(project, ChooseByRouteRegistry.getInstance(project).getRouteContributors());
-
-        myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ?
-                Integer.MAX_VALUE :
-                WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
     }
 
 
@@ -96,11 +85,5 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType> {
     @Override
     public boolean willOpenEditor() {
         return true;
-    }
-
-
-    @Override
-    public ListCellRenderer getListCellRenderer() {
-        return new GotoFileCellRenderer(myMaxSize);
     }
 }

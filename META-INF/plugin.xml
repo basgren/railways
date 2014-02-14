@@ -95,6 +95,11 @@
                     factoryClass="net.bitpot.railways.routesView.impl.RoutesViewToolWindowFactory"
                     conditionClass="net.bitpot.railways.routesView.impl.RoutesViewToolWindowCondition"/>
 
+        <!-- Register own ModuleRenderingFactory to render module names for Route objects in navigation popups
+            We set order="first" to insert extension BEFORE DefaultModuleRenderingFactory, which handles
+            all objects. -->
+        <moduleRendererFactory implementation="net.bitpot.railways.navigation.RouteModuleRendererFactory" order="first"/>
+
         <projectService serviceInterface="net.bitpot.railways.routesView.RoutesView"
                         serviceImplementation="net.bitpot.railways.routesView.impl.RoutesViewImpl"/>
 
