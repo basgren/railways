@@ -325,7 +325,7 @@ public class MainPanel {
         myDataSource = dataSource;
 
         RouteList routes =
-                (dataSource != null) ? dataSource.getRoutesList() : null;
+                (dataSource != null) ? dataSource.getRoutesManager().getRouteList() : null;
         myTableModel.setRoutes(routes);
     }
 

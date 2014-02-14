@@ -6,9 +6,8 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.utils.RailwaysUtils;
-import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 

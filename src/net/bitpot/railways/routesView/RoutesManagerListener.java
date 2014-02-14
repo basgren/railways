@@ -1,8 +1,5 @@
 package net.bitpot.railways.routesView;
 
-/**
- *
- */
 public interface RoutesManagerListener {
 
     /**

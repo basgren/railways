@@ -3,9 +3,8 @@ package net.bitpot.railways.navigation;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.routesView.RoutesManager;
-import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -60,16 +60,6 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Sets request type for the route.
-     *
-     * @param value Request type.
-     */
-    public void setRequestType(@NotNull RequestType value) {
-        requestType = value;
-    }
-
-
-    /**
      * Sets request type by its string representation. Available values: "get", "post", "put', "delete".
      * All other values are treated as any request type.
      *

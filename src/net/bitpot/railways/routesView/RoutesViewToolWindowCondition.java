@@ -2,7 +2,6 @@ package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.utils.RailwaysUtils;
 
 /**

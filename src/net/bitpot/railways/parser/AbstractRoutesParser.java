@@ -20,15 +20,11 @@ public abstract class AbstractRoutesParser {
 
 
     public RouteList parseFile(String fileName) throws FileNotFoundException {
-        File f = new File(fileName);
-
-        return parseFile(f);
+        return parseFile(new File(fileName));
     }
 
 
     public RouteList parseFile(File f) throws FileNotFoundException {
-        FileInputStream is = new FileInputStream(f);
-
-        return parse(is);
+        return parse(new FileInputStream(f));
     }
 }

@@ -25,11 +25,6 @@ public class RailwaysProjectComp implements ProjectComponent {
     }
 
 
-    public Project getProject() {
-        return myProject;
-    }
-
-
     public void initComponent() { /* Do nothing now */ }
     public void disposeComponent() { /* Do nothing now */ }
 

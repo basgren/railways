@@ -4,7 +4,6 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import net.bitpot.railways.models.RouteList;
@@ -55,7 +54,6 @@ public class RoutesManager {
     private ProgressIndicator routesUpdateIndicator = null;
 
     private ProcessOutput output;
-    private Project project;
 
     private RailsRoutesParser parser;
     private RouteList routeList = new RouteList();
@@ -67,13 +65,11 @@ public class RoutesManager {
     /**
      * Constructor of RoutesManager.
      *
-     * @param project A project for which RoutesManager is created.
      * @param railsModule Rails module which routes will be served by
      *                    RoutesManager. Specified module should be a Rails
      *                    application module.
      */
-    public RoutesManager(Project project, Module railsModule) {
-        this.project = project;
+    public RoutesManager(Module railsModule) {
         parser = new RailsRoutesParser(railsModule);
         module = railsModule;
     }
@@ -208,7 +204,7 @@ public class RoutesManager {
     private class UpdateRoutesTask extends Task.Backgroundable {
 
         public UpdateRoutesTask() {
-            super(project, "Rake task", true);
+            super(module.getProject(), "Rake task", true);
 
             setCancelText("Cancel task");
         }

@@ -137,7 +137,7 @@ public class RoutesView implements Disposable {
                 (RailsApp.fromModule(module) == null))
             return;
 
-        RoutesViewPane pane = new RoutesViewPane(myProject, module);
+        RoutesViewPane pane = new RoutesViewPane(module);
 
         // Register pane content, so we'll have a combo-box instead tool window
         // title, and each item will represent a module.

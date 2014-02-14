@@ -1,5 +1,6 @@
 package net.bitpot.railways.gui;
 
+import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
@@ -15,7 +16,8 @@ import java.awt.*;
  *
  */
 public class RouteTableCellRenderer implements TableCellRenderer {
-    private static final SimpleTextAttributes HIGHLIGHTED_TEXT_ATTR = new SimpleTextAttributes(Color.YELLOW, Color.BLACK, null, SimpleTextAttributes.STYLE_PLAIN);
+    private static final SimpleTextAttributes HIGHLIGHTED_TEXT_ATTR =
+            new SimpleTextAttributes(JBColor.YELLOW, JBColor.BLACK, null, SimpleTextAttributes.STYLE_PLAIN);
 
     // Contains formatted text.
     private SimpleColoredComponent cellRenderer;

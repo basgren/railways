@@ -8,6 +8,7 @@ import com.intellij.ui.PopupHandler;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.Route;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 
 import javax.swing.*;
@@ -65,7 +66,7 @@ public class RoutesTable extends JTable implements CopyProvider, DataProvider {
      * @param dataContext Data context which action was invoked in.
      */
     @Override
-    public void performCopy(DataContext dataContext) {
+    public void performCopy(@NotNull DataContext dataContext) {
         if (getSelectedRow() < 0)
             return;
 
@@ -81,13 +82,13 @@ public class RoutesTable extends JTable implements CopyProvider, DataProvider {
      * @return True or false.
      */
     @Override
-    public boolean isCopyEnabled(DataContext dataContext) {
+    public boolean isCopyEnabled(@NotNull DataContext dataContext) {
         return getSelectedRowCount() > 0;
     }
 
 
     @Override
-    public boolean isCopyVisible(DataContext dataContext) {
+    public boolean isCopyVisible(@NotNull DataContext dataContext) {
         return true;
     }
 
