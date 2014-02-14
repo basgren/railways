@@ -10,6 +10,6 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 public class RoutesViewToolWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-        ((RoutesViewImpl) RoutesView.getInstance(project)).initToolWindow(toolWindow);
+        RoutesView.getInstance(project).initToolWindow(toolWindow);
     }
 }

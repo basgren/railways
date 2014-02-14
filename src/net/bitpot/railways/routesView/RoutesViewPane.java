@@ -11,8 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 /**
- * @author Basil Gren
- *         on 08.02.14.
+ * Stores data for a module panel in Routes tool window.
  */
 public class RoutesViewPane {
 

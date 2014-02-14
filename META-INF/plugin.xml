@@ -101,7 +101,7 @@
         <moduleRendererFactory implementation="net.bitpot.railways.navigation.RouteModuleRendererFactory" order="first"/>
 
         <projectService serviceInterface="net.bitpot.railways.routesView.RoutesView"
-                        serviceImplementation="net.bitpot.railways.routesView.RoutesViewImpl"/>
+                        serviceImplementation="net.bitpot.railways.routesView.RoutesView"/>
 
         <projectService serviceInterface="net.bitpot.railways.navigation.ChooseByRouteRegistry"
                         serviceImplementation="net.bitpot.railways.navigation.ChooseByRouteRegistry"/>
