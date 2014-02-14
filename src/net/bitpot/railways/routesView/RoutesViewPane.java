@@ -1,6 +1,7 @@
 package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.ui.content.Content;
 import net.bitpot.railways.gui.RailwaysIcons;
 
@@ -50,7 +51,7 @@ public class RoutesViewPane {
 
 
     public Icon getIcon() {
-        return RailwaysIcons.RUBY_ON_RAILS;
+        return ModuleType.get(myModule).getIcon();
     }
 
 
