@@ -5,13 +5,12 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.ui.PopupHandler;
-import net.bitpot.railways.models.RouteTableModel;
+import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
@@ -25,7 +24,7 @@ import java.awt.event.MouseEvent;
  * 2. Implement CopyProvider interface (it also could be done in private class) which is responsible for
  * changing Copy action status and copying custom information.
  */
-public class RoutesTable extends JTable implements CopyProvider, DataProvider {
+public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RoutesTable.class.getName());
 

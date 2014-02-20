@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
@@ -42,7 +43,7 @@ public class MainPanel {
     private RouteTableModel myTableModel;
 
     private JPanel rootPanel;
-    private JTable routesTable;
+    private JBTable routesTable;
     private JTextField pathFilterField;
     private JPanel cardsPanel;
     private HyperlinkLabel showErrorLink;

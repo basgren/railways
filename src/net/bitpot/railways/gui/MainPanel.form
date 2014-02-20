@@ -176,9 +176,14 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="843c" class="javax.swing.JTable" binding="routesTable" custom-create="true">
+                      <component id="67092" class="com.intellij.ui.table.JBTable" binding="routesTable" custom-create="true">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <rowMargin value="0"/>
+                          <showHorizontalLines value="true"/>
+                          <showVerticalLines value="true"/>
+                          <striped value="false"/>
+                        </properties>
                       </component>
                     </children>
                   </scrollpane>
