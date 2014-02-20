@@ -5,7 +5,7 @@
 
 
     <!-- Load plugin version from plugin.xml. -->
-    <xmlproperty file="META-INF/plugin.xml" />
+    <xmlproperty file="resources/plugin.xml" />
     <property name="plugin.version" value="${idea-plugin.version}" />
 
 
@@ -55,7 +55,7 @@
 
     <!-- Modules -->
     <property name="output.dir" value="${basedir}/out"/>
-    <property name="dist.dir" value="${basedir}/release"/>
+    <property name="release.dir" value="${basedir}/release"/>
 
     <path id="plugin.sourcepath">
         <dirset dir="${basedir}">
@@ -89,15 +89,32 @@
     </target>
 
 
-    <!-- Build archive for plugin -->
+    <!-- Build plugin jar -->
     <target name="plugin.build.jar" depends="compile.plugin"
             description="Build plugin archive">
 
-        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${release.dir}"/>
 
-        <jar destfile="${dist.dir}/${ant.project.name}-${plugin.version}/${plugin.jar_name}.jar" duplicate="preserve">
-            <zipfileset dir="${basedir}/out"/>
-            <zipfileset file="${basedir}/META-INF/plugin.xml" prefix="META-INF"/>
+        <jar destfile="${release.dir}/${ant.project.name}-${plugin.version}/${plugin.jar_name}.jar" duplicate="preserve">
+            <zipfileset dir="${output.dir}"/>
+            <zipfileset file="${basedir}/resources/plugin.xml" prefix="META-INF"/>
+            <manifest>
+                <attribute name="Created-By" value="IntelliJ IDEA"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Build plugin jar for IntelliJ IDEA -->
+    <target name="plugin.build.idea.jar" depends="compile.plugin"
+            description="Build plugin archive for IntelliJ IDEA Ultimate">
+
+        <mkdir dir="${release.dir}"/>
+        <copyfile src="${basedir}/resources/plugin.idea.xml" dest="${output.dir}/plugin.xml"/>
+
+        <jar destfile="${release.dir}/${ant.project.name}-${plugin.version}/${plugin.jar_name}-idea.jar" duplicate="preserve">
+            <zipfileset dir="${output.dir}"/>
+            <zipfileset file="${output.dir}/plugin.xml" prefix="META-INF"/>
             <manifest>
                 <attribute name="Created-By" value="IntelliJ IDEA"/>
                 <attribute name="Manifest-Version" value="1.0"/>
@@ -109,7 +126,7 @@
         <delete dir="${output.dir}"/>
     </target>
 
-    <target name="build.plugin" depends="init, clean, plugin.build.jar" description="build plugin"/>
+    <target name="build.plugin" depends="init, clean, plugin.build.jar, plugin.build.idea.jar" description="build plugin"/>
 
     <target name="all" depends="build.plugin" description="build all"/>
 </project>

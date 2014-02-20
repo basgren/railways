@@ -1,8 +1,13 @@
 <idea-plugin version="2">
-    <name>Railways</name>
+    <name>Railways for IDEA</name>
     <category>Navigation</category>
     <description><![CDATA[
-    Railways is a plugin for RubyMine that makes navigation between route actions much quicker.<br/>
+    This is a separate release of RubyMine Railways plugin that is compatible
+    only with IntelliJ IDEA Ultimate with Ruby plugin installed.<br/>
+
+    Railways plugin makes navigation between Ruby On Rails route actions much
+    quicker.<br/>
+
     Features:
     <ul>
     <li>Separate Routes panel with list of all routes of Ruby On Rails project</li>
@@ -10,7 +15,9 @@
     <li>"Goto route action" popup available by pressing <strong>Ctrl+Shift+G</strong> in Ruby On Rails projects</li>
     </ul>
     <br/>
-    Please feel free to report a bug or a suggestion on the website or via provided e-mail.
+
+    Please feel free to report a bug or a suggestion on
+    <a href="https://github.com/basgren/railways">GitHub plugin page</a>.
     ]]></description>
 
     <version>0.6.1</version>
@@ -73,7 +80,8 @@
     <idea-version since-build="113.20"/>
 
 
-    <depends>com.intellij.modules.ruby</depends>
+    <depends>com.intellij.modules.ultimate</depends>
+    <depends>org.jetbrains.plugins.ruby</depends>
 
 
     <application-components>
