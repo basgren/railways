@@ -3,7 +3,6 @@ package net.bitpot.railways.rails;
 
 import net.bitpot.railways.parser.route.RouteParser;
 import net.bitpot.railways.parser.route.RouteToken;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -32,19 +31,16 @@ public class RouteParseTest
     @Parameterized.Parameters
     public static Collection<Object[]> createParseLineData() {
         return Arrays.asList(new Object[][] {
-            {
-                "/users",
-                new RouteToken[] {
-                    token("/users", RouteToken.REGULAR)
+                {
+                    "/users", new RouteToken[] {
+                        token(RouteToken.PLAIN, "/users")
+                    }
                 }
-            }
         });
     }
 
-    private static RouteToken token(String text, int tokenType) {
-        RouteToken token = new RouteToken();
-        token.text = text;
-        token.tokenType = tokenType;
+    private static RouteToken token(int tokenType, String text) {
+        RouteToken token = new RouteToken(tokenType, text);
 
         return token;
     }
