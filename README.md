@@ -8,7 +8,7 @@ Features:
 
 * Separate Routes panel with list of all routes of Ruby On Rails project
 * Route filter for quick filtering by route path, controller/action or route name
-* "Goto route action" popup available by pressing Ctrl + Shift + G in
+* "Goto route action" popup available by pressing **Ctrl + Shift + G** in
   Ruby On Rails projects
 
 
@@ -36,14 +36,14 @@ Features:
 
 ## Building the Plugin
 
-1. Copy and rename file build.properties.example to build.properties.
+1. Copy and rename file `build.properties.example` to `build.properties`.
 
-2. Edit this file and set its properties to point to your JDK, IntelliJ IDEA
-   and RubyMine directories (see comments in build.properties).
+2. Edit this file and edit properties to match your environment (see comments
+   in `build.properties` file).
 
 3. Open Ant tool window in IntelliJ IDEA and run 'all' task. Plugin jars will
-   be placed into `release/railways-[version]/` directory. There are two versions
-   of plugin are built: `railways.jar` - for RubyMine and `railways-idea.jar` -
-   for IntelliJ IDEA.
+   be placed into `release/railways-[version]/` directory. There are two
+   versions of plugin: `railways.jar` for RubyMine and `railways-idea.jar` for
+   IntelliJ IDEA.
 
 
