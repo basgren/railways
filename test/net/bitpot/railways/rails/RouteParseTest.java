@@ -31,9 +31,39 @@ public class RouteParseTest
     @Parameterized.Parameters
     public static Collection<Object[]> createParseLineData() {
         return Arrays.asList(new Object[][] {
-                {
-                    "/users", new RouteToken[] {
+                { "/users", new RouteToken[] {
                         token(RouteToken.PLAIN, "/users")
+                    }
+                },
+
+                { "/users/:id", new RouteToken[] {
+                        token(RouteToken.PLAIN, "/users/"),
+                        token(RouteToken.PARAMETER, ":id")
+                    }
+                },
+
+                { "/users/:id/edit", new RouteToken[] {
+                        token(RouteToken.PLAIN, "/users/"),
+                        token(RouteToken.PARAMETER, ":id"),
+                        token(RouteToken.PLAIN, "/edit"),
+                    }
+                },
+
+                { "/users(/list)", new RouteToken[] {
+                        token(RouteToken.PLAIN, "/users"),
+                        token(RouteToken.OPTIONAL, "(/list)")
+                    }
+                },
+
+                { "/users(.:format)", new RouteToken[] {
+                        token(RouteToken.PLAIN, "/users"),
+                        token(RouteToken.OPTIONAL, "(.:format)")
+                    }
+                },
+
+                { "/users(/list(/recent))", new RouteToken[] {
+                        token(RouteToken.PLAIN, "/users"),
+                        token(RouteToken.OPTIONAL, "(/list(/recent))")
                     }
                 }
         });
