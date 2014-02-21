@@ -7,6 +7,7 @@
     <!-- Load plugin version from plugin.xml. -->
     <xmlproperty file="resources/plugin.xml" />
     <property name="plugin.version" value="${idea-plugin.version}" />
+    <property name="plugin.jar_name" value="railways" />
 
 
     <!-- Compiler options -->

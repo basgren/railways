@@ -20,10 +20,10 @@ Features:
 
 3. Set up a JDK if it's not set (File > Project Structure > SDKs > Add New JDK)
 
-4. Set up IntelliJ plugin SDK. You should have RubyMine installed.
-   Go to File > Project Structure > SDKs > Add new IntelliJ IDEA Plugin SDK
-   and select path to your RubyMine installation. When you are asked to select
-   JDK, specify JDK from previous step.
+4. Set up IntelliJ plugin SDK. You should have RubyMine 6 installed.
+   Go to File > Project Structure > SDKs > Add new IntelliJ IDEA Plugin SDK,
+   name it 'RubyMine 6 SDK' and select path to your RubyMine 6 installation.
+   When you are asked to select JDK, specify JDK from previous step.
 
 5. Select a project SDK for your project using "File > Project Structure >
    Project > Project SDK". Choose the plugin SDK you have created at the
@@ -32,4 +32,18 @@ Features:
 6. Use "Run > Run 'Railways'" menu to test plugin inside RubyMine.
 
 7. Use "Run > Run 'All tests'" menu to run all tests for Railways.
+
+
+## Building the Plugin
+
+1. Copy and rename file build.properties.example to build.properties.
+
+2. Edit this file and set its properties to point to your JDK, IntelliJ IDEA
+   and RubyMine directories (see comments in build.properties).
+
+3. Open Ant tool window in IntelliJ IDEA and run 'all' task. Plugin jars will
+   be placed into release/railways-[version]/ directory. There are two versions
+   of plugin are built: railways.jar - for RubyMine and railways-idea.jar - for
+   IntelliJ IDEA.
+
 
