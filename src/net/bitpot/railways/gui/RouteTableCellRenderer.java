@@ -19,6 +19,13 @@ public class RouteTableCellRenderer implements TableCellRenderer {
     private static final SimpleTextAttributes HIGHLIGHTED_TEXT_ATTR =
             new SimpleTextAttributes(JBColor.YELLOW, JBColor.BLACK, null, SimpleTextAttributes.STYLE_PLAIN);
 
+    private static final SimpleTextAttributes QUERY_PARAM_ATTR =
+            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBColor.MAGENTA);
+
+    private static final SimpleTextAttributes OPTIONAL_TOKEN_ATTR =
+            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBColor.GRAY);
+
+
     // Contains formatted text.
     private SimpleColoredComponent cellRenderer;
     private RoutesFilter filter;
