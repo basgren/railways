@@ -42,13 +42,7 @@ public class RouteTableCellRenderer implements TableCellRenderer {
         if (value == null)
             return cellRenderer;
 
-        if (value instanceof Route) {
-            text = ((Route) value).getPath();
-            cellRenderer.setIcon(((Route) value).getIcon());
-        } else {
-            text = value.toString();
-            cellRenderer.setIcon(null);
-        }
+        text = value.toString();
 
         if (isSelected) {
             /*
@@ -101,5 +95,4 @@ public class RouteTableCellRenderer implements TableCellRenderer {
 
         cellRenderer.append(value.substring(fromIndex), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
-
 }
