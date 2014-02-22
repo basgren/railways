@@ -75,6 +75,15 @@ public class RouteTableModel extends AbstractTableModel {
     }
 
 
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        if (columnIndex == 0)
+            return Route.class;
+
+        return super.getColumnClass(columnIndex);
+    }
+
+
     public RoutesFilter getFilter() {
         return filter;
     }

@@ -93,8 +93,12 @@ public class MainPanel {
             }
         });
 
+        routesTable.setDefaultRenderer(Route.class,
+                new RouteCellRenderer());
+
         routesTable.setDefaultRenderer(Object.class,
                 new RouteTableCellRenderer(myTableModel.getFilter()));
+
         routesTable.setRowHeight(20);
 
         cardLayout = (CardLayout) (cardsPanel.getLayout());
