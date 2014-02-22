@@ -17,7 +17,13 @@ public class RouteToken {
 
 
     public RouteToken(int tokenType, String text) {
+        this(tokenType, text, 0, 0);
+    }
+
+    public RouteToken(int tokenType, String text, int startPos, int endPos) {
         this.tokenType = tokenType;
         this.text = text;
+        this.startPos = startPos;
+        this.endPos = endPos;
     }
 }

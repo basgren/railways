@@ -32,53 +32,59 @@ public class RouteParseTest
     public static Collection<Object[]> createParseLineData() {
         return Arrays.asList(new Object[][] {
                 { "/users", new RouteToken[] {
-                        token(RouteToken.PLAIN, "/users")
+                        token_plain("/users")
                     }
                 },
 
                 { "/users/:id", new RouteToken[] {
-                        token(RouteToken.PLAIN, "/users/"),
-                        token(RouteToken.PARAMETER, ":id")
+                        token_plain("/users/"), token_param(":id")
                     }
                 },
 
                 { "/users/:id/edit", new RouteToken[] {
-                        token(RouteToken.PLAIN, "/users/"),
-                        token(RouteToken.PARAMETER, ":id"),
-                        token(RouteToken.PLAIN, "/edit"),
+                        token_plain("/users/"), token_param(":id"), token_plain("/edit"),
                     }
                 },
 
                 { "/users(/list)", new RouteToken[] {
-                        token(RouteToken.PLAIN, "/users"),
-                        token(RouteToken.OPTIONAL, "(/list)")
+                        token_plain("/users"), token_optional("(/list)")
                     }
                 },
 
                 { "/users(.:format)", new RouteToken[] {
-                        token(RouteToken.PLAIN, "/users"),
-                        token(RouteToken.OPTIONAL, "(.:format)")
+                        token_plain("/users"), token_optional("(.:format)")
                     }
                 },
 
                 { "/users(/list(/recent))", new RouteToken[] {
-                        token(RouteToken.PLAIN, "/users"),
-                        token(RouteToken.OPTIONAL, "(/list(/recent))")
+                        token_plain("/users"), token_optional("(/list(/recent))")
+                    }
+                },
+
+                // Unbalanced (invalid) route should also be correctly parsed,
+                // but all tokens should be PLAIN
+                { "/users(/list(/recent)", new RouteToken[] {
+                        token_plain("/users"), token_plain("(/list(/recent)")
                     }
                 }
         });
     }
 
-    private static RouteToken token(int tokenType, String text) {
-        RouteToken token = new RouteToken(tokenType, text);
+    private static RouteToken token_plain(String text) {
+        return new RouteToken(RouteToken.PLAIN, text);
+    }
 
-        return token;
+    private static RouteToken token_param(String text) {
+        return new RouteToken(RouteToken.PARAMETER, text);
+    }
+
+    private static RouteToken token_optional(String text) {
+        return new RouteToken(RouteToken.OPTIONAL, text);
     }
 
 
     @Test
-    public void testParseRoute()
-    {
+    public void testParseRoute() {
         RouteToken[] tokens = RouteParser.parseRoute(myRouteStr);
 
         assertEquals(tokens.length, myTokens.length);
@@ -87,8 +93,8 @@ public class RouteParseTest
             RouteToken myToken = myTokens[i];
             RouteToken token = tokens[i];
 
-            assertEquals(myToken.tokenType, token.tokenType);
-            assertEquals(myToken.text, token.text);
+            assertTrue("Token types are the same", myToken.tokenType == token.tokenType);
+            assertTrue("Token text are the same",  myToken.text.equals(token.text));
         }
     }
 }

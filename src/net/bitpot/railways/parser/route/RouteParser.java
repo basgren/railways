@@ -14,8 +14,9 @@ import java.util.regex.Pattern;
  */
 public class RouteParser {
 
-
     private static final Pattern PLAIN_URI = Pattern.compile("^[^(:]+");
+    private static final Pattern PARAMETER = Pattern.compile("^:[a-zA-Z_]+");
+
 
     /**
      * Parses Rails route and returns array of tokens.
@@ -25,7 +26,7 @@ public class RouteParser {
      */
     @NotNull
     public static RouteToken[] parseRoute(String route) {
-        RouteToken token = null;
+        RouteToken token;
         ArrayList<RouteToken> tokens = new ArrayList<>();
         int pos = 0;
 
@@ -40,18 +41,75 @@ public class RouteParser {
 
 
     private static RouteToken parseToken(String routePart, int startPos) {
-        RouteToken token = null;
+        RouteToken token;
 
-        Matcher matcher = PLAIN_URI.matcher(routePart);
-        matcher.region(startPos, routePart.length());
+        token = parseOptionalPart(routePart, startPos);
 
-        if (matcher.matches()) {
-            token = new RouteToken(RouteToken.PLAIN, matcher.group());
-            token.startPos = startPos;
-            token.endPos = startPos + matcher.group().length();
-        }
+        if (token == null)
+            token = parsePlainToken(routePart, startPos);
+
+        if (token == null)
+            token = parseSymbolToken(routePart, startPos);
 
         return token;
     }
 
+
+    private static RouteToken parsePlainToken(String routePart, int startPos) {
+        RouteToken token = null;
+
+        // Firstly try to find text
+        Matcher matcher = PLAIN_URI.matcher(routePart);
+        matcher.region(startPos, routePart.length());
+
+        if (matcher.find())
+            token = new RouteToken(RouteToken.PLAIN, matcher.group(),
+                    matcher.start(), matcher.end());
+
+        return token;
+    }
+
+
+    private static RouteToken parseSymbolToken(String routePart, int startPos) {
+        RouteToken token = null;
+
+        Matcher matcher = PARAMETER.matcher(routePart);
+        matcher.region(startPos, routePart.length());
+
+        if (matcher.find())
+            token = new RouteToken(RouteToken.PARAMETER, matcher.group(),
+                    matcher.start(), matcher.end());
+
+        return token;
+    }
+
+
+    private static RouteToken parseOptionalPart(String routePart, int startPos) {
+        if (startPos >= routePart.length() || routePart.charAt(startPos) != '(')
+            return null;
+
+        // As we check that our string should start from '(', we count that we
+        // already have one opening bracket.
+        int openedCount = 0;
+        boolean isBalanced = false;
+        int endPos = startPos;
+
+        while (endPos < routePart.length()) {
+            char c = routePart.charAt(endPos);
+
+            if (c == ')')      openedCount--;
+            else if (c == '(') openedCount++;
+
+            endPos++;
+
+            if (openedCount == 0) {
+                isBalanced = true;
+                break;
+            }
+        }
+
+        return new RouteToken(
+                isBalanced ? RouteToken.OPTIONAL : RouteToken.PLAIN,
+                routePart.substring(startPos, endPos), startPos, endPos);
+    }
 }
