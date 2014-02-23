@@ -1,6 +1,7 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 
@@ -14,27 +15,40 @@ import java.awt.*;
 public abstract class RailwaysColors {
 
     public static Color HIGHLIGHT_BG_COLOR =
-            EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES.getDefaultAttributes().getBackgroundColor();
-    public static Color PARAM_TOKEN_COLOR = JBColor.MAGENTA;
+            EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES.getDefaultAttributes()
+                    .getBackgroundColor();
+
+    public static Color PARAM_TOKEN_COLOR = schemeColor("RUBY_SYMBOL");
+
     public static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
 
-    public static final SimpleTextAttributes REGULAR_HL_ATTR =
-            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, null,
-                    null, SimpleTextAttributes.STYLE_PLAIN);
 
+    // Text attributes
+
+    public static final SimpleTextAttributes REGULAR_HL_ATTR =
+            plainTextAttr(null, HIGHLIGHT_BG_COLOR);
 
     public static final SimpleTextAttributes PARAM_TOKEN_ATTR =
-            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN,
-                    PARAM_TOKEN_COLOR);
+            plainTextAttr(PARAM_TOKEN_COLOR, null);
 
     public static final SimpleTextAttributes PARAM_TOKEN_HL_ATTR =
-            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, PARAM_TOKEN_COLOR,
-                    null, SimpleTextAttributes.STYLE_PLAIN);
+            plainTextAttr(PARAM_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
 
     public static final SimpleTextAttributes OPTIONAL_TOKEN_ATTR =
-            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, OPTIONAL_TOKEN_COLOR);
+            plainTextAttr(OPTIONAL_TOKEN_COLOR, null);
 
     public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
-            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, OPTIONAL_TOKEN_COLOR,
-                    null, SimpleTextAttributes.STYLE_PLAIN);
+            plainTextAttr(OPTIONAL_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
+
+
+    private static Color schemeColor(String name) {
+        return TextAttributesKey.find(name)
+                .getDefaultAttributes().getForegroundColor();
+    }
+
+
+    private static SimpleTextAttributes plainTextAttr(Color fgColor, Color bgColor) {
+        return new SimpleTextAttributes(bgColor, fgColor,
+                null, SimpleTextAttributes.STYLE_PLAIN);
+    }
 }
