@@ -14,6 +14,7 @@ public class RouteToken {
     public int tokenType = PLAIN;
     public int startPos;
     public int endPos;
+    public boolean isHighlighted = false;
 
 
     public RouteToken(int tokenType, String text) {
