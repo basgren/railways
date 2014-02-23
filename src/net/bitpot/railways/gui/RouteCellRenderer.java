@@ -1,5 +1,6 @@
 package net.bitpot.railways.gui;
 
+import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RoutesFilter;
@@ -13,23 +14,7 @@ import javax.swing.*;
  * @author Basil Gren
  *         on 21.02.14.
  */
-public class RouteCellRenderer extends HighlightingTableCellRenderer {
-
-
-    private static final SimpleTextAttributes PARAM_TOKEN_ATTR =
-            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, PARAM_TOKEN_COLOR);
-
-    private static final SimpleTextAttributes PARAM_TOKEN_HL_ATTR =
-            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, PARAM_TOKEN_COLOR,
-                    null, SimpleTextAttributes.STYLE_PLAIN);
-
-    private static final SimpleTextAttributes OPTIONAL_TOKEN_ATTR =
-            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, OPTIONAL_TOKEN_COLOR);
-
-    private static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
-            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, OPTIONAL_TOKEN_COLOR,
-                    null, SimpleTextAttributes.STYLE_PLAIN);
-
+public class RouteCellRenderer extends ColoredTableCellRenderer {
 
     private RoutesFilter filter;
 
@@ -57,13 +42,19 @@ public class RouteCellRenderer extends HighlightingTableCellRenderer {
 
         switch(token.tokenType) {
             case RouteToken.PARAMETER:
-                return token.isHighlighted ? PARAM_TOKEN_HL_ATTR : PARAM_TOKEN_ATTR;
+                return token.isHighlighted ?
+                        RailwaysColors.PARAM_TOKEN_HL_ATTR :
+                        RailwaysColors.PARAM_TOKEN_ATTR;
 
             case RouteToken.OPTIONAL:
-                return token.isHighlighted ? OPTIONAL_TOKEN_HL_ATTR : OPTIONAL_TOKEN_ATTR;
+                return token.isHighlighted ?
+                        RailwaysColors.OPTIONAL_TOKEN_HL_ATTR :
+                        RailwaysColors.OPTIONAL_TOKEN_ATTR;
 
             default:
-                return token.isHighlighted ? REGULAR_HL_ATTR : SimpleTextAttributes.REGULAR_ATTRIBUTES;
+                return token.isHighlighted ?
+                        RailwaysColors.REGULAR_HL_ATTR :
+                        SimpleTextAttributes.REGULAR_ATTRIBUTES;
         }
     }
 }

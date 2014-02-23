@@ -1,5 +1,6 @@
 package net.bitpot.railways.gui;
 
+import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.models.RoutesFilter;
@@ -10,7 +11,7 @@ import javax.swing.*;
 /**
  *
  */
-public class RouteTableCellRenderer extends HighlightingTableCellRenderer {
+public class RouteTableCellRenderer extends ColoredTableCellRenderer {
 
     // Contains formatted text.
     private RoutesFilter filter;
@@ -50,8 +51,9 @@ public class RouteTableCellRenderer extends HighlightingTableCellRenderer {
         while ((pos = lowCaseValue.indexOf(highlight, fromIndex)) >= 0) {
             append(value.substring(fromIndex, pos), SimpleTextAttributes.REGULAR_ATTRIBUTES);
 
-            // Highlighted part must be taken from the value as its character case can differ from highlight parameter.
-            append(value.substring(pos, pos + highlight.length()), REGULAR_HL_ATTR);
+            // Highlighted part must be taken from the value as its character
+            // case can differ from highlight parameter.
+            append(value.substring(pos, pos + highlight.length()), RailwaysColors.REGULAR_HL_ATTR);
 
             fromIndex = pos + highlight.length();
         }
