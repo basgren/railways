@@ -15,8 +15,6 @@ public class RouteList extends Vector<Route> {
     // This hash is used for quick lookup in navigation dialogs.
     private HashMap<String, ArrayList<Route>> namesIndex = new HashMap<String, ArrayList<Route>>();
 
-    // Nothing special now.
-
 
     @Override
     public void clear() {
@@ -54,7 +52,7 @@ public class RouteList extends Vector<Route> {
             // As we do not use null as value, we can skip checking existence of the key
             ArrayList<Route> value = namesIndex.get(route.getName());
             if (value == null) {
-                value = new ArrayList<Route>();
+                value = new ArrayList<>();
                 namesIndex.put(route.getName(), value);
             }
 

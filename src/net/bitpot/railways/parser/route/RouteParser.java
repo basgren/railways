@@ -32,9 +32,13 @@ public class RouteParser {
     @NotNull
     public static RouteToken[] parseAndHighlight(String routePath, String highlightText) {
         RouteToken[] tokens = parseRoute(routePath);
+        highlightText = highlightText.trim();
 
         // First, find all substring regions to be highlighted.
         int[][] regions = findSubstringRegions(routePath, highlightText);
+        if (regions == null)
+            return tokens;
+
         ArrayList<RouteToken> result = new ArrayList<>();
 
         // Now go through every RouteToken and break it down if it intersects
@@ -77,9 +81,14 @@ public class RouteParser {
      *
      * @param s String which will be searched for substring.
      * @param substr Substring to find.
-     * @return Array of substring regions (begin and end offsets).
+     * @return Array of substring regions (begin and end offsets) or null if
+     *         specified substring is empty.
      */
     private static int[][] findSubstringRegions(String s, String substr) {
+        // Prevent infinite loop
+        if (substr.equals(""))
+            return null;
+
         int lastIndex = 0, regionEnd;
         ArrayList<int[]> regions = new ArrayList<>();
 
@@ -97,9 +106,9 @@ public class RouteParser {
     }
 
 
-    private static Collection<RouteToken> breakdownToken(RouteToken token, int[][] highlightedRegions) {
+    private static Collection<RouteToken> breakdownToken(RouteToken token, @NotNull int[][] highlightedRegions) {
         ArrayList<RouteToken> result = new ArrayList<>();
-        int lastPos = 0, partSize, intsBegin, intsEnd = 0;
+        int lastPos = 0, partSize;
 
         // We assume that regions are sorted.
         for(int[] region: highlightedRegions) {
@@ -113,8 +122,8 @@ public class RouteParser {
             int startPos = token.startPos + lastPos;
 
             // Get intersection of token and region
-            intsBegin = Math.max(startPos, region[0]);
-            intsEnd = Math.min(token.endPos, region[1]);
+            int intsBegin = Math.max(startPos, region[0]);
+            int intsEnd = Math.min(token.endPos, region[1]);
 
             // Now breakdown token into parts.
             // 1st part - between token begin and intersection begin
@@ -140,11 +149,11 @@ public class RouteParser {
         }
 
         // the last part - between intersection and token ends, if it's necessary
-        partSize = token.endPos - intsEnd;
+        partSize = token.text.length() - lastPos;
         if (partSize > 0) {
             result.add(new RouteToken(token.tokenType,
                     token.text.substring(lastPos, lastPos + partSize),
-                    intsEnd, token.endPos));
+                    token.startPos + lastPos, token.endPos));
         }
 
         return result;

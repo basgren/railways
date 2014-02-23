@@ -94,7 +94,7 @@ public class MainPanel {
         });
 
         routesTable.setDefaultRenderer(Route.class,
-                new RouteCellRenderer());
+                new RouteCellRenderer(myTableModel.getFilter()));
 
         routesTable.setDefaultRenderer(Object.class,
                 new RouteTableCellRenderer(myTableModel.getFilter()));

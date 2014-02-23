@@ -33,6 +33,20 @@ public class RouteParserTest
         assertTokenArraysEqual(expectedTokens, tokens);
     }
 
+    @Test
+    public void testParseAndHighlightWhenOneTokenHasNoHighlightedText() {
+        RouteToken[] tokens = RouteParser.parseAndHighlight("/tasks/:id", "t");
+
+        RouteToken[] expectedTokens = new RouteToken[] {
+                token_plain("/", false),
+                token_plain("t", true),
+                token_plain("asks/", false),
+                token_param(":id", false)
+        };
+
+        assertTokenArraysEqual(expectedTokens, tokens);
+    }
+
 
     @Test
     public void testParseAndHighlightMultipleRegionsInSingleToken() {
@@ -58,6 +72,31 @@ public class RouteParserTest
                 token_plain("t/", true),
                 token_param(":te", true),
                 token_param("st", false)
+        };
+
+        assertTokenArraysEqual(expectedTokens, tokens);
+    }
+
+
+    @Test
+    public void testParseAndHighlightWithEmptySubstring() {
+        RouteToken[] tokens = RouteParser.parseAndHighlight("/test/:test", "");
+
+        RouteToken[] expectedTokens = new RouteToken[] {
+                token_plain("/test/", false),
+                token_param(":test", false)
+        };
+
+        assertTokenArraysEqual(expectedTokens, tokens);
+    }
+
+    @Test
+    public void testParseAndHighlightWithBlankSubstring() {
+        RouteToken[] tokens = RouteParser.parseAndHighlight("/test/:test", "   ");
+
+        RouteToken[] expectedTokens = new RouteToken[] {
+                token_plain("/test/", false),
+                token_param(":test", false)
         };
 
         assertTokenArraysEqual(expectedTokens, tokens);
