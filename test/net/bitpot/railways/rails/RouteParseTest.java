@@ -20,11 +20,11 @@ public class RouteParseTest
 {
 
     private String myRouteStr;
-    private RouteToken[] myTokens;
+    private RouteToken[] expectedTokens;
 
     public RouteParseTest(String routeStr, RouteToken[] tokens) {
         myRouteStr = routeStr;
-        myTokens = tokens;
+        expectedTokens = tokens;
     }
 
 
@@ -87,14 +87,18 @@ public class RouteParseTest
     public void testParseRoute() {
         RouteToken[] tokens = RouteParser.parseRoute(myRouteStr);
 
-        assertEquals(tokens.length, myTokens.length);
+        assertEquals("Token lists have the same length",
+                expectedTokens.length, tokens.length);
 
         for(int i = 0; i < tokens.length; i++) {
-            RouteToken myToken = myTokens[i];
+            RouteToken expectedToken = expectedTokens[i];
             RouteToken token = tokens[i];
 
-            assertTrue("Token types are the same", myToken.tokenType == token.tokenType);
-            assertTrue("Token text are the same",  myToken.text.equals(token.text));
+            assertEquals("Token types are the same",
+                    expectedToken.tokenType, token.tokenType);
+
+            assertEquals("Token text are the same",
+                    expectedToken.text, token.text);
         }
     }
 }
