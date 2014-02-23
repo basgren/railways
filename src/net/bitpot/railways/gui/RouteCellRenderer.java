@@ -1,7 +1,5 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.ui.ColoredTableCellRenderer;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RoutesFilter;
@@ -10,17 +8,13 @@ import net.bitpot.railways.parser.route.RouteToken;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author Basil Gren
  *         on 21.02.14.
  */
-public class RouteCellRenderer extends ColoredTableCellRenderer {
+public class RouteCellRenderer extends HighlightingTableCellRenderer {
 
-    private static Color HIGHLIGHT_BG_COLOR = JBColor.GREEN.darker();
-    private static Color PARAM_TOKEN_COLOR = JBColor.MAGENTA;
-    private static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
 
     private static final SimpleTextAttributes PARAM_TOKEN_ATTR =
             new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, PARAM_TOKEN_COLOR);
@@ -36,10 +30,6 @@ public class RouteCellRenderer extends ColoredTableCellRenderer {
             new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, OPTIONAL_TOKEN_COLOR,
                     null, SimpleTextAttributes.STYLE_PLAIN);
 
-    private static final SimpleTextAttributes REGULAR_HL_ATTR =
-            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, null,
-                    null, SimpleTextAttributes.STYLE_PLAIN);
-
 
     private RoutesFilter filter;
 
@@ -47,6 +37,7 @@ public class RouteCellRenderer extends ColoredTableCellRenderer {
     public RouteCellRenderer(@NotNull RoutesFilter filter) {
         this.filter = filter;
     }
+
 
     @Override
     protected void customizeCellRenderer(JTable table, Object value,
@@ -60,6 +51,7 @@ public class RouteCellRenderer extends ColoredTableCellRenderer {
 
         setIcon(((Route) value).getIcon());
     }
+
 
     private SimpleTextAttributes getTextAttributes(RouteToken token) {
 
