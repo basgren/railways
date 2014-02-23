@@ -25,16 +25,16 @@ public abstract class RailwaysColors {
 
     public static final SimpleTextAttributes PARAM_TOKEN_ATTR =
             new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN,
-                    RailwaysColors.PARAM_TOKEN_COLOR);
+                    PARAM_TOKEN_COLOR);
 
     public static final SimpleTextAttributes PARAM_TOKEN_HL_ATTR =
-            new SimpleTextAttributes(RailwaysColors.HIGHLIGHT_BG_COLOR, RailwaysColors.PARAM_TOKEN_COLOR,
+            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, PARAM_TOKEN_COLOR,
                     null, SimpleTextAttributes.STYLE_PLAIN);
 
     public static final SimpleTextAttributes OPTIONAL_TOKEN_ATTR =
-            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, RailwaysColors.OPTIONAL_TOKEN_COLOR);
+            new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, OPTIONAL_TOKEN_COLOR);
 
     public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
-            new SimpleTextAttributes(RailwaysColors.HIGHLIGHT_BG_COLOR, RailwaysColors.OPTIONAL_TOKEN_COLOR,
+            new SimpleTextAttributes(HIGHLIGHT_BG_COLOR, OPTIONAL_TOKEN_COLOR,
                     null, SimpleTextAttributes.STYLE_PLAIN);
 }
