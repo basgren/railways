@@ -49,6 +49,17 @@ public class Route implements NavigationItem {
         this.module = module;
     }
 
+    public Route(@Nullable Module module, String requestType, String path,
+                 String controller, String action, String name) {
+        this(module);
+
+        setRequestType(requestType);
+        this.path = path;
+        this.controller = controller;
+        this.action = action;
+        routeName = name;
+    }
+
 
     /**
      * Returns module the route belongs to.

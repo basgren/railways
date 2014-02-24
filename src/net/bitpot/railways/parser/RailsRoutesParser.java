@@ -4,12 +4,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +20,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RailsRoutesParser.class.getName());
 
-    private static final Pattern LINE_PATTERN = Pattern.compile("^\\s*([a-z0-9_]+)?\\s*(POST|GET|PUT|PATCH|DELETE)?\\s+(\\S+?)\\s+(.+?)$");
+    private static final Pattern LINE_PATTERN = Pattern.compile("^\\s*([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+(\\S+?)\\s+(.+?)$");
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?\\}\\s*$)");
@@ -85,7 +85,6 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             return routes;
         } catch (IOException e) {
-            //log.debug("Failed to read line.");
             e.printStackTrace();
         }
 
@@ -117,50 +116,46 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         Matcher groups = LINE_PATTERN.matcher(line);
 
         if (groups.matches()) {
-            Route route = new Route(myModule);
-
-            route.setRouteName(getGroup(groups, 1));
-            route.setPath(getGroup(groups, 3));
-            route.setRequestType(getGroup(groups, 2));
-
-
+            String routeController, routeAction;
+            String routeName = getGroup(groups, 1);
+            String routePath = getGroup(groups, 3);
             String conditions = getGroup(groups, 4);
             String[] actionInfo = conditions.split("#", 2);
 
             // Process new format of output: 'controller#action'
             if (actionInfo.length == 2) {
-                route.setController(actionInfo[0]);
+                routeController = actionInfo[0];
 
                 // In this case second part can contain additional requirements. Example:
                 // "index {:user_agent => /something/}"
-                route.setAction(extractRouteRequirements(actionInfo[1], route));
+                routeAction = extractRouteRequirements(actionInfo[1]);
             } else {
-                // Older format - all route requirements are in the single hash
-                parseRequirements(conditions, route);
+                // Older format - all route requirements are specified in ruby hash:
+                // {:controller => 'users', :action => 'index'}
+                routeController = captureGroup(CONTROLLER_PATTERN, conditions);
+                routeAction = captureGroup(ACTION_PATTERN, conditions);
 
-                Map<String, String> reqs = route.getRequirements();
-
-                route.setController(captureGroup(CONTROLLER_PATTERN, conditions));
-                route.setAction(captureGroup(ACTION_PATTERN, conditions));
-
-                if (route.getController().isEmpty())
-                    route.setController(captureGroup(RACK_CONTROLLER_PATTERN, conditions));
-
-                // Remove 'controller' and 'action' conditions from requirements.
-                reqs.remove("controller");
-                reqs.remove("action");
+                if (routeController.isEmpty())
+                    routeController = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
             }
 
 
-            if (route.isValid()) {
-                route.updateType();
+            // We can have several request methods here: "GET|POST"
+            String[] requestTypes = getGroup(groups, 2).split("\\|");
+            List<Route> result = new ArrayList<>();
 
-                List<Route> result = new ArrayList<>();
-                result.add(route);
-                return result;
-            } else {
-                // TODO: process somehow this error.
+            for (String requestType : requestTypes) {
+                Route route = new Route(myModule, requestType, routePath,
+                        routeController, routeAction, routeName);
+
+                if (route.isValid()) {
+                    route.updateType();
+
+                    result.add(route);
+                }
             }
+
+            return result;
         } else {
             // TODO: string not matched. Should log this error somehow.
         }
@@ -173,44 +168,17 @@ public class RailsRoutesParser extends AbstractRoutesParser {
      * Extracts requirements from second part and fills route information.
      *
      * @param actionWithReq Action with possible requirements part
-     * @param r             Route
      * @return Route action name without requirements.
      */
-    private String extractRouteRequirements(String actionWithReq, Route r) {
+    private String extractRouteRequirements(String actionWithReq) {
         String requirements = captureGroup(REQUIREMENTS_PATTERN, actionWithReq);
-
-        // Remove outer braces to make regexp simplier.
-        //String clean_reqs = requirements.substring(1, requirements.length() - 1);
-
-
-        parseRequirements(requirements, r);
 
         // Return action without requirements
         return actionWithReq.substring(0, actionWithReq.length() - requirements.length()).trim();
     }
 
 
-    /**
-     * Parses requirements string (a ruby hash). This string should end with
-     * ',' or '}'. In other words, it should be a fully qualified ruby hash,
-     * with opening and closing brackets.
-     *
-     * @param reqs Requirements string to parse
-     * @param r    Route where to put all parsed requirements.
-     */
-    private void parseRequirements(String reqs, Route r) {
-        // Just skip parsing of
-
-        // Maybe, more complex parser should be written, because this one is very basic and
-        // does not handle situations when requirements are nested hashes.
-        //Matcher m = REQUIREMENT_PATTERN.matcher(reqs);
-
-
-        //while (m.find())
-        //    r.getRequirements().put(m.group(1), m.group(2).trim());
-    }
-
-
+    @NotNull
     private String getGroup(Matcher matcher, int groupNum) {
         String s = matcher.group(groupNum);
         return (s != null) ? s.trim() : "";

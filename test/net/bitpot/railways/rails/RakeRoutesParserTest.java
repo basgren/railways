@@ -120,6 +120,22 @@ public class RakeRoutesParserTest
 
         List<Route> routes = parser.parseLine(line);
         assertEquals("Resulting routes count", 2, routes.size());
+
+
+        // Test first route
+        Route expected = new Route(null, "GET",
+                "/test(.:format)", "clients", "show", "test");
+        Route actual = routes.get(0);
+
+        TestUtils.assertRouteEquals(expected, actual);
+
+
+        // Test second route
+        expected = new Route(null, "POST",
+                "/test(.:format)", "clients", "show", "test");
+        actual = routes.get(1);
+
+        TestUtils.assertRouteEquals(expected, actual);
     }
 
 
