@@ -7,6 +7,8 @@ import net.bitpot.railways.models.RouteList;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,16 +71,16 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             BufferedReader br = new BufferedReader(new InputStreamReader(ds));
 
             String strLine;
-            Route route;
+            List<Route> routeList;
 
             //Read File Line By Line
             while ((strLine = br.readLine()) != null) {
                 if (isInvalidRouteLine(strLine))
                     continue;
 
-                route = parseLine(strLine);
-                if (route != null)
-                    routes.add(route);
+                routeList = parseLine(strLine);
+                if (routeList != null)
+                    routes.addAll(routeList);
             }
 
             return routes;
@@ -110,16 +112,16 @@ public class RailsRoutesParser extends AbstractRoutesParser {
      * @param line Line from 'rake routes' output
      * @return Route object, if line contains route information, null if parsing failed.
      */
-    public Route parseLine(String line) {
+    public List<Route> parseLine(String line) {
         // 1. Break line into 3 groups - [name]+[verb], path, conditions(action, controller)
         Matcher groups = LINE_PATTERN.matcher(line);
 
         if (groups.matches()) {
-            Route r = new Route(myModule);
+            Route route = new Route(myModule);
 
-            r.setRouteName(getGroup(groups, 1));
-            r.setPath(getGroup(groups, 3));
-            r.setRequestType(getGroup(groups, 2));
+            route.setRouteName(getGroup(groups, 1));
+            route.setPath(getGroup(groups, 3));
+            route.setRequestType(getGroup(groups, 2));
 
 
             String conditions = getGroup(groups, 4);
@@ -127,22 +129,22 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             // Process new format of output: 'controller#action'
             if (actionInfo.length == 2) {
-                r.setController(actionInfo[0]);
+                route.setController(actionInfo[0]);
 
                 // In this case second part can contain additional requirements. Example:
                 // "index {:user_agent => /something/}"
-                r.setAction(extractRouteRequirements(actionInfo[1], r));
+                route.setAction(extractRouteRequirements(actionInfo[1], route));
             } else {
                 // Older format - all route requirements are in the single hash
-                parseRequirements(conditions, r);
+                parseRequirements(conditions, route);
 
-                Map<String, String> reqs = r.getRequirements();
+                Map<String, String> reqs = route.getRequirements();
 
-                r.setController(captureGroup(CONTROLLER_PATTERN, conditions));
-                r.setAction(captureGroup(ACTION_PATTERN, conditions));
+                route.setController(captureGroup(CONTROLLER_PATTERN, conditions));
+                route.setAction(captureGroup(ACTION_PATTERN, conditions));
 
-                if (r.getController().isEmpty())
-                    r.setController(captureGroup(RACK_CONTROLLER_PATTERN, conditions));
+                if (route.getController().isEmpty())
+                    route.setController(captureGroup(RACK_CONTROLLER_PATTERN, conditions));
 
                 // Remove 'controller' and 'action' conditions from requirements.
                 reqs.remove("controller");
@@ -150,9 +152,12 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             }
 
 
-            if (r.isValid()) {
-                r.updateType();
-                return r;
+            if (route.isValid()) {
+                route.updateType();
+
+                List<Route> result = new ArrayList<>();
+                result.add(route);
+                return result;
             } else {
                 // TODO: process somehow this error.
             }

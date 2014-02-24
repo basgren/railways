@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -73,12 +74,14 @@ public class RakeRoutesParserTest
 
         // It's enough to check just requirements as the same strings are
         // checked in another test.
-        Route route = parser.parseLine(routeOldFormat);
+        List<Route> routeList = parser.parseLine(routeOldFormat);
+        Route route = routeList.get(0);
 
         // Route parsing is disabled for now.
         assertFalse(route.hasRequirements());
 
-        route = parser.parseLine(routeNewFormat);
+        routeList = parser.parseLine(routeNewFormat);
+        route = routeList.get(0);
 
         // Route parsing is disabled for now.
         assertFalse(route.hasRequirements());
@@ -90,7 +93,8 @@ public class RakeRoutesParserTest
         String rails3routeConstraints = "           GET    /users/:id(.:format)                   users#show {:id=>/[A-Za-z]{3,}/}";
 
         // Test constraints parsing
-        Route route = parser.parseLine(rails3routeConstraints);
+        List<Route> routeList = parser.parseLine(rails3routeConstraints);
+        Route route = routeList.get(0);
 
         assertEquals(route.getAction(), "show");
 
@@ -101,12 +105,21 @@ public class RakeRoutesParserTest
 
 
     @Test
-    public void test_isInvalidRouteLine()
+    public void testIsInvalidRouteLine()
     {
         String rails4routeHeader = "   Prefix Verb   URI Pattern               Controller#Action";
         String rails4routeLine = "edit_user GET    /users/:id/edit(.:format) users#edit";
         assertTrue(parser.isInvalidRouteLine(rails4routeHeader));
         assertFalse(parser.isInvalidRouteLine(rails4routeLine));
+    }
+
+
+    @Test
+    public void testParsingMyltipleRouteTypesInASingleLine() {
+        String line = "  test GET|POST /test(.:format)             clients#show  ";
+
+        List<Route> routes = parser.parseLine(line);
+        assertEquals("Resulting routes count", 2, routes.size());
     }
 
 

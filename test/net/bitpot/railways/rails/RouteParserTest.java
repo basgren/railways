@@ -4,14 +4,8 @@ package net.bitpot.railways.rails;
 import net.bitpot.railways.parser.route.RouteParser;
 import net.bitpot.railways.parser.route.RouteToken;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test of route parser.

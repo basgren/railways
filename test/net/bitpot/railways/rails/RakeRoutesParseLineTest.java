@@ -11,6 +11,7 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -131,7 +132,10 @@ public class RakeRoutesParseLineTest
     @Test
     public void testParseLine()
     {
-        Route r = parser.parseLine(line);
+        List<Route> routeList = parser.parseLine(line);
+        Route r = routeList.get(0);
+
+        assertEquals(1, routeList.size());
         assertNotNull(r);
 
         assertEquals(r.getRouteName(), name);
