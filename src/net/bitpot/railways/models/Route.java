@@ -6,7 +6,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import net.bitpot.railways.gui.RailwaysIcons;
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
@@ -27,7 +27,7 @@ public class Route implements NavigationItem {
     private Module module = null;
 
 
-    private RequestType requestType = RequestType.ANY;
+    private RequestMethod requestMethod = RequestMethod.ANY;
     private String path = "";
     private String routeName = "";
     private String controller = "";
@@ -43,11 +43,11 @@ public class Route implements NavigationItem {
         this.module = module;
     }
 
-    public Route(@Nullable Module module, RequestType requestType, String path,
+    public Route(@Nullable Module module, RequestMethod requestMethod, String path,
                  String controller, String action, String name) {
         this(module);
 
-        setRequestType(requestType);
+        setRequestMethod(requestMethod);
         setPath(path);
         setController(controller);
         setAction(action);
@@ -64,13 +64,13 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
+    public void setRequestMethod(RequestMethod requestMethod) {
+        this.requestMethod = requestMethod;
     }
 
 
-    public RequestType getRequestType() {
-        return requestType;
+    public RequestMethod getRequestMethod() {
+        return requestMethod;
     }
 
 
@@ -80,7 +80,7 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Returns route type. There a 3 types of routes:
+     * Returns route type. There are 3 types of routes:
      *   1. DEFAULT - general route to some controller method
      *   2. MOUNTED - route mounted to some Rack application
      *   3. REDIRECT - route is a redirect to different route
@@ -154,7 +154,7 @@ public class Route implements NavigationItem {
 
     /**
      * Returns rack icon if the route is for mounted rack-application, otherwise returns icon for
-     * corresponding request type.
+     * corresponding request method.
      *
      * @return Route icon.
      */
@@ -162,7 +162,7 @@ public class Route implements NavigationItem {
         if (getType() == MOUNTED)
             return RailwaysIcons.RACK_APPLICATION;
 
-        return getRequestType().getIcon();
+        return getRequestMethod().getIcon();
     }
 
 

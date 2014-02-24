@@ -11,7 +11,7 @@ import com.intellij.psi.PsiDocumentManager;
 import net.bitpot.railways.navigation.ChooseByRouteNameFilter;
 import net.bitpot.railways.navigation.GotoRouteFilterConfiguration;
 import net.bitpot.railways.navigation.GotoRouteMethodModel;
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
@@ -36,11 +36,11 @@ public class GotoRouteMethodAction extends GotoActionBase {
         final GotoRouteMethodModel model = new GotoRouteMethodModel(project);
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-        showNavigationPopup(e, model, new GotoActionCallback<RequestType>() {
+        showNavigationPopup(e, model, new GotoActionCallback<RequestMethod>() {
 
             @Nullable
             @Override
-            protected ChooseByNameFilter<RequestType> createFilter(@NotNull ChooseByNamePopup popup) {
+            protected ChooseByNameFilter<RequestMethod> createFilter(@NotNull ChooseByNamePopup popup) {
                 return new ChooseByRouteNameFilter(popup, model,
                         GotoRouteFilterConfiguration.getInstance(project), project);
             }

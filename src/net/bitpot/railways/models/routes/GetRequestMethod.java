@@ -8,16 +8,16 @@ import javax.swing.*;
 /**
  * @author Basil Gren
  */
-public class PutRequestType extends RequestType {
+public class GetRequestMethod extends RequestMethod {
     @Override
     public Icon getIcon() {
-        return RailwaysIcons.HTTP_METHOD_PUT;
+        return RailwaysIcons.HTTP_METHOD_GET;
     }
 
 
     @NotNull
     @Override
     public String getName() {
-        return "PUT";
+        return "GET";
     }
 }

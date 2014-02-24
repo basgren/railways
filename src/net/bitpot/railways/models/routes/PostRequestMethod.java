@@ -8,16 +8,16 @@ import javax.swing.*;
 /**
  * @author Basil Gren
  */
-public class DeleteRequestType extends RequestType {
+public class PostRequestMethod extends RequestMethod {
     @Override
     public Icon getIcon() {
-        return RailwaysIcons.HTTP_METHOD_DELETE;
+        return RailwaysIcons.HTTP_METHOD_POST;
     }
 
 
     @NotNull
     @Override
     public String getName() {
-        return "DELETE";
+        return "POST";
     }
 }

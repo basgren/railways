@@ -6,7 +6,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 
 /**
  * @author Basil Gren
@@ -14,15 +14,15 @@ import net.bitpot.railways.models.routes.RequestType;
 @State(
         name = "GotoRouteFilterConfiguration",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-public class GotoRouteFilterConfiguration extends ChooseByNameFilterConfiguration<RequestType> {
+public class GotoRouteFilterConfiguration extends ChooseByNameFilterConfiguration<RequestMethod> {
 
-    public static ChooseByNameFilterConfiguration<RequestType> getInstance(Project project) {
+    public static ChooseByNameFilterConfiguration<RequestMethod> getInstance(Project project) {
         return ServiceManager.getService(project, GotoRouteFilterConfiguration.class);
     }
 
 
     @Override
-    protected String nameForElement(RequestType type) {
-        return type.getName();
+    protected String nameForElement(RequestMethod method) {
+        return method.getName();
     }
 }

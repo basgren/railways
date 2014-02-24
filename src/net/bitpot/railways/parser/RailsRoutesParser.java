@@ -4,7 +4,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -142,12 +142,12 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
 
             // We can have several request methods here: "GET|POST"
-            String[] requestTypes = getGroup(groups, 2).split("\\|");
+            String[] requestMethods = getGroup(groups, 2).split("\\|");
             List<Route> result = new ArrayList<>();
 
-            for (String requestTypeName : requestTypes) {
+            for (String requestMethodName : requestMethods) {
                 Route route = new Route(myModule,
-                        RequestType.get(requestTypeName), routePath,
+                        RequestMethod.get(requestMethodName), routePath,
                         routeController, routeAction, routeName);
 
                 if (route.isValid())

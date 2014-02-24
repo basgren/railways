@@ -270,7 +270,7 @@ public class MainPanel {
             nameLbl.setText(NO_INFO);
         } else {
             routeLbl.setText(route.getPath());
-            methodLbl.setText(route.getRequestType().getName());
+            methodLbl.setText(route.getRequestMethod().getName());
             methodLbl.setIcon(route.getIcon());
 
             switch (route.getType()) {

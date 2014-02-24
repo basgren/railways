@@ -3,7 +3,7 @@ package net.bitpot.railways.rails;
 
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -114,7 +114,7 @@ public class RakeRoutesParserTest
 
 
         // Test first route
-        Route expected = new Route(null, RequestType.GET,
+        Route expected = new Route(null, RequestMethod.GET,
                 "/test(.:format)", "clients", "show", "test");
         Route actual = routes.get(0);
 
@@ -122,7 +122,7 @@ public class RakeRoutesParserTest
 
 
         // Test second route
-        expected = new Route(null, RequestType.POST,
+        expected = new Route(null, RequestMethod.POST,
                 "/test(.:format)", "clients", "show", "test");
         actual = routes.get(1);
 

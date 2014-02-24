@@ -4,14 +4,14 @@ import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Basil Gren
  */
-public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType> {
+public class GotoRouteMethodModel extends FilteringGotoByModel<RequestMethod> {
 
     public GotoRouteMethodModel(Project project) {
         super(project, ChooseByRouteRegistry.getInstance(project).getRouteContributors());
@@ -20,8 +20,8 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestType> {
 
     @Nullable
     @Override
-    protected RequestType filterValueFor(NavigationItem item) {
-        return (item instanceof Route) ? ((Route) item).getRequestType() : null;
+    protected RequestMethod filterValueFor(NavigationItem item) {
+        return (item instanceof Route) ? ((Route) item).getRequestMethod() : null;
     }
 
 

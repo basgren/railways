@@ -1,6 +1,6 @@
 package net.bitpot.railways.models;
 
-import net.bitpot.railways.models.routes.RequestType;
+import net.bitpot.railways.models.routes.RequestMethod;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class RouteTest
     @Before
     public void setUp() throws Exception
     {
-        route = new Route(null, RequestType.GET,
+        route = new Route(null, RequestMethod.GET,
                 "/users", "users", "index", "users");
     }
 
