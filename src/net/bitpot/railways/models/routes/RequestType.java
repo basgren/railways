@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -19,10 +20,10 @@ public abstract class RequestType {
     public static final RequestType ANY = new AnyRequestType();
 
 
-    private static Collection<RequestType> routeTypes = createRouteTypesList();
+    private static List<RequestType> routeTypes = createRouteTypesList();
 
 
-    private static Collection<RequestType> createRouteTypesList() {
+    private static List<RequestType> createRouteTypesList() {
         Vector<RequestType> types = new Vector<RequestType>();
         types.add(GET);
         types.add(POST);
@@ -32,6 +33,23 @@ public abstract class RequestType {
         types.add(ANY);
 
         return types;
+    }
+
+
+    /**
+     * Finds request type by name. If no request type is found, AnyRequestType is
+     * returned.
+     *
+     * @param name Name of request type.
+     * @return RequestType object.
+     */
+    @NotNull
+    public static RequestType get(String name) {
+        for(RequestType type: routeTypes)
+            if (type.getName().equals(name))
+                return type;
+
+        return ANY;
     }
 
 

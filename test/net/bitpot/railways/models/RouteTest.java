@@ -17,8 +17,8 @@ public class RouteTest
     @Before
     public void setUp() throws Exception
     {
-        route = new Route();
-        route.setRoute("users", "/users", RequestType.GET, "users", "index");
+        route = new Route(null, RequestType.GET,
+                "/users", "users", "index", "users");
     }
 
 

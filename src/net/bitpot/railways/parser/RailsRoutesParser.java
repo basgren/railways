@@ -4,6 +4,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.models.routes.RequestType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -144,15 +145,13 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             String[] requestTypes = getGroup(groups, 2).split("\\|");
             List<Route> result = new ArrayList<>();
 
-            for (String requestType : requestTypes) {
-                Route route = new Route(myModule, requestType, routePath,
+            for (String requestTypeName : requestTypes) {
+                Route route = new Route(myModule,
+                        RequestType.get(requestTypeName), routePath,
                         routeController, routeAction, routeName);
 
-                if (route.isValid()) {
-                    route.updateType();
-
+                if (route.isValid())
                     result.add(route);
-                }
             }
 
             return result;

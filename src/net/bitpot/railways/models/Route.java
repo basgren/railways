@@ -7,15 +7,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -30,10 +27,7 @@ public class Route implements NavigationItem {
     private Module module = null;
 
 
-    private int routeType = DEFAULT;
     private RequestType requestType = RequestType.ANY;
-    private HashMap<String, String> requirements = null;
-
     private String path = "";
     private String routeName = "";
     private String controller = "";
@@ -49,15 +43,15 @@ public class Route implements NavigationItem {
         this.module = module;
     }
 
-    public Route(@Nullable Module module, String requestType, String path,
+    public Route(@Nullable Module module, RequestType requestType, String path,
                  String controller, String action, String name) {
         this(module);
 
         setRequestType(requestType);
-        this.path = path;
-        this.controller = controller;
-        this.action = action;
-        routeName = name;
+        setPath(path);
+        setController(controller);
+        setAction(action);
+        setRouteName(name);
     }
 
 
@@ -70,22 +64,8 @@ public class Route implements NavigationItem {
     }
 
 
-    /**
-     * Sets request type by its string representation. Available values: "get", "post", "put', "delete".
-     * All other values are treated as any request type.
-     *
-     * @param verb String name of request type.
-     */
-    public void setRequestType(String verb) {
-        verb = verb.toLowerCase();
-
-        if (verb.equals("get")) requestType = RequestType.GET;
-        else if (verb.equals("post")) requestType = RequestType.POST;
-        else if (verb.equals("put")) requestType = RequestType.PUT;
-        else if (verb.equals("patch")) requestType = RequestType.PATCH;
-        else if (verb.equals("delete")) requestType = RequestType.DELETE;
-        else
-            requestType = RequestType.ANY;
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
     }
 
 
@@ -99,49 +79,23 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setRoute(String name, String path, @NotNull RequestType type, String controller, String action) {
-        this.routeName = name;
-        this.path = path;
-        this.requestType = type;
-
-        this.controller = controller;
-        this.action = action;
-    }
-
-
-    public int getType() {
-        return routeType;
-    }
-
-
     /**
-     * Tries to determine route type and set inner field. Should be called after all fields of the route is set.
+     * Returns route type. There a 3 types of routes:
+     *   1. DEFAULT - general route to some controller method
+     *   2. MOUNTED - route mounted to some Rack application
+     *   3. REDIRECT - route is a redirect to different route
+     *
+     * @return Route type
      */
-    public void updateType() {
-        if (!controller.isEmpty() && action.isEmpty()) {
-            routeType = MOUNTED;
-            return;
-        }
+    public int getType() {
+        if (!controller.isEmpty() && action.isEmpty())
+            return MOUNTED;
 
-        if (controller != null && controller.equals(":controller") && action != null && action.equals(":action")) {
-            routeType = REDIRECT;
-            return;
-        }
+        if (controller != null && controller.equals(":controller") &&
+                action != null && action.equals(":action"))
+            return REDIRECT;
 
-        routeType = DEFAULT;
-    }
-
-
-    public Map<String, String> getRequirements() {
-        if (requirements == null)
-            requirements = new HashMap<String, String>();
-
-        return requirements;
-    }
-
-
-    public boolean hasRequirements() {
-        return (requirements != null) && (requirements.size() > 0);
+        return DEFAULT;
     }
 
 
@@ -152,6 +106,8 @@ public class Route implements NavigationItem {
      * @return Fully qualified method name.
      */
     public String getControllerMethodName() {
+        int routeType = getType();
+
         if (controller.isEmpty() || routeType == REDIRECT)
             return "";
 
@@ -168,7 +124,7 @@ public class Route implements NavigationItem {
      * @return Displayable text for route action, ex. users#create
      */
     public String getActionText() {
-        switch (routeType) {
+        switch (getType()) {
             case MOUNTED:
                 return controller;
             case REDIRECT:
@@ -203,7 +159,7 @@ public class Route implements NavigationItem {
      * @return Route icon.
      */
     public Icon getIcon() {
-        if (routeType == MOUNTED)
+        if (getType() == MOUNTED)
             return RailwaysIcons.RACK_APPLICATION;
 
         return getRequestType().getIcon();
@@ -253,6 +209,8 @@ public class Route implements NavigationItem {
 
     @Override
     public void navigate(boolean requestFocus) {
+        int routeType = getType();
+
         if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
             return;
 

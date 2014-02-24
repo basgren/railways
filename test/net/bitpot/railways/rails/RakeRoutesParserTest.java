@@ -3,6 +3,7 @@ package net.bitpot.railways.rails;
 
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.models.routes.RequestType;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,14 +78,8 @@ public class RakeRoutesParserTest
         List<Route> routeList = parser.parseLine(routeOldFormat);
         Route route = routeList.get(0);
 
-        // Route parsing is disabled for now.
-        assertFalse(route.hasRequirements());
-
         routeList = parser.parseLine(routeNewFormat);
         route = routeList.get(0);
-
-        // Route parsing is disabled for now.
-        assertFalse(route.hasRequirements());
     }
 
     @Test
@@ -97,10 +92,6 @@ public class RakeRoutesParserTest
         Route route = routeList.get(0);
 
         assertEquals(route.getAction(), "show");
-
-        // This time requirements parsing is disabled. Possibly, need to create
-        // a gem that will return routes in more detailed format.
-        assertFalse(route.hasRequirements());
     }
 
 
@@ -123,7 +114,7 @@ public class RakeRoutesParserTest
 
 
         // Test first route
-        Route expected = new Route(null, "GET",
+        Route expected = new Route(null, RequestType.GET,
                 "/test(.:format)", "clients", "show", "test");
         Route actual = routes.get(0);
 
@@ -131,7 +122,7 @@ public class RakeRoutesParserTest
 
 
         // Test second route
-        expected = new Route(null, "POST",
+        expected = new Route(null, RequestType.POST,
                 "/test(.:format)", "clients", "show", "test");
         actual = routes.get(1);
 
