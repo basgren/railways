@@ -56,45 +56,9 @@
         </p>
 
 
-        <p><b>0.6.0</b><br/>
-        <ul>
-            <li>Added navigation popup available by pressing <strong>Ctrl+Shift+G</strong> in Ruby On Rails project.</li>
-            <li>Fixed exception thrown on some versions of JRE</li>
-            <li>Fixed Railways panel disappearing when several Ruby On Rails projects are opened.</li>
-            <li>Fixed parsing errors.</li>
-        </ul>
-        </p>
-
-
-        <p><b>0.5.3</b><br/>
-        <ul>
-            <li>Fixed: any non-critical warnings in 'rake routes' output was treated as errors and error panel was shown after routes are updated</li>
-            <li>Routes are updated just after project is opened, not after Routes panel is activated as it was before</li>
-            <li>Minor fixes</li>
-        </ul>
-        </p>
-
-
-        <p><b>0.5.2</b><br/>
-        <ul>
-            <li>Added caching of route list</li>
-            <li>Routes are automatically updated (or loaded from cache) on IDE startup</li>
-            <li>Route name can be copied via context menu or keyboard shortcuts</li>
-        </ul>
-        </p>
-
-        <p><b>0.5.1</b><br/>
-        <ul>
-            <li>Added compatibility with RubyMine 5</li>
-            <li>Scrollbar is changed to IDE's native</li>
-            <li>Fixed bug with formatting controller name in CamelCase</li>
-        </ul>
-        </p>
-
-        <p><b>0.5.0b</b><br/>
-        <ul>
-            <li>Initial release</li>
-        </ul>
+        <p>
+        Full list of changes can be found
+        <a href="https://github.com/basgren/railways/blob/master/CHANGES.md">here</a>.
         </p>
     ]]>
     </change-notes>
