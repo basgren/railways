@@ -38,6 +38,7 @@
         <ul>
             <li>Added support for projects with multiple modules.</li>
             <li>Added module display in Go To Route popup.</li>
+            <li>Fixed routes parsing for Rails 4 projects.</li>
             <li>Syntax highlighting for route paths in Route tool window.</li>
             <li>Minor UI enhancements.</li>
             <li>Plugin now released in two versions - for RubyMine and
