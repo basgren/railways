@@ -1,7 +1,7 @@
 Railways - Change Notes
 =======================
 
-### v0.7.0
+### v0.7.0 (2014-02-27)
         
 * Added support for projects with multiple modules.
 * Added module display in Go To Route popup.
