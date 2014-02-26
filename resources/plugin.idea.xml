@@ -62,7 +62,7 @@
     </change-notes>
 
 
-    <idea-version since-build="113.20"/>
+    <idea-version since-build="122.633"/>
 
 
     <depends>com.intellij.modules.ultimate</depends>

@@ -1,8 +1,6 @@
 package net.bitpot.railways.utils;
 
-import com.intellij.execution.ExecutionMode;
 import com.intellij.execution.ExecutionModes;
-import com.intellij.execution.Output;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -19,8 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.gem.GemsRunner;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-
-import java.lang.reflect.Method;
 
 /**
  * Class that contains all API methods for Railways plugin.
@@ -54,8 +50,6 @@ public class RailwaysUtils {
      */
     @Nullable
     public static ProcessOutput queryRakeRoutes(Module module) {
-        String errorTitle = "Error in rake command.";
-
         // Get root path of Rails application from module.
         RailsApp app = RailsApp.fromModule(module);
         if ((app == null) || (app.getRailsApplicationRoot() == null))
@@ -63,122 +57,29 @@ public class RailwaysUtils {
 
         String moduleContentRoot = app.getRailsApplicationRoot().getPresentableUrl();
 
-
         ModuleRootManager mManager = ModuleRootManager.getInstance(module);
         Sdk sdk = mManager.getSdk();
         if (sdk == null) {
-            Notifications.Bus.notify(new Notification("Railways", "Railways Error",
-                    "Cannot update routes list, because SDK is not specified for the current project", NotificationType.ERROR)
+            Notifications.Bus.notify(new Notification("Railways",
+                    "Railways Error",
+                    "Cannot update routes list for '" + module.getName() +
+                    "' module, because its SDK is not set",
+                    NotificationType.ERROR)
                     , module.getProject());
             return null;
         }
 
         try {
-            // TODO: Think about dropping support of older RubyMine versions.
-
-            //  !!! Note!!! Since RubyMine 5 EAP (Build 122.633) runGemsExecutableScript
-            // returns ProcessOutput object. Previous versions returned Output.
-            // Let's do this trick through reflections.
-            Method method = null;
-            String[] params = {"routes", "--trace"};
-            Object output = null;
-
-            try {
-                // This this declaration was until RubyMine 5 EAP (122.782)
-                method = GemsRunner.class.getDeclaredMethod("runGemsExecutableScript",
-                        Sdk.class, Module.class, String.class, String.class,
-                        String.class, ExecutionMode.class, boolean.class,
-                        String.class, java.lang.String[].class);
-
-                output = method.invoke(null, sdk, module,
-                        "rake", "rake",
-                        moduleContentRoot,
-                        new ExecutionModes.SameThreadMode(), false,
-                        errorTitle, params);
-            } catch (NoSuchMethodException e) { /* Do nothing */ }
-
-            if (method == null) {
-                // Try to find and invoke by declaration which was introduced since build 122.782
-                method = GemsRunner.class.getDeclaredMethod("runGemsExecutableScript",
-                        Sdk.class, Module.class, String.class, String.class,
-                        String.class, ExecutionMode.class,
-                        java.lang.String[].class);
-
-                output = method.invoke(null, sdk, module,
-                        "rake", "rake",
-                        moduleContentRoot,
-                        new ExecutionModes.SameThreadMode(),
-                        params);
-            }
-
-
-            /* If support of older RubyMine versions (below 4.5) is dropped, we can use this:
-            Object output = GemsRunner.runGemsExecutableScript(sdk, module,
-                   "rake", "rake",
-                   moduleContentRoot,
-                   new ExecutionModes.SameThreadMode(), false,
-                   errorTitle, "routes", "--trace");
-
-            or this in the newest RubyMine 5:
-
-            Object output = GemsRunner.runGemsExecutableScript(sdk, module,
-                   "rake", "rake",
-                   moduleContentRoot,
-                   new ExecutionModes.SameThreadMode(),
-                   "routes", "--trace");
-            */
-
-
-            // Here we must take into account that for RubyMine prior to 122.633 (RubyMine 5) build will be of an Output class,
-            // but since 122.633 build it is ProcessOutput type.
-            ProcessOutput processOutput;
-            if (output instanceof Output)
-                processOutput = convertToProcessOutput((Output) output);
-            else
-                processOutput = (ProcessOutput) output;
-
-
-            return processOutput;
+            // Will work on IntelliJ platform since 122.633 build (RubyMine 5)
+            return GemsRunner.runGemsExecutableScript(sdk, module,
+                    "rake", "rake",
+                    moduleContentRoot, new ExecutionModes.SameThreadMode(),
+                    "routes", "--trace");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-
-    /**
-     * Converts Output object to ProcessOutput.
-     *
-     * @param output Output object to convert
-     * @return ProcessOutput object
-     */
-    private static ProcessOutput convertToProcessOutput(@NotNull Output output) {
-        ProcessOutput res = new ProcessOutput();
-
-        // Unfortunately, methods setExitCode, appendStdout and
-        // appendStderr are declared as private prior to 122.633 build.
-        // So we will try to use reflection to call them.
-
-        Method method;
-        try {
-            method = ProcessOutput.class.getDeclaredMethod("setExitCode", int.class);
-            method.setAccessible(true);
-            method.invoke(res, output.getExitCode());
-
-            method = ProcessOutput.class.getDeclaredMethod("appendStdout", String.class);
-            method.setAccessible(true);
-            method.invoke(res, output.getStdout());
-
-            method = ProcessOutput.class.getDeclaredMethod("appendStderr", String.class);
-            method.setAccessible(true);
-            method.invoke(res, output.getStderr());
-
-        } catch (Exception e) {
-            return null;
-        }
-
-        return res;
     }
 
 
