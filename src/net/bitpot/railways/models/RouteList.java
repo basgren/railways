@@ -52,7 +52,7 @@ public class RouteList extends Vector<Route> {
             // As we do not use null as value, we can skip checking existence of the key
             ArrayList<Route> value = namesIndex.get(route.getName());
             if (value == null) {
-                value = new ArrayList<>();
+                value = new ArrayList<Route>();
                 namesIndex.put(route.getName(), value);
             }
 

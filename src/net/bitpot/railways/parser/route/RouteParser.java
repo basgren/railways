@@ -39,7 +39,7 @@ public class RouteParser {
         if (regions == null)
             return tokens;
 
-        ArrayList<RouteToken> result = new ArrayList<>();
+        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
 
         // Now go through every RouteToken and break it down if it intersects
         // with any region. Token type is preserved.
@@ -61,7 +61,7 @@ public class RouteParser {
     @NotNull
     public static RouteToken[] parseRoute(String route) {
         RouteToken token;
-        ArrayList<RouteToken> tokens = new ArrayList<>();
+        ArrayList<RouteToken> tokens = new ArrayList<RouteToken>();
         int pos = 0;
 
         // Try to find token
@@ -90,7 +90,7 @@ public class RouteParser {
             return null;
 
         int lastIndex = 0, regionEnd;
-        ArrayList<int[]> regions = new ArrayList<>();
+        ArrayList<int[]> regions = new ArrayList<int[]>();
 
         while(lastIndex != -1) {
             lastIndex = s.indexOf(substr, lastIndex);
@@ -107,7 +107,7 @@ public class RouteParser {
 
 
     private static Collection<RouteToken> breakdownToken(RouteToken token, @NotNull int[][] highlightedRegions) {
-        ArrayList<RouteToken> result = new ArrayList<>();
+        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
         int lastPos = 0, partSize;
 
         // We assume that regions are sorted.

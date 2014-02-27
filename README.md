@@ -18,7 +18,9 @@ Features:
 
 2. Open the project in IntelliJ IDEA
 
-3. Set up a JDK if it's not set (File > Project Structure > SDKs > Add New JDK)
+3. Set up a JDK if it's not set (File > Project Structure > SDKs > Add New JDK).
+   It's highly recommended to use JDK 1.6 to make plugin compatible with wider
+   range of systems.
 
 4. Set up IntelliJ plugin SDK. You should have RubyMine 6 installed.
    Go to File > Project Structure > SDKs > Add new IntelliJ IDEA Plugin SDK,
@@ -45,5 +47,3 @@ Features:
    be placed into `release/railways-[version]/` directory. There are two
    versions of plugin: `railways.jar` for RubyMine and `railways-idea.jar` for
    IntelliJ IDEA.
-
-

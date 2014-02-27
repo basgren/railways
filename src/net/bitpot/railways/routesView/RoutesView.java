@@ -38,7 +38,7 @@ public class RoutesView implements Disposable {
 
     private MainPanel mainPanel;
 
-    private ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
+    private ArrayList<RoutesViewPane> myPanes = new ArrayList<RoutesViewPane>();
     private RoutesViewPane currentPane = null;
 
     // Hmmm... I don't remember why I needed this... Some glitches with action state update?

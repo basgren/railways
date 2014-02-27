@@ -143,7 +143,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             // We can have several request methods here: "GET|POST"
             String[] requestMethods = getGroup(groups, 2).split("\\|");
-            List<Route> result = new ArrayList<>();
+            List<Route> result = new ArrayList<Route>();
 
             for (String requestMethodName : requestMethods) {
                 Route route = new Route(myModule,
