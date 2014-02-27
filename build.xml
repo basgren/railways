@@ -5,7 +5,7 @@
 
 
     <!-- Load plugin version from plugin.xml. -->
-    <xmlproperty file="resources/plugin.xml" />
+    <xmlproperty file="META-INF/plugin.xml" />
     <property name="plugin.version" value="${idea-plugin.version}" />
     <property name="plugin.jar_name" value="railways" />
 
@@ -98,7 +98,7 @@
 
         <jar destfile="${release.dir}/${ant.project.name}-${plugin.version}/${plugin.jar_name}.jar" duplicate="preserve">
             <zipfileset dir="${output.dir}"/>
-            <zipfileset file="${basedir}/resources/plugin.xml" prefix="META-INF"/>
+            <zipfileset file="${basedir}/META-INF/plugin.xml" prefix="META-INF"/>
             <manifest>
                 <attribute name="Created-By" value="IntelliJ IDEA"/>
                 <attribute name="Manifest-Version" value="1.0"/>
@@ -111,7 +111,7 @@
             description="Build plugin archive for IntelliJ IDEA Ultimate">
 
         <mkdir dir="${release.dir}"/>
-        <copyfile src="${basedir}/resources/plugin.idea.xml" dest="${output.dir}/plugin.xml"/>
+        <copyfile src="${basedir}/META-INF/plugin.idea.xml" dest="${output.dir}/plugin.xml"/>
 
         <jar destfile="${release.dir}/${ant.project.name}-${plugin.version}/${plugin.jar_name}-idea.jar" duplicate="preserve">
             <zipfileset dir="${output.dir}"/>
