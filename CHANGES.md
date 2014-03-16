@@ -1,6 +1,11 @@
 Railways - Change Notes
 =======================
 
+### 0.7.1 (2014-03-16)
+
+* Fix plugin crash when IDE is run using Java 1.6
+
+
 ### v0.7.0 (2014-02-27)
         
 * Added support for projects with multiple modules.

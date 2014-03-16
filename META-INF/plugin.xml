@@ -31,11 +31,16 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+        <p><b>0.7.1</b><br/>
+        <ul>
+            <li>Fix plugin crash when IDE is run using Java 1.6</li>
+        </ul>
+
         <p><b>0.7.0</b><br/>
         <ul>
             <li>Added support for projects with multiple modules.</li>
