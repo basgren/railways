@@ -24,6 +24,11 @@ public class RouteTableCellRenderer extends ColoredTableCellRenderer {
 
     @Override
     protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
+        // Value can be null in older JDKs (below 1.7, I suppose).
+        // Info: http://stackoverflow.com/questions/3054775/jtable-strange-behavior-from-getaccessiblechild-method-resulting-in-null-point
+        if (value == null)
+            return;
+
         String text = value.toString();
 
         if (selected) {
