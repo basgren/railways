@@ -1,6 +1,7 @@
 package net.bitpot.railways.rails;
 
 
+import net.bitpot.railways.Utils;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.routes.RequestMethod;
@@ -43,7 +44,7 @@ public class RakeRoutesParserTest
     @Test
     public void testStrErrorParsing() throws IOException
     {
-        String stdErr = readFile("test/data/sample_stderr.txt");
+        String stdErr = Utils.readFile("test/data/sample_stderr.txt");
 
         parser.parseErrors(stdErr);
         String stack = parser.getErrorStacktrace();
@@ -127,20 +128,5 @@ public class RakeRoutesParserTest
         actual = routes.get(1);
 
         TestUtils.assertRouteEquals(expected, actual);
-    }
-
-
-    private String readFile( String file ) throws IOException {
-        BufferedReader reader = new BufferedReader( new FileReader (file));
-        StringBuilder  stringBuilder = new StringBuilder();
-        String         ls = System.getProperty("line.separator");
-        String         line;
-
-        while( ( line = reader.readLine() ) != null ) {
-            stringBuilder.append( line );
-            stringBuilder.append( ls );
-        }
-
-        return stringBuilder.toString();
     }
 }

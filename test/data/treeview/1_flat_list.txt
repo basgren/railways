@@ -1,0 +1,5 @@
+# Sample file with routes that should build a single, flat RouteNode
+
+    clients GET          /clients(.:format)          clients#index
+            POST         /clients(.:format)          clients#create
+       test GET          /test(.:format)             clients#show
