@@ -1,0 +1,8 @@
+# Routes that should build simple sorted route tree
+
+        clients GET          /clients(.:format)          clients#index
+                GET          /clients/search(.:format)   clients#index
+     new_client GET          /clients/new(.:format)      clients#new
+    edit_client GET          /clients/:id/edit(.:format) clients#edit
+         client GET          /clients/:id(.:format)      clients#show
+

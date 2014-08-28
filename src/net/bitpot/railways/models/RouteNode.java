@@ -2,32 +2,42 @@ package net.bitpot.railways.models;
 
 import com.intellij.util.ArrayUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Container for routes. Can contain any RouteItem (Route of RouteNode).
  */
-public class RouteNode extends Vector<RouteTreeItem> implements RouteTreeItem {
+public class RouteNode extends Vector<RouteNode> {
 
     private Route route;
-    private boolean isLeaf;
+    private boolean isContainer;
     private String title;
 
 
+    private static final Comparator<RouteNode> comparator = new Comparator<RouteNode>() {
 
-    public RouteNode(String title, Route route, boolean isLeaf) {
+        /**
+         * Sorts RouteNodes. First come containers (alphabetically), then come
+         * routes (alphabetically)
+         *
+         */
+        @Override
+        public int compare(RouteNode n1, RouteNode n2) {
+            if (n1.isContainer() && !n2.isContainer())
+                return -1;
+
+            if (!n1.isContainer() && n2.isContainer())
+                return 1;
+
+            return n1.getTitle().compareTo(n2.getTitle());
+        }
+    };
+
+
+    public RouteNode(String title, Route route, boolean isContainer) {
         this.title = title;
         this.route = route;
-        this.isLeaf = isLeaf;
-    }
-
-
-    @Override
-    public boolean isLeaf() {
-        return isLeaf;
+        this.isContainer = isContainer;
     }
 
 
@@ -46,20 +56,58 @@ public class RouteNode extends Vector<RouteTreeItem> implements RouteTreeItem {
             pushRouteNode(root, route, parts, 0);
         }
 
+        root.sort();
+
         return root;
     }
 
 
-    private static void pushRouteNode(RouteNode node, Route route,
+    /**
+     * Sorts routes alphabetically
+     */
+    private void sort() {
+        Collections.sort(this, RouteNode.comparator);
+
+        for (RouteNode node: this)
+            if (node.isContainer())
+                node.sort();
+    }
+
+
+    private static void pushRouteNode(RouteNode parent, Route route,
                                       String[] parts, int partIndex) {
-        boolean isLeaf = (partIndex + 1 == parts.length);
+        boolean isContainer = (partIndex + 1 < parts.length);
 
-        RouteNode child = new RouteNode(parts[partIndex], route, isLeaf);
-        node.add(child);
+        RouteNode child = null;
+        String childTitle = parts[partIndex];
 
-        if (!isLeaf) {
+        // Search for existing container node
+        if (isContainer) {
+            for (RouteNode node: parent) {
+                if (node.getTitle().equals(childTitle)) {
+                    child = node;
+                    break;
+                }
+            }
+        }
+
+        if (child == null) {
+            child = new RouteNode(childTitle, route, isContainer);
+            parent.add(child);
+        }
+
+        if (isContainer) {
             pushRouteNode(child, route, parts, partIndex + 1);
         }
     }
 
+
+    public String getTitle() {
+        return title;
+    }
+
+
+    public boolean isContainer() {
+        return isContainer;
+    }
 }
