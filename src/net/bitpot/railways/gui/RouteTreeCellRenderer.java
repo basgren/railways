@@ -1,6 +1,7 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
+import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteNode;
 
 import javax.swing.*;
@@ -25,10 +26,15 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
         RouteNode node = (RouteNode) value;
 
         if (node.isLeaf()) {
+            Route route = node.getRoute();
+
             append(node.getTitle());
-            append(" (" + node.getRoute().getActionText() + ")",
+            append(" (" + route.getActionText() + ")",
                     RailwaysColors.CONTROLLER_METHOD_ATTR);
+
+            setIcon(route.getIcon());
         } else {
+            setIcon(RailwaysIcons.ROUTE_PARENT);
             append(node.getTitle());
         }
     }
