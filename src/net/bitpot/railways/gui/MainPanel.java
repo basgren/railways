@@ -10,10 +10,10 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
+import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.models.*;
+import net.bitpot.railways.parser.RouteTreeBuilder;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,6 +38,7 @@ public class MainPanel {
     // Names should be the same as specified in GUI designer for appropriate panels.
     private final static String ROUTES_CARD_NAME = "routesCard"; // Main page with routes table.
     private final static String INFO_CARD_NAME = "infoCard"; // Panel with message/error information.
+    private final static String ROUTES_TREE_CARD_NAME = "routesTreeCard"; // Panel with routes tree
 
     private final static String NO_INFO = "-";
 
@@ -59,6 +61,10 @@ public class MainPanel {
     private JPanel topPanel;
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
+    private JPanel routesListPanel;
+    private JPanel routesErrorPanel;
+    private JPanel routesTreeviewPanel;
+    private JTree routesTree;
 
 
     private CardLayout cardLayout;
@@ -93,6 +99,7 @@ public class MainPanel {
             }
         });
 
+        // Init routes table
         routesTable.setDefaultRenderer(Route.class,
                 new RouteCellRenderer(myTableModel.getFilter()));
 
@@ -100,6 +107,10 @@ public class MainPanel {
                 new RouteTableCellRenderer(myTableModel.getFilter()));
 
         routesTable.setRowHeight(20);
+
+        // Init routes tree
+        routesTree.setCellRenderer(new RouteTreeCellRenderer());
+
 
         cardLayout = (CardLayout) (cardsPanel.getLayout());
 
@@ -156,8 +167,22 @@ public class MainPanel {
     }
 
 
+    private void showRoutesTreePanel() {
+        routesHidden = false;
+        updateCounterLabel();
+        setControlsEnabled(true);
+
+        routesCounterLbl.setVisible(true);
+        cardLayout.show(cardsPanel, ROUTES_TREE_CARD_NAME);
+    }
+
+
     private void createUIComponents() {
+        // Create custom table
         routesTable = new RoutesTable();
+
+        // Create tree manually to get is with empty model.
+        routesTree = new Tree(new DefaultTreeModel(null));
     }
 
 
@@ -302,8 +327,21 @@ public class MainPanel {
 
     public void setUpdatedRoutes(RouteList routeList) {
         myTableModel.setRoutes(routeList);
+
+        // TODO: restore after debug
         showRoutesPanel();
+
+        updateRoutesTree(routeList);
+        showRoutesTreePanel();
+
         UpdateRoutesListAction.updateIcon(project);
+    }
+
+
+    private void updateRoutesTree(RouteList routeList) {
+        RouteNode root = RouteTreeBuilder.buildTree(routeList);
+
+        routesTree.setModel(new DefaultTreeModel(root));
     }
 
 

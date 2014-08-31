@@ -1,16 +1,21 @@
 package net.bitpot.railways.models;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ArrayUtil;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import java.util.*;
 
 /**
  * Container for routes. Can contain any RouteItem (Route of RouteNode).
  */
-public class RouteNode extends Vector<RouteNode> {
+public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
+
+    @SuppressWarnings("unused")
+    private static Logger log = Logger.getInstance(RouteNode.class.getName());
 
     private Route route;
-    private boolean isContainer;
     private String title;
 
 
@@ -23,82 +28,32 @@ public class RouteNode extends Vector<RouteNode> {
          */
         @Override
         public int compare(RouteNode n1, RouteNode n2) {
-            if (n1.isContainer() && !n2.isContainer())
-                return -1;
-
-            if (!n1.isContainer() && n2.isContainer())
+            if (n1.isLeaf() && !n2.isLeaf())
                 return 1;
+
+            if (!n1.isLeaf() && n2.isLeaf())
+                return -1;
 
             return n1.getTitle().compareTo(n2.getTitle());
         }
     };
 
 
-    public RouteNode(String title, Route route, boolean isContainer) {
+    public RouteNode(String title, Route route) {
         this.title = title;
         this.route = route;
-        this.isContainer = isContainer;
-    }
-
-
-    /**
-     *
-     * @param list
-     * @return
-     */
-    public static RouteNode buildTree(RouteList list) {
-        RouteNode root = new RouteNode("", null, false);
-
-        for(Route route: list) {
-            // Break route path into parts, but remove leading slash before.
-            String[] parts = route.getPath().substring(1).split("/");
-
-            pushRouteNode(root, route, parts, 0);
-        }
-
-        root.sort();
-
-        return root;
     }
 
 
     /**
      * Sorts routes alphabetically
      */
-    private void sort() {
-        Collections.sort(this, RouteNode.comparator);
+    public void sort() {
+        Collections.sort(this.children, RouteNode.comparator);
 
-        for (RouteNode node: this)
-            if (node.isContainer())
-                node.sort();
-    }
-
-
-    private static void pushRouteNode(RouteNode parent, Route route,
-                                      String[] parts, int partIndex) {
-        boolean isContainer = (partIndex + 1 < parts.length);
-
-        RouteNode child = null;
-        String childTitle = parts[partIndex];
-
-        // Search for existing container node
-        if (isContainer) {
-            for (RouteNode node: parent) {
-                if (node.getTitle().equals(childTitle)) {
-                    child = node;
-                    break;
-                }
-            }
-        }
-
-        if (child == null) {
-            child = new RouteNode(childTitle, route, isContainer);
-            parent.add(child);
-        }
-
-        if (isContainer) {
-            pushRouteNode(child, route, parts, partIndex + 1);
-        }
+        for (Object node: this.children)
+            if (!((RouteNode)node).isLeaf())
+                ((RouteNode)node).sort();
     }
 
 
@@ -106,8 +61,7 @@ public class RouteNode extends Vector<RouteNode> {
         return title;
     }
 
-
-    public boolean isContainer() {
-        return isContainer;
+    public Route getRoute() {
+        return route;
     }
 }

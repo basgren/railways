@@ -1,10 +1,10 @@
 package net.bitpot.railways.models;
 
 import net.bitpot.railways.parser.RailsRoutesParser;
+import net.bitpot.railways.parser.RouteTreeBuilder;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,10 +16,9 @@ public class RouteNodeTest
     private RouteNode buildRouteTreeFromFile(String filename) {
         try {
             RailsRoutesParser parser = new RailsRoutesParser();
-
             RouteList routes = parser.parseFile("test/data/treeview/" + filename);
-            return RouteNode.buildTree(routes);
 
+            return RouteTreeBuilder.buildTree(routes);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -32,8 +31,7 @@ public class RouteNodeTest
     {
         RouteNode node = buildRouteTreeFromFile("1_flat_list.txt");
 
-        assertEquals("Root node has 3 routes",
-                3, node.size());
+        assertEquals("Root node has 3 routes", 3, node.getChildCount());
     }
 
 
@@ -42,21 +40,22 @@ public class RouteNodeTest
     {
         RouteNode root = buildRouteTreeFromFile("2_simple_nested_routes.txt");
 
-        assertEquals("Root node has 2 child nodes", 2, root.size());
+        assertEquals("Root node has 2 child nodes", 2, root.getChildCount());
 
         // As we don't check sorting here, just iterate through nodes and check
         // if we have appropriate children.
-        for(RouteNode node: root) {
-            if (node.isContainer()) {
-                assertEquals("clients", node.getTitle());
-                assertEquals("Child should be a container", true, node.isContainer());
-            } else {
+        for(int i = 0; i < root.getChildCount(); i++) {
+            RouteNode node = (RouteNode) root.getChildAt(i);
+
+            if (node.isLeaf()) {
                 assertEquals("clients(.:format)", node.getTitle());
-                assertEquals("Child should be a route", false, node.isContainer());
+                assertEquals("Child should be a route", true, node.isLeaf());
+            } else {
+                assertEquals("clients", node.getTitle());
+                assertEquals("Child should be a container", false, node.isLeaf());
             }
         }
     }
-
 
 
     @Test
@@ -69,22 +68,22 @@ public class RouteNodeTest
         RouteNode root = buildRouteTreeFromFile("3_route_nodes_sorting.txt");
         RouteNode child;
 
-        assertEquals("Root node has 2 child nodes", 2, root.size());
+        assertEquals("Root node has 2 child nodes", 2, root.getChildCount());
 
         // Check first child
-        child = root.get(0);
+        child = (RouteNode) root.getChildAt(0);
         assertEquals("First child should be 'clients' container",
                 "clients", child.getTitle());
 
         // Test sorting in child nodes
-        assertEquals(":id",                 child.get(0).getTitle());
-        assertEquals(":id(.:format)",       child.get(1).getTitle());
-        assertEquals("new(.:format)",       child.get(2).getTitle());
-        assertEquals("search(.:format)",    child.get(3).getTitle());
+        assertEquals(":id",                 ((RouteNode)child.getChildAt(0)).getTitle());
+        assertEquals(":id(.:format)",       ((RouteNode)child.getChildAt(1)).getTitle());
+        assertEquals("new(.:format)",       ((RouteNode)child.getChildAt(2)).getTitle());
+        assertEquals("search(.:format)",    ((RouteNode)child.getChildAt(3)).getTitle());
 
 
         // Check second child
-        child = root.get(1);
+        child = (RouteNode) root.getChildAt(1);
         assertEquals("Second child should be 'clients(.:format)' route",
                 "clients(.:format)", child.getTitle());
     }

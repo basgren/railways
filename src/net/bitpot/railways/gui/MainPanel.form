@@ -66,7 +66,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="8ddf0" layout-manager="BorderLayout" hgap="0" vgap="0">
+              <grid id="8ddf0" binding="routesListPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints>
                   <card name="routesCard"/>
                 </constraints>
@@ -189,7 +189,7 @@
                   </scrollpane>
                 </children>
               </grid>
-              <grid id="e98d6" layout-manager="FormLayout">
+              <grid id="e98d6" binding="routesErrorPanel" layout-manager="FormLayout">
                 <rowspec value="center:d:grow"/>
                 <rowspec value="top:4dlu:noGrow"/>
                 <rowspec value="center:d:noGrow"/>
@@ -233,6 +233,28 @@
                     </constraints>
                     <properties/>
                   </component>
+                </children>
+              </grid>
+              <grid id="282cf" binding="routesTreeviewPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <card name="routesTreeCard"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="781c6" class="com.intellij.ui.components.JBScrollPane">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="992d2" class="com.intellij.ui.treeStructure.Tree" binding="routesTree" custom-create="true">
+                        <constraints/>
+                        <properties>
+                          <rootVisible value="false"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
             </children>

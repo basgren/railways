@@ -40,6 +40,10 @@ public abstract class RailwaysColors {
     public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
             plainTextAttr(OPTIONAL_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
 
+    // Colors for treeview
+    public static final SimpleTextAttributes CONTROLLER_METHOD_ATTR =
+            plainTextAttr(JBColor.GRAY, null);
+
 
     private static Color schemeColor(String name) {
         return TextAttributesKey.find(name)
