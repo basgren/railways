@@ -124,6 +124,22 @@ public class MainPanel {
 
 
     /**
+     * Initializes Railways toolbar with actions defined in plugin.xml.
+     */
+    private void initToolbar() {
+        ActionManager am = ActionManager.getInstance();
+
+        // The toolbar is registered in plugin.xml
+        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
+
+        // Create railways toolbar.
+        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+        toolbar.setTargetComponent(actionsPanel);
+        actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
+    }
+
+
+    /**
      * Hides panel with routes list and shows panel with information message.
      *
      * @param message Message to show.
@@ -253,20 +269,6 @@ public class MainPanel {
         else
             routesCounterLbl.setText(String.format("%d/%d",
                     myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
-    }
-
-
-    private void initToolbar() {
-        ActionManager am = ActionManager.getInstance();
-
-        // The toolbar is registered in plugin.xml
-        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
-
-        // Create railways toolbar.
-        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
-
-        toolbar.setTargetComponent(actionsPanel);
-        actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
     }
 
 

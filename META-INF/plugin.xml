@@ -111,8 +111,29 @@
 
 
     <actions>
-        <action id="railways.UpdateRoutesList" class="net.bitpot.railways.actions.UpdateRoutesListAction" text="Update routes list"
-                description="Update the list of routes" icon="/actions/sync.png"/>
+
+        <action id="railways.ShowAsTree"
+                class="net.bitpot.railways.actions.ShowAsTreeAction"
+                text="Show routes as tree"
+                description="Shows routes as a tree."
+                icon="/actions/showAsTree.png"/>
+
+        <action id="railways.ExpandAll"
+                class="net.bitpot.railways.actions.ExpandAllAction"
+                text="Expand all"
+                icon="/actions/expandall.png" />
+
+        <action id="railways.CollapseAll"
+                class="net.bitpot.railways.actions.CollapseAllAction"
+                text="Collapse all"
+                icon="/actions/collapseall.png" />
+
+
+        <action id="railways.UpdateRoutesList"
+                class="net.bitpot.railways.actions.UpdateRoutesListAction"
+                text="Update routes list"
+                description="Update the list of routes"
+                icon="/actions/sync.png"/>
 
 
         <action id="Railways.gotoRouteAction" class="net.bitpot.railways.actions.GotoRouteMethodAction"
@@ -123,6 +144,10 @@
 
 
         <group id="railways.MainToolbar">
+            <reference ref="railways.ShowAsTree"/>
+            <reference ref="railways.ExpandAll"/>
+            <reference ref="railways.CollapseAll"/>
+            <separator/>
             <reference ref="railways.UpdateRoutesList"/>
         </group>
 
@@ -132,4 +157,5 @@
         </group>
 
     </actions>
+
 </idea-plugin>
