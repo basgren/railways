@@ -54,7 +54,7 @@ public class UpdateRoutesListAction extends AnAction {
         RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
         if (rm == null) return;
 
-        RailwaysActionsFields fields =
+        RailwaysActionFields fields =
                 RoutesView.getInstance(project).getRailwaysActionsFields();
 
         boolean previousState = fields.previousRoutesUpdatingState;

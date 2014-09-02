@@ -3,12 +3,12 @@ package net.bitpot.railways.routesView;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.ui.content.Content;
-import net.bitpot.railways.gui.RailwaysIcons;
 
 import javax.swing.*;
 
 /**
- * Stores data for a module panel in Routes tool window.
+ * Stores data for a module panel in Routes tool window. Each project module
+ * that can have its own routes has its own RoutesViewPane.
  */
 public class RoutesViewPane {
 

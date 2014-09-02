@@ -14,7 +14,7 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.UIUtil;
-import net.bitpot.railways.actions.RailwaysActionsFields;
+import net.bitpot.railways.actions.RailwaysActionFields;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,8 @@ public class RoutesView implements Disposable {
     private RoutesViewPane currentPane = null;
 
     // Hmmm... I don't remember why I needed this... Some glitches with action state update?
-    private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
+    private RailwaysActionFields railwaysActionsFields = new RailwaysActionFields();
+
 
     public RoutesView(Project project) {
         myProject = project;
@@ -69,34 +70,26 @@ public class RoutesView implements Disposable {
             addModulePane(m);
 
         // Add listener to update mainPanel when a module is selected from
-        // tool window header.
+        // tool window combo.
         myContentManager.addContentManagerListener(new ContentManagerAdapter() {
             @Override
             public void selectionChanged(ContentManagerEvent event) {
                 // When user selects a module from tool window combo,
                 // selectionChanges is called twice:
-                // 1. With 'remove' operation -  for previously selected item,
-                // 2. With 'add' operation - for newly selected item.
-                if (event.getOperation() == ContentManagerEvent.ContentOperation.add)
-                    viewSelectionChanged();
+                // 1. With 'remove' event -  for previously selected item,
+                // 2. With 'add' event - for newly selected item.
+                if (event.getOperation() != ContentManagerEvent.ContentOperation.add
+                        || event.getContent() == null)
+                    return;
+
+                // Find selected pane by content.
+                for(RoutesViewPane p: myPanes)
+                    if (p.getContent() == event.getContent()) {
+                        setCurrentPane(p);
+                        return;
+                    }
             }
         });
-    }
-
-
-    private void viewSelectionChanged() {
-        Content content = myContentManager.getSelectedContent();
-        if (content == null) return;
-
-        // Find selected pane by content.
-        RoutesViewPane pane = null;
-        for(RoutesViewPane p: myPanes)
-            if (p.getContent() == content) {
-                pane = p;
-                break;
-            }
-
-        setCurrentPane(pane);
     }
 
 
@@ -188,8 +181,24 @@ public class RoutesView implements Disposable {
      *
      * @return Object with info
      */
-    public RailwaysActionsFields getRailwaysActionsFields() {
+    public RailwaysActionFields getRailwaysActionsFields() {
         return railwaysActionsFields;
+    }
+
+
+    private class MyRoutesManagerListener implements RoutesManagerListener {
+        @Override
+        public void stateChanged(final RoutesManager routesManager) {
+            // Railways can invoke this event from another thread
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+                public void run() {
+                    // Synchronize with routesManager only if it belongs to
+                    // currently selected pane.
+                    if (routesManager == getCurrentRoutesManager())
+                        syncPanelWithRoutesManager(routesManager);
+                }
+            });
+        }
     }
 
 
@@ -215,19 +224,4 @@ public class RoutesView implements Disposable {
         }
     }
 
-
-    private class MyRoutesManagerListener implements RoutesManagerListener {
-        @Override
-        public void stateChanged(final RoutesManager routesManager) {
-            // Railways can invoke this event from another thread
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-                public void run() {
-                    // Synchronize with routesManager only if it belongs to
-                    // currently selected pane.
-                    if (routesManager == getCurrentRoutesManager())
-                        syncPanelWithRoutesManager(routesManager);
-                }
-            });
-        }
-    }
 }

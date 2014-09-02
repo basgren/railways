@@ -28,9 +28,15 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
         if (node.isLeaf()) {
             Route route = node.getRoute();
 
+            // When there are no routes, root node can be a leaf
+            if (route == null)
+                return;
+
             append(node.getTitle());
-            append(" (" + route.getActionText() + ")",
-                    RailwaysColors.CONTROLLER_METHOD_ATTR);
+            String text = route.getActionText();
+
+            if (text != null)
+                append(" (" + text + ")", RailwaysColors.CONTROLLER_METHOD_ATTR);
 
             setIcon(route.getIcon());
         } else {

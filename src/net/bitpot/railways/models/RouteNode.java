@@ -1,11 +1,11 @@
 package net.bitpot.railways.models;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.ArrayUtil;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Container for routes. Can contain any RouteItem (Route of RouteNode).
@@ -49,6 +49,9 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
      * Sorts routes alphabetically
      */
     public void sort() {
+        if (this.children == null)
+            return;
+
         Collections.sort(this.children, RouteNode.comparator);
 
         for (Object node: this.children)

@@ -8,7 +8,7 @@ package net.bitpot.railways.actions;
  * use internal fields in actions if we need to keep separate values for each
  * project.
  */
-public class RailwaysActionsFields {
+public class RailwaysActionFields {
     // Field is used to store previous value of RailwaysUtils.isUpdating()
     public boolean previousRoutesUpdatingState = false;
 }
