@@ -2,7 +2,7 @@ package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -23,11 +23,18 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import javax.swing.*;
 import java.util.ArrayList;
 
+@State(
+        name = "RoutesView",
+        storages = {
+                @Storage(id="other", file = StoragePathMacros.WORKSPACE_FILE)
+        }
+)
+
 /**
  * Implements tool window logic. Synchronizes the number of tool window panes
  * with the number of opened Rails modules in the project.
  */
-public class RoutesView implements Disposable {
+public class RoutesView implements Disposable, PersistentStateComponent<RoutesView.State> {
 
     public static RoutesView getInstance(Project project) {
         return ServiceManager.getService(project, RoutesView.class);
@@ -43,6 +50,28 @@ public class RoutesView implements Disposable {
 
     // Hmmm... I don't remember why I needed this... Some glitches with action state update?
     private RailwaysActionFields railwaysActionsFields = new RailwaysActionFields();
+
+    private State myState = new State();
+
+
+    // State class should be accessible from outer packages, so it should be
+    // declared as public static.
+    public static class State {
+        public boolean isTreeMode;
+    }
+
+
+    @Nullable
+    @Override
+    public State getState() {
+        return myState;
+    }
+
+
+    @Override
+    public void loadState(State state) {
+        myState = state;
+    }
 
 
     public RoutesView(Project project) {
@@ -90,6 +119,19 @@ public class RoutesView implements Disposable {
                     }
             }
         });
+    }
+
+
+    public boolean isTreeMode() {
+        return myState.isTreeMode;
+    }
+
+    public void setTreeMode(boolean isTreeMode) {
+        if (isTreeMode == isTreeMode())
+            return;
+
+        myState.isTreeMode = isTreeMode;
+        // TODO: implement tree mode switching.
     }
 
 
