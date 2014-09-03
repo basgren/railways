@@ -39,6 +39,11 @@ public class MainPanel {
     private static final String CARD_TREE_PANEL = "treePanel";
 
 
+    private final static int PANEL_ROUTES = 0;
+    private final static int PANEL_MESSAGE = 1;
+    private final static int PANEL_ERROR = 2;
+
+
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(MainPanel.class.getName());
 
@@ -76,10 +81,6 @@ public class MainPanel {
     private JPanel routeViews;
 
 
-    private CardLayout cardLayout;
-    private boolean routesHidden = false;
-
-
     private Project project;
 
     // A pane that is used as a data source for the Routes panel.
@@ -87,7 +88,10 @@ public class MainPanel {
 
     // Contains route which information is shown in the info panel.
     // Contains null if no route is selected.
+    @Nullable
     private Route currentRoute;
+
+    private int currentPanel;
 
 
     public MainPanel(Project project) {
@@ -120,15 +124,13 @@ public class MainPanel {
         // Init routes tree
         routesTree.setCellRenderer(new RouteTreeCellRenderer());
 
-
-        cardLayout = (CardLayout) (centerPanel.getLayout());
-
         showErrorLink.setHyperlinkText("Show details");
 
         updateCounterLabel();
 
         // Update route info panel
         showRouteInfo(null);
+        showPanel(PANEL_ROUTES);
     }
 
 
@@ -148,48 +150,24 @@ public class MainPanel {
     }
 
 
-    /**
-     * Show panel that contains routes table, hiding any other panel (information or error).
-     */
-    private void showRoutesPanel() {
-        routesHidden = false;
-        updateCounterLabel();
-        setControlsEnabled(true);
+    private void showPanel(int panel) {
+        if (currentPanel == panel)
+            return;
 
-        routesCounterLbl.setVisible(true);
-        cardLayout.show(centerPanel, ROUTES_CARD_NAME);
-    }
+        String panelName;
 
+        switch (panel) {
+            case PANEL_MESSAGE: panelName = INFO_CARD_NAME; break;
+            case PANEL_ERROR:   panelName = INFO_CARD_NAME; break;
+            default:            panelName = ROUTES_CARD_NAME; break;
+        }
 
-    /**
-     * Hides panel with routes list and shows panel with information message.
-     *
-     * @param message Message to show.
-     */
-    private void showMessagePanel(String message) {
-        infoLbl.setText(message);
-        showErrorLink.setVisible(false);
-        routesHidden = true;
-        updateCounterLabel();
-        setControlsEnabled(false);
+        showErrorLink.setVisible(panel == PANEL_ERROR);
+        setControlsEnabled(panel == PANEL_ROUTES);
 
-        cardLayout.show(centerPanel, INFO_CARD_NAME);
-    }
+        ((CardLayout)centerPanel.getLayout()).show(centerPanel, panelName);
 
-
-    /**
-     * Hides routes panel and shows panel with error message and with link that shows dialog with error details
-     */
-    private void showErrorPanel() {
-        infoLbl.setText("Failed to load routes");
-        showErrorLink.setVisible(true);
-        routesCounterLbl.setVisible(false);
-        routesHidden = true;
-
-        updateCounterLabel();
-        setControlsEnabled(false);
-
-        cardLayout.show(centerPanel, INFO_CARD_NAME);
+        currentPanel = panel;
     }
 
 
@@ -278,7 +256,7 @@ public class MainPanel {
 
     private void setControlsEnabled(boolean value) {
         pathFilterField.setEnabled(value);
-        routesCounterLbl.setEnabled(value);
+        routesCounterLbl.setVisible(value);
     }
 
 
@@ -287,11 +265,8 @@ public class MainPanel {
      * list is not visible (info or error panels are shown)
      */
     private void updateCounterLabel() {
-        if (routesHidden)
-            routesCounterLbl.setText("--/--");
-        else
-            routesCounterLbl.setText(String.format("%d/%d",
-                    myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
+        routesCounterLbl.setText(String.format("%d/%d",
+                myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
     }
 
 
@@ -355,7 +330,7 @@ public class MainPanel {
         RouteNode root = RouteTreeBuilder.buildTree(routeList);
         routesTree.setModel(new DefaultTreeModel(root));
 
-        showRoutesPanel();
+        showPanel(PANEL_ROUTES);
 
         UpdateRoutesListAction.updateIcon(project);
     }
@@ -365,9 +340,21 @@ public class MainPanel {
         showMessagePanel("Loading routes...");
     }
 
+    /**
+     * Hides panel with routes list and shows panel with information message.
+     *
+     * @param message Message to show.
+     */
+    private void showMessagePanel(String message) {
+        infoLbl.setText(message);
+        showPanel(PANEL_MESSAGE);
+    }
+
 
     public void showRoutesUpdateError() {
-        showErrorPanel();
+        infoLbl.setText("Failed to load routes");
+        showPanel(PANEL_ERROR);
+
         UpdateRoutesListAction.updateIcon(project);
     }
 
