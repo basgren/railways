@@ -72,6 +72,8 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
     @Override
     public void loadState(State state) {
         myState = state;
+
+        mainPanel.setRoutesViewMode(myState.viewMode);
     }
 
 
