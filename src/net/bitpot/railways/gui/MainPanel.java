@@ -14,7 +14,9 @@ import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.parser.RouteTreeBuilder;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
@@ -44,7 +46,6 @@ public class MainPanel {
     // Names should be the same as specified in GUI designer for appropriate panels.
     private final static String ROUTES_CARD_NAME = "routesCard"; // Main page with routes table.
     private final static String INFO_CARD_NAME = "infoCard"; // Panel with message/error information.
-    private final static String ROUTES_TREE_CARD_NAME = "routesTreeCard"; // Panel with routes tree
 
     private final static String NO_INFO = "-";
 
@@ -212,16 +213,6 @@ public class MainPanel {
     }
 
 
-//    private void showRoutesTreePanel() {
-//        routesHidden = false;
-//        updateCounterLabel();
-//        setControlsEnabled(true);
-//
-//        routesCounterLbl.setVisible(true);
-//        cardLayout.show(centerPanel, ROUTES_TREE_CARD_NAME);
-//    }
-
-
     /**
      * Called by IntelliJ form builder upon MainForm creation.
      */
@@ -357,26 +348,17 @@ public class MainPanel {
     // ----------------------------------------
     //         Railways event handlers
 
-
-
     public void setUpdatedRoutes(RouteList routeList) {
         myTableModel.setRoutes(routeList);
 
-        // TODO: restore after debug
-        showRoutesPanel();
+        // Update tree view
+        RouteNode root = RouteTreeBuilder.buildTree(routeList);
+        routesTree.setModel(new DefaultTreeModel(root));
 
-        //updateRoutesTree(routeList);
-        //showRoutesTreePanel();
+        showRoutesPanel();
 
         UpdateRoutesListAction.updateIcon(project);
     }
-
-
-//    private void updateRoutesTree(RouteList routeList) {
-//        RouteNode root = RouteTreeBuilder.buildTree(routeList);
-//
-//        routesTree.setModel(new DefaultTreeModel(root));
-//    }
 
 
     public void showLoading() {
