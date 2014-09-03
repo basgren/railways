@@ -12,8 +12,9 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.models.*;
-import net.bitpot.railways.parser.RouteTreeBuilder;
+import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
@@ -31,6 +32,11 @@ import java.awt.event.MouseEvent;
  *
  */
 public class MainPanel {
+
+    private static final String CARD_TABLE_PANEL = "tablePanel";
+    private static final String CARD_TREE_PANEL = "treePanel";
+
+
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(MainPanel.class.getName());
 
@@ -47,7 +53,7 @@ public class MainPanel {
     private JPanel rootPanel;
     private JBTable routesTable;
     private JTextField pathFilterField;
-    private JPanel cardsPanel;
+    private JPanel centerPanel;
     private HyperlinkLabel showErrorLink;
     private JLabel infoLbl;
     private JLabel routesCounterLbl;
@@ -61,10 +67,12 @@ public class MainPanel {
     private JPanel topPanel;
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
-    private JPanel routesListPanel;
+    private JPanel routesPanel;
     private JPanel routesErrorPanel;
     private JPanel routesTreeviewPanel;
     private JTree routesTree;
+    private JPanel routesTablePanel;
+    private JPanel routeViews;
 
 
     private CardLayout cardLayout;
@@ -112,7 +120,7 @@ public class MainPanel {
         routesTree.setCellRenderer(new RouteTreeCellRenderer());
 
 
-        cardLayout = (CardLayout) (cardsPanel.getLayout());
+        cardLayout = (CardLayout) (centerPanel.getLayout());
 
         showErrorLink.setHyperlinkText("Show details");
 
@@ -140,6 +148,19 @@ public class MainPanel {
 
 
     /**
+     * Show panel that contains routes table, hiding any other panel (information or error).
+     */
+    private void showRoutesPanel() {
+        routesHidden = false;
+        updateCounterLabel();
+        setControlsEnabled(true);
+
+        routesCounterLbl.setVisible(true);
+        cardLayout.show(centerPanel, ROUTES_CARD_NAME);
+    }
+
+
+    /**
      * Hides panel with routes list and shows panel with information message.
      *
      * @param message Message to show.
@@ -151,7 +172,7 @@ public class MainPanel {
         updateCounterLabel();
         setControlsEnabled(false);
 
-        cardLayout.show(cardsPanel, INFO_CARD_NAME);
+        cardLayout.show(centerPanel, INFO_CARD_NAME);
     }
 
 
@@ -163,36 +184,47 @@ public class MainPanel {
         showErrorLink.setVisible(true);
         routesCounterLbl.setVisible(false);
         routesHidden = true;
+
         updateCounterLabel();
         setControlsEnabled(false);
 
-        cardLayout.show(cardsPanel, INFO_CARD_NAME);
+        cardLayout.show(centerPanel, INFO_CARD_NAME);
     }
 
 
     /**
-     * Show panel that contains routes table, hiding any other panel (information or error).
+     * Sets the way routes will be represented - using common table or treeview.
+     * It can be either ViewConstants.VIEW_MODE_TREE or ViewConstants.VIEW_MODE_TABLE.
+     *
+     * @param viewMode View mode.
      */
-    private void showRoutesPanel() {
-        routesHidden = false;
-        updateCounterLabel();
-        setControlsEnabled(true);
+    public void setRoutesViewMode(int viewMode) {
+        String panelID;
+        switch (viewMode) {
+            case ViewConstants.VIEW_MODE_TREE:
+                panelID = CARD_TREE_PANEL;
+                break;
+            default:
+                panelID = CARD_TABLE_PANEL;
+        }
 
-        routesCounterLbl.setVisible(true);
-        cardLayout.show(cardsPanel, ROUTES_CARD_NAME);
+        ((CardLayout)routeViews.getLayout()).show(routeViews, panelID);
     }
 
 
-    private void showRoutesTreePanel() {
-        routesHidden = false;
-        updateCounterLabel();
-        setControlsEnabled(true);
+//    private void showRoutesTreePanel() {
+//        routesHidden = false;
+//        updateCounterLabel();
+//        setControlsEnabled(true);
+//
+//        routesCounterLbl.setVisible(true);
+//        cardLayout.show(centerPanel, ROUTES_TREE_CARD_NAME);
+//    }
 
-        routesCounterLbl.setVisible(true);
-        cardLayout.show(cardsPanel, ROUTES_TREE_CARD_NAME);
-    }
 
-
+    /**
+     * Called by IntelliJ form builder upon MainForm creation.
+     */
     private void createUIComponents() {
         // Create custom table
         routesTable = new RoutesTable();
@@ -333,18 +365,18 @@ public class MainPanel {
         // TODO: restore after debug
         showRoutesPanel();
 
-        updateRoutesTree(routeList);
-        showRoutesTreePanel();
+        //updateRoutesTree(routeList);
+        //showRoutesTreePanel();
 
         UpdateRoutesListAction.updateIcon(project);
     }
 
 
-    private void updateRoutesTree(RouteList routeList) {
-        RouteNode root = RouteTreeBuilder.buildTree(routeList);
-
-        routesTree.setModel(new DefaultTreeModel(root));
-    }
+//    private void updateRoutesTree(RouteList routeList) {
+//        RouteNode root = RouteTreeBuilder.buildTree(routeList);
+//
+//        routesTree.setModel(new DefaultTreeModel(root));
+//    }
 
 
     public void showLoading() {

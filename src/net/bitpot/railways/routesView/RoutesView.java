@@ -16,6 +16,7 @@ import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.RailwaysActionFields;
 import net.bitpot.railways.gui.MainPanel;
+import net.bitpot.railways.gui.ViewConstants;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -57,7 +58,7 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
     // State class should be accessible from outer packages, so it should be
     // declared as public static.
     public static class State {
-        public boolean isTreeMode;
+        public int viewMode = ViewConstants.VIEW_MODE_TABLE;
     }
 
 
@@ -122,16 +123,16 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
     }
 
 
-    public boolean isTreeMode() {
-        return myState.isTreeMode;
+    public int getViewMode() {
+        return myState.viewMode;
     }
 
-    public void setTreeMode(boolean isTreeMode) {
-        if (isTreeMode == isTreeMode())
+    public void setViewMode(int viewMode) {
+        if (viewMode == getViewMode())
             return;
 
-        myState.isTreeMode = isTreeMode;
-        // TODO: implement tree mode switching.
+        mainPanel.setRoutesViewMode(viewMode);
+        myState.viewMode = viewMode;
     }
 
 

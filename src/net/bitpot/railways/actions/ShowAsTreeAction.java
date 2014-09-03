@@ -2,6 +2,7 @@ package net.bitpot.railways.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import net.bitpot.railways.gui.ViewConstants;
 import net.bitpot.railways.routesView.RoutesView;
 
 /**
@@ -16,7 +17,7 @@ public class ShowAsTreeAction extends ToggleAction {
             return false;
 
         RoutesView view = RoutesView.getInstance(e.getProject());
-        return view.isTreeMode();
+        return view.getViewMode() == ViewConstants.VIEW_MODE_TREE;
     }
 
 
@@ -26,6 +27,6 @@ public class ShowAsTreeAction extends ToggleAction {
             return;
 
         RoutesView view = RoutesView.getInstance(e.getProject());
-        view.setTreeMode(state);
+        view.setViewMode(state ? ViewConstants.VIEW_MODE_TREE : ViewConstants.VIEW_MODE_TABLE);
     }
 }
