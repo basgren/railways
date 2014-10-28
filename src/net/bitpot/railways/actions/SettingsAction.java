@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.gui.RailwaysSettingsDialog;
+import net.bitpot.railways.routesView.RoutesManager;
+import net.bitpot.railways.routesView.RoutesView;
 
 /**
  * @author Basil Gren
@@ -20,7 +22,12 @@ public class SettingsAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(CommonDataKeys.PROJECT);
-        RailwaysSettingsDialog.configure(project);
+
+        RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+        if (rm == null)
+            return;
+
+        RailwaysSettingsDialog.configure(rm.getModule());
     }
 
 

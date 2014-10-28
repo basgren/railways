@@ -1,7 +1,9 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.ui.components.JBTextField;
+import net.bitpot.railways.routesView.RoutesManager;
 
 import javax.swing.*;
 
@@ -13,10 +15,10 @@ public class RailwaysSettingsForm {
     private JPanel rootPanel;
     private JBTextField routesTaskEdit;
 
-    private final Project myProject;
+    private final Module myModule;
 
-    public RailwaysSettingsForm(Project project) {
-        myProject = project;
+    public RailwaysSettingsForm(Module module) {
+        myModule = module;
     }
 
     public JComponent rootPanel() {
@@ -29,7 +31,9 @@ public class RailwaysSettingsForm {
      * Resets form components to contain corresponding project settings.
      */
     public void reset() {
+        RoutesManager.State settings = getSettings();
 
+        routesTaskEdit.setText(settings.routesTaskName);
     }
 
 
@@ -37,6 +41,14 @@ public class RailwaysSettingsForm {
      * Sets project settings from corresponding form component values.
      */
     public void apply() {
+        RoutesManager.State settings = getSettings();
 
+        settings.routesTaskName = routesTaskEdit.getText();
+    }
+
+
+    private RoutesManager.State getSettings() {
+        RoutesManager mgr = ModuleServiceManager.getService(myModule, RoutesManager.class);
+        return mgr.getState();
     }
 }

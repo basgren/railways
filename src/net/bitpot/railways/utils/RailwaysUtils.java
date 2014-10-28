@@ -49,7 +49,7 @@ public class RailwaysUtils {
      * @return Output of 'rake routes'.
      */
     @Nullable
-    public static ProcessOutput queryRakeRoutes(Module module) {
+    public static ProcessOutput queryRakeRoutes(Module module, String routesTaskName) {
         // Get root path of Rails application from module.
         RailsApp app = RailsApp.fromModule(module);
         if ((app == null) || (app.getRailsApplicationRoot() == null))
@@ -74,7 +74,7 @@ public class RailwaysUtils {
             return GemsRunner.runGemsExecutableScript(sdk, module,
                     "rake", "rake",
                     moduleContentRoot, new ExecutionModes.SameThreadMode(),
-                    "routes", "--trace");
+                    routesTaskName, "--trace");
         } catch (Exception e) {
             e.printStackTrace();
         }

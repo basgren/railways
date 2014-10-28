@@ -1,7 +1,8 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,13 +15,13 @@ public class RailwaysSettingsDialog extends DialogWrapper {
 
     private final RailwaysSettingsForm myPanel;
 
-    protected RailwaysSettingsDialog(@Nullable Project project) {
-        super(project);
+    protected RailwaysSettingsDialog(@NotNull Module module) {
+        super(module.getProject());
 
         setTitle("Configure Railways");
 
         // Create panel and reset components
-        myPanel = new RailwaysSettingsForm(project);
+        myPanel = new RailwaysSettingsForm(module);
         myPanel.reset();
 
         // Important to call inherited init() method.
@@ -42,12 +43,14 @@ public class RailwaysSettingsDialog extends DialogWrapper {
     }
 
 
-    public static void configure(Project project) {
-        RailwaysSettingsDialog dlg = new RailwaysSettingsDialog(project);
+    public static void configure(Module module) {
+        RailwaysSettingsDialog dlg = new RailwaysSettingsDialog(module);
         dlg.show();
 
         if (!dlg.isOK())
             return;
+
+        dlg.myPanel.apply();
 
         dlg.dispose();
     }

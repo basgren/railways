@@ -107,6 +107,9 @@
 
         <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
                         serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
+
+        <moduleService  serviceInterface="net.bitpot.railways.routesView.RoutesManager"
+                        serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
     </extensions>
 
 
