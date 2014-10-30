@@ -1,6 +1,5 @@
 package net.bitpot.railways.parser.route;
 
-import com.intellij.openapi.util.text.StringUtilRt;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

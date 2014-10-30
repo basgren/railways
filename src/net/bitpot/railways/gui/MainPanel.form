@@ -226,7 +226,7 @@
                       <forms defaultalign-vert="false"/>
                     </constraints>
                   </vspacer>
-                  <component id="ed362" class="com.intellij.ui.HyperlinkLabel" binding="showErrorLink">
+                  <component id="ed362" class="com.intellij.ui.HyperlinkLabel" binding="infoLink">
                     <constraints>
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                       <forms defaultalign-horz="false"/>

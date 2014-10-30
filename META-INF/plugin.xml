@@ -107,6 +107,9 @@
 
         <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
                         serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
+
+        <moduleService  serviceInterface="net.bitpot.railways.routesView.RoutesManager"
+                        serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
     </extensions>
 
 
@@ -122,8 +125,15 @@
         </action>
 
 
+        <action id="Railways.settingsAction" class="net.bitpot.railways.actions.SettingsAction"
+                text="Settings"
+                description="Open Railways settings dialog."
+                icon="AllIcons.Actions.Properties" />
+
+
         <group id="railways.MainToolbar">
             <reference ref="railways.UpdateRoutesList"/>
+            <reference ref="Railways.settingsAction"/>
         </group>
 
 

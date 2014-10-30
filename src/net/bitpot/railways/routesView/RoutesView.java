@@ -200,9 +200,9 @@ public class RoutesView implements Disposable {
      *                      appearance sync.
      */
     private void syncPanelWithRoutesManager(RoutesManager routesManager) {
-        switch(routesManager.getState()) {
+        switch(routesManager.getRoutesState()) {
             case RoutesManager.UPDATING:
-                mainPanel.showLoading();
+                mainPanel.showLoadingMessage();
                 break;
 
             case RoutesManager.UPDATED:
@@ -210,7 +210,7 @@ public class RoutesView implements Disposable {
                 break;
 
             case RoutesManager.ERROR:
-                mainPanel.showRoutesUpdateError();
+                mainPanel.showRoutesUpdateError(routesManager.getParserErrorCode());
                 break;
         }
     }
