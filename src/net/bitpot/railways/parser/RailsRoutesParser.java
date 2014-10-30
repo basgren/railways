@@ -233,7 +233,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
 
     public boolean isErrorReported() {
-        return !stacktrace.equals("");
+        return errorCode != NO_ERRORS;
     }
 
 

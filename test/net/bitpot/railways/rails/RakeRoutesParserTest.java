@@ -50,6 +50,7 @@ public class RakeRoutesParserTest
 
         assertTrue(stack.length() > 0);
         assertEquals(RailsRoutesParser.ERROR_GENERAL, parser.getErrorCode());
+        assertTrue(parser.isErrorReported());
         assertFalse("Rake error wasn't cleaned from unnecessary text.",
                 stack.contains("rake aborted!"));
     }
@@ -65,6 +66,18 @@ public class RakeRoutesParserTest
         String stack = parser.getErrorStacktrace();
 
         assertEquals(stack.length(), 0);
+    }
+
+
+    @Test
+    public void testWrongRakeTaskCall() {
+        String s = "rake aborted!\n" +
+                "    Don't know how to build task 'xroutes'";
+
+        parser.parse("", s);
+
+        assertEquals(RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND, parser.getErrorCode());
+        assertTrue(parser.isErrorReported());
     }
 
 
@@ -113,16 +126,6 @@ public class RakeRoutesParserTest
         actual = routes.get(1);
 
         TestUtils.assertRouteEquals(expected, actual);
-    }
-
-    @Test
-    public void testWrongRakeTaskCall() {
-        String s = "rake aborted!\n" +
-                "    Don't know how to build task 'xroutes'";
-
-        parser.parse("", s);
-
-        assertEquals(RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND, parser.getErrorCode());
     }
 
 
