@@ -18,7 +18,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Rake routes task"/>
+          <text value="Routes rake task name"/>
         </properties>
       </component>
       <component id="1ad27" class="com.intellij.ui.components.JBTextField" binding="routesTaskEdit">

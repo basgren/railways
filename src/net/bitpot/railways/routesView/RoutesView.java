@@ -210,7 +210,7 @@ public class RoutesView implements Disposable {
                 break;
 
             case RoutesManager.ERROR:
-                mainPanel.showRoutesUpdateError();
+                mainPanel.showRoutesUpdateError(routesManager.getParserErrorCode());
                 break;
         }
     }

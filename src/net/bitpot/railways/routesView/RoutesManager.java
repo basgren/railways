@@ -208,6 +208,11 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     }
 
 
+    public int getParserErrorCode() {
+        return parser.getErrorCode();
+    }
+
+
     /**
      * Returns ruby exception stacktrace from output of executed rake-task.
      *
