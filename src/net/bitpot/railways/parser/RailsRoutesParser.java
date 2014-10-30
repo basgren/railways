@@ -21,6 +21,12 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RailsRoutesParser.class.getName());
 
+    // Errors
+    public static final int NO_ERRORS = 0;
+    public static final int ERROR_GENERAL = -1;
+    public static final int ERROR_RAKE_TASK_NOT_FOUND = -2;
+
+
     private static final Pattern LINE_PATTERN = Pattern.compile("^\\s*([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+(\\S+?)\\s+(.+?)$");
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
@@ -38,6 +44,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     //private final Project project;
     private Module myModule;
+    private int errorCode;
 
 
     public RailsRoutesParser() {
@@ -47,11 +54,13 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     public RailsRoutesParser(@Nullable Module module) {
         myModule = module;
+        clearErrors();
     }
 
 
     public void clearErrors() {
         stacktrace = "";
+        errorCode = NO_ERRORS;
     }
 
 
@@ -208,8 +217,13 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         // Remove all rake messages that go to stdErr. Those messages start with "**".
         String cleanStdErr = stdErr.replaceAll("(?m)^\\*\\*.*$", "").trim();
 
-        // Remove unnecessary text if exception was thrown after rake sent several messages to stderr.
-        stacktrace = cleanStdErr.replaceAll(EXCEPTION_REGEX, "$1");
+        if (cleanStdErr.contains("Don't know how to"))
+            errorCode = ERROR_RAKE_TASK_NOT_FOUND;
+        else {
+            errorCode = ERROR_GENERAL;
+            // Remove unnecessary text if exception was thrown after rake sent several messages to stderr.
+            stacktrace = cleanStdErr.replaceAll(EXCEPTION_REGEX, "$1");
+        }
     }
 
 
@@ -220,5 +234,10 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     public boolean isErrorReported() {
         return !stacktrace.equals("");
+    }
+
+
+    public int getErrorCode() {
+        return errorCode;
     }
 }

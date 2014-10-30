@@ -49,6 +49,7 @@ public class RakeRoutesParserTest
         String stack = parser.getErrorStacktrace();
 
         assertTrue(stack.length() > 0);
+        assertEquals(RailsRoutesParser.ERROR_GENERAL, parser.getErrorCode());
         assertFalse("Rake error wasn't cleaned from unnecessary text.",
                 stack.contains("rake aborted!"));
     }
@@ -66,7 +67,7 @@ public class RakeRoutesParserTest
         assertEquals(stack.length(), 0);
     }
 
-
+    // TODO: check if this test is still actual
     @Test
     public void testRequirementsParsing()
     {
@@ -106,7 +107,7 @@ public class RakeRoutesParserTest
 
 
     @Test
-    public void testParsingMyltipleRouteTypesInASingleLine() {
+    public void testParsingMultipleRouteTypesInASingleLine() {
         String line = "  test GET|POST /test(.:format)             clients#show  ";
 
         List<Route> routes = parser.parseLine(line);
@@ -127,6 +128,16 @@ public class RakeRoutesParserTest
         actual = routes.get(1);
 
         TestUtils.assertRouteEquals(expected, actual);
+    }
+
+    @Test
+    public void testWrongRakeTaskCall() {
+        String s = "rake aborted!\n" +
+                "    Don't know how to build task 'xroutes'";
+
+        parser.parse("", s);
+
+        assertEquals(RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND, parser.getErrorCode());
     }
 
 
