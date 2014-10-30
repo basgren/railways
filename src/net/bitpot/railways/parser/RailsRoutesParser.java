@@ -216,6 +216,8 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
         // Remove all rake messages that go to stdErr. Those messages start with "**".
         String cleanStdErr = stdErr.replaceAll("(?m)^\\*\\*.*$", "").trim();
+        if (cleanStdErr.equals(""))
+            return;
 
         if (cleanStdErr.contains("Don't know how to"))
             errorCode = ERROR_RAKE_TASK_NOT_FOUND;

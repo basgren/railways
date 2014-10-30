@@ -66,6 +66,8 @@ public class RakeRoutesParserTest
         String stack = parser.getErrorStacktrace();
 
         assertEquals(stack.length(), 0);
+        assertFalse(parser.isErrorReported());
+        assertEquals(RailsRoutesParser.NO_ERRORS, parser.getErrorCode());
     }
 
 
