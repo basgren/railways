@@ -307,8 +307,9 @@ public class MainPanel {
     }
 
 
-    public void showLoading() {
-        showMessagePanel("Loading routes...");
+    public void showLoadingMessage() {
+        RoutesManager.State settings = myDataSource.getRoutesManager().getState();
+        showMessagePanel("Running `rake " + settings.routesTaskName + "`...");
     }
 
 

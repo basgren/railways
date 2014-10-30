@@ -27,7 +27,6 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?\\}\\s*$)");
     private static final Pattern REQUIREMENT_PATTERN = Pattern.compile(":([a-zA-Z0-9_]\\w*)\\s*=>\\s*(.+?)[,]");
 
-    //private static final Pattern EXCEPTION_REGEX = Pattern.compile("rake aborted!\\s*(.+?)Tasks:", Pattern.DOTALL);
     private static final String EXCEPTION_REGEX = "(?s)rake aborted!\\s*(.+?)Tasks:";
 
     // Will capture both {:to => Test::Server} and Test::Server.

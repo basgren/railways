@@ -105,7 +105,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
      * Returns plugin module settings.
      * @return ModuleSettings instance.
      */
-    @Nullable
+    @NotNull
     @Override
     public State getState() {
         return myModuleSettings;
