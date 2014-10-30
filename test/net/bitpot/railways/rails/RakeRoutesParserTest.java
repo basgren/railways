@@ -67,21 +67,6 @@ public class RakeRoutesParserTest
         assertEquals(stack.length(), 0);
     }
 
-    // TODO: check if this test is still actual
-    @Test
-    public void testRequirementsParsing()
-    {
-        String routeOldFormat = "mozilla_users        /mozilla_users(.:format)  {:user_agent=>/Mozilla.*/, :controller=>\"users\", :action=>\"index\"}";
-        String routeNewFormat = "mozilla_users        /mozilla_users(.:format)  users#index {:user_agent=>/Mozilla.*/, :test => 34, :test_string => \"Some string\"}";
-
-        // It's enough to check just requirements as the same strings are
-        // checked in another test.
-        List<Route> routeList = parser.parseLine(routeOldFormat);
-        Route route = routeList.get(0);
-
-        routeList = parser.parseLine(routeNewFormat);
-        route = routeList.get(0);
-    }
 
     @Test
     public void testConstraintsParsing()
