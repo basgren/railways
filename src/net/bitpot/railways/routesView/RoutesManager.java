@@ -1,6 +1,9 @@
 package net.bitpot.railways.routesView;
 
 import com.intellij.execution.process.ProcessOutput;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -16,11 +19,17 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import java.io.File;
 import java.util.LinkedList;
 
+
+@State(
+        name = "RailwaysModuleConfiguration",
+        storages = {@Storage(file = "$MODULE_FILE$")}
+)
+
 /**
  * Class is responsible for receiving and storing the list of routes for
  * a Rails module.
  */
-public class RoutesManager {
+public class RoutesManager implements PersistentStateComponent<RoutesManager.State> {
 
     /**
      * Default state. It is set just after RoutesManager is created.
@@ -46,7 +55,7 @@ public class RoutesManager {
     public static final int ERROR       = 3;
 
 
-    private int myState = DEFAULT;
+    private int myRoutesState = DEFAULT;
 
     private LinkedList<RoutesManagerListener> listeners = new LinkedList<RoutesManagerListener>();
 
@@ -60,6 +69,14 @@ public class RoutesManager {
 
     // Rails module
     private Module module = null;
+
+    private State myModuleSettings = new State();
+
+
+    public static class State {
+        // Name of rake task which retrieves routes.
+        public String routesTaskName = "routes";
+    }
 
 
     /**
@@ -79,8 +96,30 @@ public class RoutesManager {
      * Returns current state of RouteManager.
      * @return Current state.
      */
-    public int getState() {
-        return myState;
+    public int getRoutesState() {
+        return myRoutesState;
+    }
+
+
+    /**
+     * Returns plugin module settings.
+     * @return ModuleSettings instance.
+     */
+    @NotNull
+    @Override
+    public State getState() {
+        return myModuleSettings;
+    }
+
+
+    /**
+     * This method is called when new component state is loaded. A component should expect this method
+     * to be called at any moment of its lifecycle. The method can and will be called several times, if
+     * config files were externally changed while IDEA running.
+     */
+    @Override
+    public void loadState(State state) {
+        myModuleSettings = state;
     }
 
 
@@ -169,6 +208,11 @@ public class RoutesManager {
     }
 
 
+    public int getParserErrorCode() {
+        return parser.getErrorCode();
+    }
+
+
     /**
      * Returns ruby exception stacktrace from output of executed rake-task.
      *
@@ -186,10 +230,10 @@ public class RoutesManager {
      * @param newState New state of RouteManager.
      */
     private void setState(int newState) {
-        if (myState == newState)
+        if (myRoutesState == newState)
             return;
 
-        myState = newState;
+        myRoutesState = newState;
 
         // Notify listeners.
         for (RoutesManagerListener l : listeners)
@@ -219,7 +263,8 @@ public class RoutesManager {
             // Save indicator to be able to cancel task execution.
             routesUpdateIndicator = indicator;
 
-            output = RailwaysUtils.queryRakeRoutes(getModule());
+            output = RailwaysUtils.queryRakeRoutes(getModule(),
+                    myModuleSettings.routesTaskName);
 
             if (output == null)
                 setState(UPDATED);

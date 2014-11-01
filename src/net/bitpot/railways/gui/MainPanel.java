@@ -1,9 +1,6 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
@@ -17,6 +14,7 @@ import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.parser.RouteTreeBuilder;
+import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
@@ -54,13 +52,17 @@ public class MainPanel {
 
     private final static String NO_INFO = "-";
 
+    private static final int LINK_OPEN_SETTINGS = 1;
+    private static final int LINK_SHOW_STACKTRACE = 2;
+
+
     private RouteTableModel myTableModel;
 
     private JPanel rootPanel;
     private JBTable routesTable;
     private JTextField pathFilterField;
     private JPanel centerPanel;
-    private HyperlinkLabel showErrorLink;
+    private HyperlinkLabel infoLink;
     private JLabel infoLbl;
     private JLabel routesCounterLbl;
 
@@ -91,8 +93,8 @@ public class MainPanel {
     @Nullable
     private Route currentRoute;
 
+    private int infoLinkAction;
     private int currentPanel;
-
 
     public MainPanel(Project project) {
         this.project = project;
@@ -123,8 +125,6 @@ public class MainPanel {
 
         // Init routes tree
         routesTree.setCellRenderer(new RouteTreeCellRenderer());
-
-        showErrorLink.setHyperlinkText("Show details");
 
         updateCounterLabel();
 
@@ -162,12 +162,33 @@ public class MainPanel {
             default:            panelName = ROUTES_CARD_NAME; break;
         }
 
-        showErrorLink.setVisible(panel == PANEL_ERROR);
+        infoLink.setVisible(panel == PANEL_ERROR);
         setControlsEnabled(panel == PANEL_ROUTES);
 
         ((CardLayout)centerPanel.getLayout()).show(centerPanel, panelName);
 
         currentPanel = panel;
+    }
+
+    
+    private void updateErrorPanel(int parserError) {
+        switch (parserError) {
+            case RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND:
+                RoutesManager.State settings = myDataSource.getRoutesManager().getState();
+                infoLbl.setText("Rake task '" + settings.routesTaskName + "' is not found.");
+                infoLink.setHyperlinkText("Configure");
+                infoLinkAction = LINK_OPEN_SETTINGS;
+
+                AnAction act = ActionManager.getInstance().getAction("Railways.settingsAction");
+                infoLink.setIcon(act.getTemplatePresentation().getIcon());
+                break;
+
+            default:
+                infoLbl.setText("Failed to load routes");
+                infoLink.setHyperlinkText("Show details");
+                infoLinkAction = LINK_SHOW_STACKTRACE;
+                infoLink.setIcon(null);
+        }
     }
 
 
@@ -235,12 +256,22 @@ public class MainPanel {
         routesTable.getSelectionModel().addListSelectionListener(
                 new RouteSelectionListener(routesTable));
 
-        showErrorLink.addHyperlinkListener(new HyperlinkListener() {
+        infoLink.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
-                if (rm != null)
-                    RailwaysUtils.showErrorInfo(rm);
+                if (rm == null)
+                    return;
+
+                switch (infoLinkAction) {
+                    case LINK_OPEN_SETTINGS:
+                        RailwaysUtils.invokeAction("Railways.settingsAction", project);
+                        break;
+
+                    default:
+                        RailwaysUtils.showErrorInfo(rm);
+                }
+
             }
         });
 
@@ -336,8 +367,9 @@ public class MainPanel {
     }
 
 
-    public void showLoading() {
-        showMessagePanel("Loading routes...");
+    public void showLoadingMessage() {
+        RoutesManager.State settings = myDataSource.getRoutesManager().getState();
+        showMessagePanel("Running `rake " + settings.routesTaskName + "`...");
     }
 
     /**
@@ -351,10 +383,10 @@ public class MainPanel {
     }
 
 
-    public void showRoutesUpdateError() {
-        infoLbl.setText("Failed to load routes");
+    public void showRoutesUpdateError(int parserError) {
+        updateErrorPanel(parserError);
         showPanel(PANEL_ERROR);
-
+    
         UpdateRoutesListAction.updateIcon(project);
     }
 

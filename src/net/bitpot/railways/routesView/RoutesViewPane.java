@@ -1,6 +1,7 @@
 package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.ui.content.Content;
 
@@ -25,7 +26,7 @@ public class RoutesViewPane {
     public RoutesViewPane(Module module) {
         myModule = module;
 
-        myRoutesManager = new RoutesManager(module);
+        myRoutesManager =  ModuleServiceManager.getService(module, RoutesManager.class);
         myRoutesManager.initRouteList();
     }
 

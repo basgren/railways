@@ -50,6 +50,8 @@ public class RakeRoutesParserTest
         String stack = parser.getErrorStacktrace();
 
         assertTrue(stack.length() > 0);
+        assertEquals(RailsRoutesParser.ERROR_GENERAL, parser.getErrorCode());
+        assertTrue(parser.isErrorReported());
         assertFalse("Rake error wasn't cleaned from unnecessary text.",
                 stack.contains("rake aborted!"));
     }
@@ -65,23 +67,22 @@ public class RakeRoutesParserTest
         String stack = parser.getErrorStacktrace();
 
         assertEquals(stack.length(), 0);
+        assertFalse(parser.isErrorReported());
+        assertEquals(RailsRoutesParser.NO_ERRORS, parser.getErrorCode());
     }
 
 
     @Test
-    public void testRequirementsParsing()
-    {
-        String routeOldFormat = "mozilla_users        /mozilla_users(.:format)  {:user_agent=>/Mozilla.*/, :controller=>\"users\", :action=>\"index\"}";
-        String routeNewFormat = "mozilla_users        /mozilla_users(.:format)  users#index {:user_agent=>/Mozilla.*/, :test => 34, :test_string => \"Some string\"}";
+    public void testWrongRakeTaskCall() {
+        String s = "rake aborted!\n" +
+                "    Don't know how to build task 'xroutes'";
 
-        // It's enough to check just requirements as the same strings are
-        // checked in another test.
-        List<Route> routeList = parser.parseLine(routeOldFormat);
-        Route route = routeList.get(0);
+        parser.parse("", s);
 
-        routeList = parser.parseLine(routeNewFormat);
-        route = routeList.get(0);
+        assertEquals(RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND, parser.getErrorCode());
+        assertTrue(parser.isErrorReported());
     }
+
 
     @Test
     public void testConstraintsParsing()
@@ -107,7 +108,7 @@ public class RakeRoutesParserTest
 
 
     @Test
-    public void testParsingMyltipleRouteTypesInASingleLine() {
+    public void testParsingMultipleRouteTypesInASingleLine() {
         String line = "  test GET|POST /test(.:format)             clients#show  ";
 
         List<Route> routes = parser.parseLine(line);

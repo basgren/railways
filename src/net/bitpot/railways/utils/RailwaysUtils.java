@@ -5,6 +5,7 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -13,6 +14,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import net.bitpot.railways.gui.ErrorInfoDlg;
 import net.bitpot.railways.routesView.RoutesManager;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.gem.GemsRunner;
@@ -49,7 +51,7 @@ public class RailwaysUtils {
      * @return Output of 'rake routes'.
      */
     @Nullable
-    public static ProcessOutput queryRakeRoutes(Module module) {
+    public static ProcessOutput queryRakeRoutes(Module module, String routesTaskName) {
         // Get root path of Rails application from module.
         RailsApp app = RailsApp.fromModule(module);
         if ((app == null) || (app.getRailsApplicationRoot() == null))
@@ -74,7 +76,7 @@ public class RailwaysUtils {
             return GemsRunner.runGemsExecutableScript(sdk, module,
                     "rake", "rake",
                     moduleContentRoot, new ExecutionModes.SameThreadMode(),
-                    "routes", "--trace");
+                    routesTaskName, "--trace");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,5 +94,36 @@ public class RailwaysUtils {
     public static void showErrorInfo(@NotNull RoutesManager routesManager) {
         ErrorInfoDlg.showError("Error information:",
                 routesManager.getParseErrorStacktrace());
+    }
+
+
+    /**
+     * Invokes action with specified ID. This method provides very simple
+     * implementation of invoking action manually when ActionEvent and
+     * DataContext are unavailable. Created DataContext in this method provides
+     * only CommonDataKeys.PROJECT value.
+     *
+     * @param actionId ID of action to invoke
+     * @param project Current project
+     */
+    public static void invokeAction(String actionId, final Project project) {
+        AnAction act = ActionManager.getInstance().getAction(actionId);
+
+        // For simple actions which don't heavily use data context, we can create
+        // it manually.
+        DataContext dataContext = new DataContext() {
+            @Nullable
+            @Override
+            public Object getData(@NonNls String dataId) {
+                if (CommonDataKeys.PROJECT.is(dataId))
+                    return project;
+
+                return null;
+            }
+        };
+
+        act.actionPerformed(new AnActionEvent(null, dataContext,
+                ActionPlaces.UNKNOWN, act.getTemplatePresentation(),
+                ActionManager.getInstance(), 0));
     }
 }

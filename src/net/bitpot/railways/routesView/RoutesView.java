@@ -254,9 +254,9 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
      *                      appearance sync.
      */
     private void syncPanelWithRoutesManager(RoutesManager routesManager) {
-        switch(routesManager.getState()) {
+        switch(routesManager.getRoutesState()) {
             case RoutesManager.UPDATING:
-                mainPanel.showLoading();
+                mainPanel.showLoadingMessage();
                 break;
 
             case RoutesManager.UPDATED:
@@ -264,7 +264,7 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
                 break;
 
             case RoutesManager.ERROR:
-                mainPanel.showRoutesUpdateError();
+                mainPanel.showRoutesUpdateError(routesManager.getParserErrorCode());
                 break;
         }
     }
