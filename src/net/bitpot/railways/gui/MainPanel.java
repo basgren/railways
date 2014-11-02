@@ -54,7 +54,7 @@ public class MainPanel {
     private JLabel routesCounterLbl;
 
 
-    private JPanel routeInfoPnl;
+    private JPanel routeInfoPanel;
     private HyperlinkLabel actionLbl;
     private JLabel nameLbl;
     private JLabel methodLbl;
@@ -62,6 +62,7 @@ public class MainPanel {
     private JPanel topPanel;
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
+    private JPanel mainRoutePanel;
 
 
     private CardLayout cardLayout;
@@ -321,8 +322,8 @@ public class MainPanel {
             nameLbl.setText(route.getRouteName());
         }
 
-        routeInfoPnl.revalidate();
-        routeInfoPnl.repaint();
+        routeInfoPanel.revalidate();
+        routeInfoPanel.repaint();
     }
 
 
@@ -364,6 +365,14 @@ public class MainPanel {
         RouteList routes =
                 (dataSource != null) ? dataSource.getRoutesManager().getRouteList() : null;
         myTableModel.setRoutes(routes);
+    }
+
+
+    public void setHorizontalOrientation(boolean isHorizontal) {
+        mainRoutePanel.remove(routeInfoPanel);
+        mainRoutePanel.add(routeInfoPanel,
+                isHorizontal ? BorderLayout.EAST : BorderLayout.SOUTH);
+        mainRoutePanel.invalidate();
     }
 
 

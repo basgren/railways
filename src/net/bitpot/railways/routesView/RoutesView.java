@@ -7,7 +7,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
+import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
+import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -81,6 +84,35 @@ public class RoutesView implements Disposable {
                     viewSelectionChanged();
             }
         });
+
+
+        ToolWindowManagerEx toolManager = ToolWindowManagerEx.getInstanceEx(myProject);
+        toolManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+            @Override
+            public void stateChanged() {
+                // We have to check if our tool window is still registered, as
+                // otherwise it will raise an exception when project is closed.
+                if (ToolWindowManagerEx.getInstanceEx(myProject).getToolWindow("Routes") == null)
+                    return;
+
+                updateToolwindowOrientation(toolWindow);
+
+            }
+        });
+
+        updateToolwindowOrientation(toolWindow);
+    }
+
+
+    private void updateToolwindowOrientation(ToolWindow toolWindow) {
+        if (toolWindow.isDisposed())
+            return;
+
+        ToolWindowAnchor anchor = toolWindow.getAnchor();
+        boolean isHorizontal = (anchor == ToolWindowAnchor.BOTTOM ||
+                anchor == ToolWindowAnchor.TOP);
+
+        mainPanel.setHorizontalOrientation(isHorizontal);
     }
 
 
