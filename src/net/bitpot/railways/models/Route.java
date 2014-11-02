@@ -24,6 +24,7 @@ public class Route implements NavigationItem {
     // as rake routes does not show this info.
     public final static int MOUNTED = 2; // Mounted rack application.
 
+    // TODO: move module reference to parent list.
     private Module module = null;
 
 
@@ -32,6 +33,9 @@ public class Route implements NavigationItem {
     private String routeName = "";
     private String controller = "";
     private String action = "";
+
+    // By default let's assume that action exists.
+    private boolean isActionAvailable = true;
 
 
     public Route() {
@@ -100,7 +104,8 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Returns fully-qualified controller method name as it's writte in ruby, ex. 'UsersController#index'.
+     * Returns fully-qualified controller method name as it's writte in ruby,
+     * ex. 'UsersController#index'.
      * If route is mounted, returns only the name of the controller.
      *
      * @return Fully qualified method name.
@@ -279,5 +284,30 @@ public class Route implements NavigationItem {
 
     public String getAction() {
         return action;
+    }
+
+
+    public boolean isActionAvailable() {
+        return isActionAvailable;
+    }
+
+
+    /**
+     * Checks route action status and sets isActionAvailable flag.
+     *
+     * @param app Rails application which will be checked for controller action.
+     */
+    public void updateActionStatus(RailsApp app) {
+        int routeType = getType();
+
+        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED) {
+            isActionAvailable = true;
+            return;
+        }
+
+        RailsController appCtrl = app.findController(getController());
+
+        isActionAvailable = (appCtrl != null &&
+                !action.isEmpty() && appCtrl.getAction(action) != null);
     }
 }

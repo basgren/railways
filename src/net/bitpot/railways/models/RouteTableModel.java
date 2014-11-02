@@ -8,6 +8,11 @@ import javax.swing.table.AbstractTableModel;
  * Table models.
  */
 public class RouteTableModel extends AbstractTableModel {
+
+    public final static int COL_PATH        = 0;
+    public final static int COL_ACTION      = 1;
+    public final static int COL_NAME        = 2;
+
     private RouteList myRouteList;
     private RouteList filteredRoutes;
     private RoutesFilter filter;
@@ -34,11 +39,11 @@ public class RouteTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         switch (column) {
-            case 0:
+            case COL_PATH:
                 return "Path";
-            case 1:
+            case COL_ACTION:
                 return "Action";
-            case 2:
+            case COL_NAME:
                 return "Name";
             default:
                 return super.getColumnName(column);
@@ -63,11 +68,11 @@ public class RouteTableModel extends AbstractTableModel {
         Route route = filteredRoutes.get(rowIndex);
 
         switch (columnIndex) {
-            case 0:
+            case COL_PATH:
                 return route;
-            case 1:
-                return route.getActionText();
-            case 2:
+            case COL_ACTION:
+                return route;
+            case COL_NAME:
                 return route.getRouteName();
         }
 
@@ -77,7 +82,7 @@ public class RouteTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 0)
+        if ((columnIndex == COL_PATH) || (columnIndex == COL_ACTION))
             return Route.class;
 
         return super.getColumnClass(columnIndex);

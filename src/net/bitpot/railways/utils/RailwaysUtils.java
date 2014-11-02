@@ -13,6 +13,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import net.bitpot.railways.gui.ErrorInfoDlg;
+import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -126,4 +128,15 @@ public class RailwaysUtils {
                 ActionPlaces.UNKNOWN, act.getTemplatePresentation(),
                 ActionManager.getInstance(), 0));
     }
+
+
+    public static void updateActionsStatus(Module module, RouteList routeList) {
+        RailsApp app = RailsApp.fromModule(module);
+        if (app == null)
+            return;
+
+        for (Route route: routeList)
+            route.updateActionStatus(app);
+    }
+
 }

@@ -102,7 +102,7 @@ public class MainPanel {
                 new RouteCellRenderer(myTableModel.getFilter()));
 
         routesTable.setDefaultRenderer(Object.class,
-                new RouteTableCellRenderer(myTableModel.getFilter()));
+                new FilterHighlightRenderer(myTableModel.getFilter()));
 
         routesTable.setRowHeight(20);
 

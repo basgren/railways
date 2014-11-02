@@ -1,8 +1,8 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
 import net.bitpot.railways.parser.route.RouteParser;
 import net.bitpot.railways.parser.route.RouteToken;
@@ -14,13 +14,11 @@ import javax.swing.*;
  * @author Basil Gren
  *         on 21.02.14.
  */
-public class RouteCellRenderer extends ColoredTableCellRenderer {
-
-    private RoutesFilter filter;
+public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     public RouteCellRenderer(@NotNull RoutesFilter filter) {
-        this.filter = filter;
+        super(filter);
     }
 
 
@@ -34,12 +32,34 @@ public class RouteCellRenderer extends ColoredTableCellRenderer {
 
         Route route = (Route) value;
 
-        RouteToken[] tokens = RouteParser.parseAndHighlight(route.getPath(), filter.getPathFilter());
+        int modelCol = table.convertColumnIndexToModel(column);
+        switch (modelCol) {
+            case RouteTableModel.COL_ACTION:
+                renderRouteAction(route);
+                break;
+
+            default:
+                renderRoutePath(route);
+        }
+    }
+
+
+    private void renderRouteAction(Route route) {
+        boolean isError = !route.isActionAvailable();
+
+        appendHighlighted(route.getActionText(),
+                getFilter().getPathFilter(), isError);
+    }
+
+
+    private void renderRoutePath(Route route) {
+        RouteToken[] tokens = RouteParser.parseAndHighlight(route.getPath(),
+                getFilter().getPathFilter());
 
         for(RouteToken token: tokens)
             append(token.text, getTextAttributes(token));
 
-        setIcon(((Route) value).getIcon());
+        setIcon(route.getIcon());
     }
 
 
