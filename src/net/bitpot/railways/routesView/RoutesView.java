@@ -95,24 +95,23 @@ public class RoutesView implements Disposable {
                 if (ToolWindowManagerEx.getInstanceEx(myProject).getToolWindow("Routes") == null)
                     return;
 
-                updateToolwindowOrientation(toolWindow);
-
+                updateToolWindowOrientation(toolWindow);
             }
         });
 
-        updateToolwindowOrientation(toolWindow);
+        updateToolWindowOrientation(toolWindow);
     }
 
 
-    private void updateToolwindowOrientation(ToolWindow toolWindow) {
+    private void updateToolWindowOrientation(ToolWindow toolWindow) {
         if (toolWindow.isDisposed())
             return;
 
         ToolWindowAnchor anchor = toolWindow.getAnchor();
-        boolean isHorizontal = (anchor == ToolWindowAnchor.BOTTOM ||
-                anchor == ToolWindowAnchor.TOP);
+        boolean isVertical = (anchor == ToolWindowAnchor.LEFT ||
+                anchor == ToolWindowAnchor.RIGHT);
 
-        mainPanel.setHorizontalOrientation(isHorizontal);
+        mainPanel.setOrientation(isVertical);
     }
 
 

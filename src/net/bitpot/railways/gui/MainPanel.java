@@ -5,6 +5,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
+import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
@@ -80,6 +81,8 @@ public class MainPanel {
 
     private int infoLinkAction;
 
+    private JBSplitter mySplitter;
+
 
     public MainPanel(Project project) {
         this.project = project;
@@ -113,6 +116,43 @@ public class MainPanel {
 
         // Update route info panel
         showRouteInfo(null);
+
+        initSplitter();
+    }
+
+
+    private void createUIComponents() {
+        routesTable = new RoutesTable();
+    }
+
+
+    /**
+     * Initializes splitter that divides routes table and info panel.
+     * We do this manually as there were difficulties with UI designer and
+     * the splitter.
+     */
+    private void initSplitter() {
+        // Remove required components from main panel
+        mainRoutePanel.remove(routeInfoPanel);
+        mainRoutePanel.remove(routesScrollPane);
+
+        mySplitter = new JBSplitter(true, 0.8f);
+
+        mySplitter.setHonorComponentsMinimumSize(true);
+        mySplitter.setAndLoadSplitterProportionKey("Railways.SplitterProportion");
+        mySplitter.setOpaque(false);
+        mySplitter.setShowDividerControls(false);
+        mySplitter.setShowDividerIcon(false);
+
+        mySplitter.setFirstComponent(routesScrollPane);
+        mySplitter.setSecondComponent(routeInfoPanel);
+
+        mainRoutePanel.add(mySplitter, BorderLayout.CENTER);
+    }
+
+
+    public void setOrientation(boolean isVertical) {
+        mySplitter.setOrientation(isVertical);
     }
 
 
@@ -175,11 +215,6 @@ public class MainPanel {
 
         routesCounterLbl.setVisible(true);
         cardLayout.show(cardsPanel, ROUTES_CARD_NAME);
-    }
-
-
-    private void createUIComponents() {
-        routesTable = new RoutesTable();
     }
 
 
@@ -365,14 +400,6 @@ public class MainPanel {
         RouteList routes =
                 (dataSource != null) ? dataSource.getRoutesManager().getRouteList() : null;
         myTableModel.setRoutes(routes);
-    }
-
-
-    public void setHorizontalOrientation(boolean isHorizontal) {
-        mainRoutePanel.remove(routeInfoPanel);
-        mainRoutePanel.add(routeInfoPanel,
-                isHorizontal ? BorderLayout.EAST : BorderLayout.SOUTH);
-        mainRoutePanel.invalidate();
     }
 
 
