@@ -1,5 +1,6 @@
 package net.bitpot.railways.gui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
@@ -7,6 +8,7 @@ import net.bitpot.railways.models.RoutesFilter;
 import net.bitpot.railways.parser.route.RouteParser;
 import net.bitpot.railways.parser.route.RouteToken;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 
 import javax.swing.*;
 
@@ -45,10 +47,25 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRouteAction(Route route) {
+        // TODO: remove isActionAvailable, as it's unavailable when action visibility == null
         boolean isError = !route.isActionAvailable();
 
         appendHighlighted(route.getActionText(),
                 getFilter().getPathFilter(), isError);
+
+        Visibility vis = route.getActionVisibility();
+        if (vis == null)
+            setIcon(null);
+        else {
+            Icon icon = null;
+            switch (vis) {
+                case PRIVATE:   icon = AllIcons.Nodes.C_private; break;
+                case PROTECTED: icon = AllIcons.Nodes.C_protected; break;
+                case PUBLIC:    icon = AllIcons.Nodes.C_public; break;
+            }
+
+            setIcon(icon);
+        }
     }
 
 

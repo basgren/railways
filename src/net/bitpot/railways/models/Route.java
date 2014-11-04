@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 
 import javax.swing.*;
 
@@ -36,6 +37,9 @@ public class Route implements NavigationItem {
 
     // By default let's assume that action exists.
     private boolean isActionAvailable = true;
+
+    @Nullable
+    private Visibility actionVisibility = null;
 
 
     public Route() {
@@ -306,8 +310,20 @@ public class Route implements NavigationItem {
         }
 
         RailsController appCtrl = app.findController(getController());
+        if (appCtrl != null) {
+            RMethod method = appCtrl.getAction(action);
 
-        isActionAvailable = (appCtrl != null &&
-                !action.isEmpty() && appCtrl.getAction(action) != null);
+            isActionAvailable = (method != null);
+            actionVisibility = (method != null) ? method.getVisibility() : null;
+        } else {
+            isActionAvailable = false;
+            actionVisibility = null;
+        }
+    }
+
+
+    @Nullable
+    public Visibility getActionVisibility() {
+        return actionVisibility;
     }
 }
