@@ -65,12 +65,12 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
 
     public static class State {
-        int selectedModuleId;
+        public int selectedTabId;
     }
 
     @Nullable
     @Override
-    public State getState() {
+    public RoutesView.State getState() {
         return myState;
     }
 
@@ -114,7 +114,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         });
 
 
-        Content savedContent = myContentManager.getContent(myState.selectedModuleId);
+        Content savedContent = myContentManager.getContent(myState.selectedTabId);
         if (savedContent != null)
             myContentManager.setSelectedContent(savedContent);
 
@@ -158,7 +158,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         for(RoutesViewPane p: myPanes) {
             if (p.getContent() == content) {
                 pane = p;
-                myState.selectedModuleId = index;
+                myState.selectedTabId = index;
                 break;
             }
 
