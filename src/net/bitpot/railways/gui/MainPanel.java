@@ -5,6 +5,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
+import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
@@ -54,7 +55,7 @@ public class MainPanel {
     private JLabel routesCounterLbl;
 
 
-    private JPanel routeInfoPnl;
+    private JPanel routeInfoPanel;
     private HyperlinkLabel actionLbl;
     private JLabel nameLbl;
     private JLabel methodLbl;
@@ -62,6 +63,7 @@ public class MainPanel {
     private JPanel topPanel;
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
+    private JPanel mainRoutePanel;
 
 
     private CardLayout cardLayout;
@@ -78,6 +80,8 @@ public class MainPanel {
     private Route currentRoute;
 
     private int infoLinkAction;
+
+    private JBSplitter mySplitter;
 
 
     public MainPanel(Project project) {
@@ -112,6 +116,43 @@ public class MainPanel {
 
         // Update route info panel
         showRouteInfo(null);
+
+        initSplitter();
+    }
+
+
+    private void createUIComponents() {
+        routesTable = new RoutesTable();
+    }
+
+
+    /**
+     * Initializes splitter that divides routes table and info panel.
+     * We do this manually as there were difficulties with UI designer and
+     * the splitter.
+     */
+    private void initSplitter() {
+        // Remove required components from main panel
+        mainRoutePanel.remove(routeInfoPanel);
+        mainRoutePanel.remove(routesScrollPane);
+
+        mySplitter = new JBSplitter(true, 0.8f);
+
+        mySplitter.setHonorComponentsMinimumSize(true);
+        mySplitter.setAndLoadSplitterProportionKey("Railways.SplitterProportion");
+        mySplitter.setOpaque(false);
+        mySplitter.setShowDividerControls(false);
+        mySplitter.setShowDividerIcon(false);
+
+        mySplitter.setFirstComponent(routesScrollPane);
+        mySplitter.setSecondComponent(routeInfoPanel);
+
+        mainRoutePanel.add(mySplitter, BorderLayout.CENTER);
+    }
+
+
+    public void setOrientation(boolean isVertical) {
+        mySplitter.setOrientation(isVertical);
     }
 
 
@@ -174,11 +215,6 @@ public class MainPanel {
 
         routesCounterLbl.setVisible(true);
         cardLayout.show(cardsPanel, ROUTES_CARD_NAME);
-    }
-
-
-    private void createUIComponents() {
-        routesTable = new RoutesTable();
     }
 
 
@@ -321,8 +357,8 @@ public class MainPanel {
             nameLbl.setText(route.getRouteName());
         }
 
-        routeInfoPnl.revalidate();
-        routeInfoPnl.repaint();
+        routeInfoPanel.revalidate();
+        routeInfoPanel.repaint();
     }
 
 

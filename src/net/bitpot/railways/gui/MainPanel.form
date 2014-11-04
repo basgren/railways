@@ -66,26 +66,28 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="8ddf0" layout-manager="BorderLayout" hgap="0" vgap="0">
+              <grid id="8ddf0" binding="mainRoutePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints>
                   <card name="routesCard"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="2dde" binding="routeInfoPnl" layout-manager="FormLayout">
-                    <rowspec value="center:m:grow"/>
+                  <grid id="2dde" binding="routeInfoPanel" layout-manager="FormLayout">
+                    <rowspec value="center:p:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
-                    <rowspec value="center:m:grow"/>
+                    <rowspec value="center:p:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
-                    <rowspec value="center:m:grow"/>
+                    <rowspec value="center:p:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
-                    <rowspec value="center:m:grow"/>
+                    <rowspec value="center:p:noGrow"/>
                     <colspec value="center:p:noGrow"/>
                     <colspec value="left:4dlu:noGrow"/>
                     <colspec value="fill:d:grow"/>
                     <constraints border-constraint="South"/>
-                    <properties/>
+                    <properties>
+                      <preferredSize width="300" height="120"/>
+                    </properties>
                     <border type="empty">
                       <size top="4" left="4" bottom="4" right="4"/>
                     </border>
