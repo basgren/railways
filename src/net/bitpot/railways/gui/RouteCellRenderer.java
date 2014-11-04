@@ -55,7 +55,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         Visibility vis = route.getActionVisibility();
         if (vis == null)
-            setIcon(null);
+            setIcon(AllIcons.General.Error);
         else {
             Icon icon = null;
             switch (vis) {
