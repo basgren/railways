@@ -2,7 +2,7 @@ package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -26,11 +26,19 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import javax.swing.*;
 import java.util.ArrayList;
 
+@State(
+    name="RoutesToolWindow",
+    storages= {
+        @Storage(file = StoragePathMacros.WORKSPACE_FILE)
+    }
+)
+
 /**
  * Implements tool window logic. Synchronizes the number of tool window panes
  * with the number of opened Rails modules in the project.
  */
-public class RoutesView implements Disposable {
+public class RoutesView implements PersistentStateComponent<RoutesView.State>,
+        Disposable {
 
     public static RoutesView getInstance(Project project) {
         return ServiceManager.getService(project, RoutesView.class);
@@ -47,9 +55,29 @@ public class RoutesView implements Disposable {
     // Hmmm... I don't remember why I needed this... Some glitches with action state update?
     private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
 
+    private State myState = new State();
+
+
     public RoutesView(Project project) {
         myProject = project;
         mainPanel = new MainPanel(project);
+    }
+
+
+    public static class State {
+        int selectedModuleId;
+    }
+
+    @Nullable
+    @Override
+    public State getState() {
+        return myState;
+    }
+
+
+    @Override
+    public void loadState(RoutesView.State state) {
+        myState = state;
     }
 
 
@@ -84,6 +112,11 @@ public class RoutesView implements Disposable {
                     viewSelectionChanged();
             }
         });
+
+
+        Content savedContent = myContentManager.getContent(myState.selectedModuleId);
+        if (savedContent != null)
+            myContentManager.setSelectedContent(savedContent);
 
 
         ToolWindowManagerEx toolManager = ToolWindowManagerEx.getInstanceEx(myProject);
@@ -121,11 +154,16 @@ public class RoutesView implements Disposable {
 
         // Find selected pane by content.
         RoutesViewPane pane = null;
-        for(RoutesViewPane p: myPanes)
+        int index = 0;
+        for(RoutesViewPane p: myPanes) {
             if (p.getContent() == content) {
                 pane = p;
+                myState.selectedModuleId = index;
                 break;
             }
+
+            index++;
+        }
 
         setCurrentPane(pane);
     }
