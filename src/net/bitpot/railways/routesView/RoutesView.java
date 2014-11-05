@@ -2,6 +2,7 @@ package net.bitpot.railways.routesView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -12,10 +13,13 @@ import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
+import com.intellij.util.Alarm;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.RailwaysActionsFields;
 import net.bitpot.railways.gui.MainPanel;
@@ -61,6 +65,8 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     public RoutesView(Project project) {
         myProject = project;
         mainPanel = new MainPanel(project);
+
+        initChangeHandler();
     }
 
 
@@ -78,6 +84,26 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     @Override
     public void loadState(RoutesView.State state) {
         myState = state;
+    }
+
+
+    private void initChangeHandler() {
+        MessageBusConnection conn = myProject.getMessageBus().connect();
+        conn.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
+            final Alarm alarm = new Alarm();
+
+            @Override
+            public void modificationCountChanged() {
+                alarm.cancelAllRequests();
+                alarm.addRequest(new Runnable() {
+                    @Override
+                    public void run() {
+                        //updateAfterPsiChange();
+                        System.out.println("Blah!!! Action update!");
+                    }
+                }, 300, ModalityState.NON_MODAL);
+            }
+        });
     }
 
 
