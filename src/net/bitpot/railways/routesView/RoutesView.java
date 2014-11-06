@@ -122,8 +122,10 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 // selectionChanges is called twice:
                 // 1. With 'remove' operation -  for previously selected item,
                 // 2. With 'add' operation - for newly selected item.
-                if (event.getOperation() == ContentManagerEvent.ContentOperation.add)
+                if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
                     viewSelectionChanged();
+                    refreshRoutes();
+                }
             }
         });
 
