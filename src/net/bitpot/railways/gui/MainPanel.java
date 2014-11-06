@@ -403,6 +403,11 @@ public class MainPanel {
     }
 
 
+    public void refresh() {
+        myTableModel.fireTableDataChanged();
+    }
+
+
     private class RouteSelectionListener implements ListSelectionListener {
         private JTable table;
 

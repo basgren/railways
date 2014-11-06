@@ -1,5 +1,6 @@
 package net.bitpot.railways.routesView;
 
+import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -23,7 +24,9 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.actions.RailwaysActionsFields;
 import net.bitpot.railways.gui.MainPanel;
+import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
@@ -55,6 +58,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<RoutesViewPane>();
     private RoutesViewPane currentPane = null;
+    private ToolWindow myToolWindow;
 
     // Hmmm... I don't remember why I needed this... Some glitches with action state update?
     private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
@@ -66,7 +70,10 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         myProject = project;
         mainPanel = new MainPanel(project);
 
-        initChangeHandler();
+        // Subscribe on files changes to update Routes list regularly.
+        // We connect to project bus, as module bus don't work with this topic
+        MessageBusConnection conn = project.getMessageBus().connect();
+        conn.subscribe(PsiModificationTracker.TOPIC, new PSIModificationListener());
     }
 
 
@@ -87,32 +94,13 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
-    private void initChangeHandler() {
-        MessageBusConnection conn = myProject.getMessageBus().connect();
-        conn.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
-            final Alarm alarm = new Alarm();
-
-            @Override
-            public void modificationCountChanged() {
-                alarm.cancelAllRequests();
-                alarm.addRequest(new Runnable() {
-                    @Override
-                    public void run() {
-                        //updateAfterPsiChange();
-                        System.out.println("Blah!!! Action update!");
-                    }
-                }, 300, ModalityState.NON_MODAL);
-            }
-        });
-    }
-
-
     /**
      * Initializes tool window.
      *
      * @param toolWindow Tool window to initialize.
      */
     public synchronized void initToolWindow(final ToolWindow toolWindow) {
+        myToolWindow = toolWindow;
         myContentManager = toolWindow.getContentManager();
 
         if (!ApplicationManager.getApplication().isUnitTestMode()) {
@@ -309,6 +297,32 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 break;
         }
     }
+
+
+    private class PSIModificationListener implements PsiModificationTracker.Listener {
+        final Alarm alarm = new Alarm();
+
+        @Override
+        public void modificationCountChanged() {
+            if (PowerSaveMode.isEnabled() || !myToolWindow.isVisible())
+                return;
+
+            alarm.cancelAllRequests();
+            alarm.addRequest(new Runnable() {
+                @Override
+                public void run() {
+                    RoutesViewPane pane = currentPane;
+                    RouteList routes = pane.getRoutesManager().getRouteList();
+                    if (routes.size() == 0)
+                        return;
+
+                    RailwaysUtils.updateActionsStatus(pane.getModule(), routes);
+                    mainPanel.refresh();
+                }
+            }, 300, ModalityState.NON_MODAL);
+        }
+    }
+
 
 
     private class MyRoutesManagerListener implements RoutesManagerListener {
