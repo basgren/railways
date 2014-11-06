@@ -135,6 +135,11 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
         ToolWindowManagerEx toolManager = ToolWindowManagerEx.getInstanceEx(myProject);
         toolManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+
+            /**
+             * This method is called when ToolWindow changes its state, i.e.
+             * expanded/collapsed, docked to another panel, etc.
+             */
             @Override
             public void stateChanged() {
                 // We have to check if our tool window is still registered, as
@@ -143,6 +148,8 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                     return;
 
                 updateToolWindowOrientation(toolWindow);
+
+                refreshRoutes();
             }
         });
 
@@ -299,6 +306,16 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
+    private void refreshRoutes() {
+        RouteList routes = currentPane.getRoutesManager().getRouteList();
+        if (routes.size() == 0)
+            return;
+
+        RailwaysUtils.updateActionsStatus(currentPane.getModule(), routes);
+        mainPanel.refresh();
+    }
+
+
     private class PSIModificationListener implements PsiModificationTracker.Listener {
         final Alarm alarm = new Alarm();
 
@@ -311,13 +328,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
             alarm.addRequest(new Runnable() {
                 @Override
                 public void run() {
-                    RoutesViewPane pane = currentPane;
-                    RouteList routes = pane.getRoutesManager().getRouteList();
-                    if (routes.size() == 0)
-                        return;
-
-                    RailwaysUtils.updateActionsStatus(pane.getModule(), routes);
-                    mainPanel.refresh();
+                    refreshRoutes();
                 }
             }, 300, ModalityState.NON_MODAL);
         }
