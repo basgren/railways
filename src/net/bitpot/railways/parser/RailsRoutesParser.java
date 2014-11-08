@@ -255,6 +255,8 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                         RequestMethod.get(requestMethodName), routePath,
                         routeController, routeAction, routeName);
 
+                route.setParentEngine(currentEngine);
+
                 if (route.isValid())
                     result.add(route);
             }

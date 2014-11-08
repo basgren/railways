@@ -41,6 +41,9 @@ public class Route implements NavigationItem {
     @Nullable
     private Visibility actionVisibility = null;
 
+    @Nullable
+    private RailsEngine myParentEngine = null;
+
 
     public Route() {
         this(null);
@@ -325,5 +328,15 @@ public class Route implements NavigationItem {
     @Nullable
     public Visibility getActionVisibility() {
         return actionVisibility;
+    }
+
+
+    public void setParentEngine(RailsEngine engine) {
+        myParentEngine = engine;
+    }
+
+    @Nullable
+    public RailsEngine getParentEngine() {
+        return myParentEngine;
     }
 }

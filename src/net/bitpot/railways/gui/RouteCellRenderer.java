@@ -47,20 +47,17 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRouteAction(Route route) {
+        Icon icon = null;
+
         // TODO: remove isActionAvailable, as it's unavailable when action visibility == null
-        boolean isError = !route.isActionAvailable();
+        boolean isError = (route.getParentEngine() == null) && !route.isActionAvailable();
 
         // TODO: check mounted engine helpers namespace.
-        // TODO: do not render engine routes as erroneous, render with rack icon.
-        // TODO: change rack icon to the one from RubyMine assets.
-
 
         appendHighlighted(route.getActionText(),
                 getFilter().getPathFilter(), isError);
 
-        Icon icon = null;
-
-        if (route.getType() == Route.MOUNTED) {
+        if (route.getType() == Route.MOUNTED || route.getParentEngine() != null) {
             icon = RailwaysIcons.RACK_APPLICATION;
         } else {
             Visibility vis = route.getActionVisibility();
