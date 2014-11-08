@@ -48,7 +48,13 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private Module myModule;
     private int errorCode;
 
-    private List<RailsEngine> mountedEngines = new ArrayList<RailsEngine>();
+    private List<RailsEngine> mountedEngines;
+    private RouteList routes;
+
+    private int insertPos;
+
+    @Nullable
+    private RailsEngine currentEngine;
 
 
     public RailsRoutesParser() {
@@ -58,6 +64,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     public RailsRoutesParser(@Nullable Module module) {
         myModule = module;
+        clear();
         clearErrors();
     }
 
@@ -78,7 +85,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     @Override
     public RouteList parse(InputStream stream) {
         try {
-            RouteList routes = new RouteList();
+            clear();
 
             DataInputStream ds = new DataInputStream(stream);
             BufferedReader br = new BufferedReader(new InputStreamReader(ds));
@@ -93,7 +100,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
                 routeList = parseLine(strLine);
                 if (routeList != null) {
-                    routes.addAll(routeList);
+                    addRoutes(routeList);
 
                     addRakeEngineIfPresent(routeList);
                 }
@@ -106,6 +113,24 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         }
 
         return null;
+    }
+
+
+    private void addRoutes(List<Route> routeList) {
+        if (insertPos < 0)
+            routes.addAll(routeList);
+        else {
+            routes.addAll(insertPos, routeList);
+            insertPos += routeList.size();
+        }
+    }
+
+
+    private void clear() {
+        routes = new RouteList();
+        insertPos = -1;
+        currentEngine = null;
+        mountedEngines = new ArrayList<RailsEngine>();
     }
 
 
@@ -140,11 +165,39 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
         matcher = ENGINE_ROUTES_HEADER_LINE.matcher(line);
         if (matcher.find()) {
+            // All following routes belong to parsed route engine. We should
+            // find engine mount route and add them after it.
+            String engineName = getGroup(matcher, 1);
+            int index = findEngineRouteIndex(engineName);
+
+            if (index >= 0) {
+                insertPos = index + 1;
+                currentEngine = findEngine(engineName);
+            }
 
             return true;
         }
 
         return false;
+    }
+
+
+    @Nullable
+    private RailsEngine findEngine(String engineName) {
+        for(RailsEngine engine: mountedEngines)
+            if (engine.getEngineClassName().equals(engineName))
+                return engine;
+
+        return null;
+    }
+
+
+    private int findEngineRouteIndex(String engineName) {
+        for(int i = 0; i < routes.size(); i++)
+            if (routes.get(i).getController().equals(engineName))
+                return i;
+
+        return -1;
     }
 
 

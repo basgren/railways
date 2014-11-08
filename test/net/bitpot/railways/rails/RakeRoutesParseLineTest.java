@@ -44,8 +44,7 @@ public class RakeRoutesParseLineTest
 
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         parser = new RailsRoutesParser();
     }
 
