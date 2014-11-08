@@ -50,6 +50,12 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         // TODO: remove isActionAvailable, as it's unavailable when action visibility == null
         boolean isError = !route.isActionAvailable();
 
+        // TODO: check mounted engine helpers namespace.
+        // TODO: do not render mounted engine class as error
+        // TODO: do not render engine routes as erroneous, render with rack icon.
+        // TODO: change rack icon to the one from RubyMine assets.
+
+
         appendHighlighted(route.getActionText(),
                 getFilter().getPathFilter(), isError);
 

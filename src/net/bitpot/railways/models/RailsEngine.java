@@ -7,11 +7,12 @@ package net.bitpot.railways.models;
 public class RailsEngine {
 
     private String myEngineClassName = "";
-    private String myRouteNamespace = "";
+    private String myRootPath = "";
 
-    public RailsEngine(String engineClassName, String routeNamespace) {
+
+    public RailsEngine(String engineClassName, String rootPath) {
         myEngineClassName = engineClassName;
-        myRouteNamespace = routeNamespace;
+        myRootPath = rootPath;
     }
 
 
@@ -19,7 +20,8 @@ public class RailsEngine {
         return myEngineClassName;
     }
 
-    public String getRouteNamespace() {
-        return myRouteNamespace;
+
+    public String getRootPath() {
+        return myRootPath;
     }
 }

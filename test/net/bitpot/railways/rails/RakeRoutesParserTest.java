@@ -141,11 +141,11 @@ public class RakeRoutesParserTest
 
         RailsEngine engine = enginesList.get(0);
         assertEquals("RailsAdmin::Engine", engine.getEngineClassName());
-        assertEquals("/admin", engine.getRouteNamespace());
+        assertEquals("/admin", engine.getRootPath());
 
         engine = enginesList.get(1);
         assertEquals("RailsSettingsUi::Engine", engine.getEngineClassName());
-        assertEquals("/settings", engine.getRouteNamespace());
+        assertEquals("/settings", engine.getRootPath());
     }
 
 
@@ -154,7 +154,10 @@ public class RakeRoutesParserTest
         RouteList routes = parser.parseFile("test/data/engine_routes_parsing.data.txt");
 
         // Engine routes should follow parent engine route which mounts them
-        Route route = routes.get(1);
+        Route route = routes.get(0);
+        assertEquals("RailsAdmin::Engine", route.getActionText());
+
+        route = routes.get(1);
         assertEquals("rails_admin/main#dashboard", route.getActionText());
         assertEquals("/admin", route.getPath());
 
@@ -163,10 +166,13 @@ public class RakeRoutesParserTest
         assertEquals("/admin/:model_name(.:format)", route.getPath());
 
         route = routes.get(3);
+        assertEquals("RailsSettingsUi::Engine", route.getActionText());
+
+        route = routes.get(4);
         assertEquals("rails_settings_ui/settings#index", route.getActionText());
         assertEquals("/settings", route.getPath());
 
-        route = routes.get(4);
+        route = routes.get(5);
         assertEquals("rails_settings_ui/settings#update_all", route.getActionText());
         assertEquals("/settings/update_all(.:format)", route.getPath());
     }

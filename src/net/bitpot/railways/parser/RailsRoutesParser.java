@@ -241,6 +241,15 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             String[] requestMethods = getGroup(groups, 2).split("\\|");
             List<Route> result = new ArrayList<Route>();
 
+            // Also fix path if this route belongs to some engine
+            if (currentEngine != null) {
+                if (routePath.equals("/"))
+                    routePath = currentEngine.getRootPath();
+                else
+                    routePath = currentEngine.getRootPath() + routePath;
+            }
+
+
             for (String requestMethodName : requestMethods) {
                 Route route = new Route(myModule,
                         RequestMethod.get(requestMethodName), routePath,
