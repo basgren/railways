@@ -51,7 +51,6 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         boolean isError = !route.isActionAvailable();
 
         // TODO: check mounted engine helpers namespace.
-        // TODO: do not render mounted engine class as error
         // TODO: do not render engine routes as erroneous, render with rack icon.
         // TODO: change rack icon to the one from RubyMine assets.
 
@@ -59,19 +58,24 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         appendHighlighted(route.getActionText(),
                 getFilter().getPathFilter(), isError);
 
-        Visibility vis = route.getActionVisibility();
-        if (vis == null)
-            setIcon(AllIcons.General.Error);
-        else {
-            Icon icon = null;
-            switch (vis) {
-                case PRIVATE:   icon = AllIcons.Nodes.C_private; break;
-                case PROTECTED: icon = AllIcons.Nodes.C_protected; break;
-                case PUBLIC:    icon = AllIcons.Nodes.C_public; break;
-            }
+        Icon icon = null;
 
-            setIcon(icon);
+        if (route.getType() == Route.MOUNTED) {
+            icon = RailwaysIcons.RACK_APPLICATION;
+        } else {
+            Visibility vis = route.getActionVisibility();
+            if (vis == null)
+                icon = AllIcons.General.Error;
+            else {
+                switch (vis) {
+                    case PRIVATE: icon = AllIcons.Nodes.C_private; break;
+                    case PROTECTED: icon = AllIcons.Nodes.C_protected; break;
+                    case PUBLIC: icon = AllIcons.Nodes.C_public; break;
+                }
+            }
         }
+
+        setIcon(icon);
     }
 
 
