@@ -9,4 +9,4 @@ Routes for RailsSettingsUi::Engine:
 
 Routes for RailsAdmin::Engine:
   dashboard GET         /                                      rails_admin/main#dashboard
-      index GET|POST    /:model_name(.:format)                 rails_admin/main#index
+      index GET         /:model_name(.:format)                 rails_admin/main#index
