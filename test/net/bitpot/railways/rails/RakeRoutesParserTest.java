@@ -1,6 +1,7 @@
 package net.bitpot.railways.rails;
 
 
+import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.routes.RequestMethod;
@@ -128,6 +129,23 @@ public class RakeRoutesParserTest
         actual = routes.get(1);
 
         TestUtils.assertRouteEquals(expected, actual);
+    }
+
+
+    @Test
+    public void testParsingEngineRoutes() throws Exception {
+        RouteList routes = parser.parseFile("test/data/engine_routes_parsing.data.txt");
+
+        RailsEngine[] enginesList = parser.getMountedEngines();
+        assertEquals(enginesList.length, 2);
+
+        RailsEngine engine = enginesList[0];
+        assertEquals(engine.getEngineClassName(), "RailsSettingsUi::Engine");
+        assertEquals(engine.getRouteNamespace(), "/settings");
+
+        engine = enginesList[1];
+        assertEquals(engine.getEngineClassName(), "RailsAdmin::Engine");
+        assertEquals(engine.getRouteNamespace(), "/admin");
     }
 
 

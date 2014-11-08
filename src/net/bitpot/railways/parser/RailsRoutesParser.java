@@ -2,6 +2,7 @@ package net.bitpot.railways.parser;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.routes.RequestMethod;
@@ -45,6 +46,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     //private final Project project;
     private Module myModule;
     private int errorCode;
+    private RailsEngine[] mountedEngines = new RailsEngine[]{};
 
 
     public RailsRoutesParser() {
@@ -241,5 +243,10 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     public int getErrorCode() {
         return errorCode;
+    }
+
+
+    public RailsEngine[] getMountedEngines() {
+        return mountedEngines;
     }
 }
