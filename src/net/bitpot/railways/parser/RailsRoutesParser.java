@@ -40,13 +40,15 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private static final Pattern RACK_CONTROLLER_PATTERN = Pattern.compile("([A-Z_][A-Za-z0-9_:/]+)");
 
     public static final Pattern HEADER_LINE = Pattern.compile("^\\s*Prefix\\s+Verb");
+    public static final Pattern ENGINE_ROUTES_HEADER_LINE = Pattern.compile("^Routes for ([a-zA-Z0-9:_]+):");
 
     private String stacktrace;
 
     //private final Project project;
     private Module myModule;
     private int errorCode;
-    private RailsEngine[] mountedEngines = new RailsEngine[]{};
+
+    private List<RailsEngine> mountedEngines = new ArrayList<RailsEngine>();
 
 
     public RailsRoutesParser() {
@@ -86,12 +88,16 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             //Read File Line By Line
             while ((strLine = br.readLine()) != null) {
-                if (isInvalidRouteLine(strLine))
+                if (parseSpecialLine(strLine))
                     continue;
 
                 routeList = parseLine(strLine);
-                if (routeList != null)
+                if (routeList != null) {
                     routes.addAll(routeList);
+
+                    addRakeEngineIfPresent(routeList);
+                }
+
             }
 
             return routes;
@@ -104,14 +110,41 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
 
     /**
-     * Tests if the line is invalid, i.e. route cannot be parsed.
+     * Adds rake engine to the list of parsed engines.
+     * @param routeList Route list parsed from a line.
+     */
+    private void addRakeEngineIfPresent(@NotNull List<Route> routeList) {
+        if (routeList.size() != 1)
+            return;
+
+        Route route = routeList.get(0);
+        if (route.getType() == Route.MOUNTED) {
+            mountedEngines.add(new RailsEngine(route.getControllerMethodName(),
+                    route.getPath()));
+        }
+    }
+
+
+    /**
+     * Parses special lines, such as Header, or line with information about
+     * routes engine. Returns true if it matches special line pattern and was
+     * successfully parsed, false otherwise.
      *
      * @param line Line from rake routes.
-     * @return false if line is correct.
+     * @return true if line is a special line and was parsed successfully.
      */
-    public boolean isInvalidRouteLine(String line) {
+    public boolean parseSpecialLine(String line) {
         Matcher matcher = HEADER_LINE.matcher(line);
-        return matcher.find();
+        if (matcher.find())
+            return true;
+
+        matcher = ENGINE_ROUTES_HEADER_LINE.matcher(line);
+        if (matcher.find()) {
+
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -246,7 +279,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     }
 
 
-    public RailsEngine[] getMountedEngines() {
+    public List<RailsEngine> getMountedEngines() {
         return mountedEngines;
     }
 }

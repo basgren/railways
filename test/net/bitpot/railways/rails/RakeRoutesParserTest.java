@@ -102,8 +102,8 @@ public class RakeRoutesParserTest
     {
         String rails4routeHeader = "   Prefix Verb   URI Pattern               Controller#Action";
         String rails4routeLine = "edit_user GET    /users/:id/edit(.:format) users#edit";
-        assertTrue(parser.isInvalidRouteLine(rails4routeHeader));
-        assertFalse(parser.isInvalidRouteLine(rails4routeLine));
+        assertTrue(parser.parseSpecialLine(rails4routeHeader));
+        assertFalse(parser.parseSpecialLine(rails4routeLine));
     }
 
 
@@ -136,16 +136,16 @@ public class RakeRoutesParserTest
     public void testParsingEngineRoutes() throws Exception {
         RouteList routes = parser.parseFile("test/data/engine_routes_parsing.data.txt");
 
-        RailsEngine[] enginesList = parser.getMountedEngines();
-        assertEquals(enginesList.length, 2);
+        List<RailsEngine> enginesList = parser.getMountedEngines();
+        assertEquals(enginesList.size(), 2);
 
-        RailsEngine engine = enginesList[0];
-        assertEquals(engine.getEngineClassName(), "RailsSettingsUi::Engine");
-        assertEquals(engine.getRouteNamespace(), "/settings");
-
-        engine = enginesList[1];
+        RailsEngine engine = enginesList.get(0);
         assertEquals(engine.getEngineClassName(), "RailsAdmin::Engine");
         assertEquals(engine.getRouteNamespace(), "/admin");
+
+        engine = enginesList.get(1);
+        assertEquals(engine.getEngineClassName(), "RailsSettingsUi::Engine");
+        assertEquals(engine.getRouteNamespace(), "/settings");
     }
 
 
