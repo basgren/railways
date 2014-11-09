@@ -265,6 +265,9 @@ public class Route implements NavigationItem {
 
 
     public String getRouteName() {
+        if (getParentEngine() != null)
+            return getParentEngine().getNamespace() + "." + routeName;
+
         return routeName;
     }
 

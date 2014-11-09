@@ -144,8 +144,10 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
         Route route = routeList.get(0);
         if (route.getType() == Route.MOUNTED) {
-            mountedEngines.add(new RailsEngine(route.getControllerMethodName(),
-                    route.getPath()));
+            mountedEngines.add(new RailsEngine(
+                    route.getControllerMethodName(),
+                    route.getPath(),
+                    route.getRouteName()));
         }
     }
 
@@ -185,7 +187,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     @Nullable
     private RailsEngine findEngine(String engineName) {
         for(RailsEngine engine: mountedEngines)
-            if (engine.getEngineClassName().equals(engineName))
+            if (engine.getRubyClassName().equals(engineName))
                 return engine;
 
         return null;

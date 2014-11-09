@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RouteItemsContributor implements ChooseByNameContributor {
 
+    // TODO: filter out engine routes as navigation to engine controllers is not implemented yet.
+
     private RoutesManager myRoutesManager;
 
     public RouteItemsContributor(RoutesManager routesManager) {

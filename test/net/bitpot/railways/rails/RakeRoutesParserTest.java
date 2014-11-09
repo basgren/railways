@@ -140,11 +140,11 @@ public class RakeRoutesParserTest
         assertEquals(enginesList.size(), 2);
 
         RailsEngine engine = enginesList.get(0);
-        assertEquals("RailsAdmin::Engine", engine.getEngineClassName());
+        assertEquals("RailsAdmin::Engine", engine.getRubyClassName());
         assertEquals("/admin", engine.getRootPath());
 
         engine = enginesList.get(1);
-        assertEquals("RailsSettingsUi::Engine", engine.getEngineClassName());
+        assertEquals("RailsSettingsUi::Engine", engine.getRubyClassName());
         assertEquals("/settings", engine.getRootPath());
     }
 

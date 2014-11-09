@@ -8,20 +8,26 @@ public class RailsEngine {
 
     private String myEngineClassName = "";
     private String myRootPath = "";
+    private String myNamespace = "";
 
 
-    public RailsEngine(String engineClassName, String rootPath) {
+    public RailsEngine(String engineClassName, String rootPath, String namespace) {
         myEngineClassName = engineClassName;
         myRootPath = rootPath;
+        myNamespace = namespace;
     }
 
 
-    public String getEngineClassName() {
+    public String getRubyClassName() {
         return myEngineClassName;
     }
 
 
     public String getRootPath() {
         return myRootPath;
+    }
+
+    public String getNamespace() {
+        return myNamespace;
     }
 }
