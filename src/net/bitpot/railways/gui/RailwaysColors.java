@@ -22,7 +22,10 @@ public abstract class RailwaysColors {
     // Route token colors
     public static Color PARAM_TOKEN_COLOR = schemeColor("RUBY_SYMBOL");
     public static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
-    public static Color UNAVAILABLE_ACTION_COLOR = JBColor.RED;
+
+    // Color of the nonexistent action that's referenced by a route.
+    public static Color MISSING_ACTION_COLOR = JBColor.RED;
+    public static Color DISABLED_ITEM_COLOR = JBColor.GRAY;
 
 
 
@@ -43,8 +46,11 @@ public abstract class RailwaysColors {
     public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
             plainTextAttr(OPTIONAL_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
 
-    public static final SimpleTextAttributes UNAVAILABLE_ACTION_ATTR =
-            plainTextAttr(UNAVAILABLE_ACTION_COLOR, null);
+    public static final SimpleTextAttributes MISSING_ACTION_ATTR =
+            plainTextAttr(MISSING_ACTION_COLOR, null);
+
+    public static final SimpleTextAttributes DISABLED_ITEM_ATTR =
+            plainTextAttr(DISABLED_ITEM_COLOR, null);
 
 
     private static Color schemeColor(String name) {

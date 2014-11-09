@@ -59,7 +59,8 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
      * @param highlight Substring of value to be highlighted.
      */
     protected void appendHighlighted(String value, String highlight) {
-        appendHighlighted(value, highlight, false);
+        appendHighlighted(value, highlight,
+                SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 
 
@@ -68,14 +69,10 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
      *
      * @param value Value to be displayed.
      * @param highlight Substring of value to be highlighted.
-     * @param isError When set to true, all string will be rendered using error
-     *                text attributes.
+     * @param textAttrs Attributes of not highlighted text.
      */
-    protected void appendHighlighted(String value, String highlight, boolean isError) {
-        SimpleTextAttributes textAttrs = isError ?
-                RailwaysColors.UNAVAILABLE_ACTION_ATTR :
-                SimpleTextAttributes.REGULAR_ATTRIBUTES;
-
+    protected void appendHighlighted(String value, String highlight,
+                                     SimpleTextAttributes textAttrs) {
         if (highlight.equals("")) {
             append(value, textAttrs);
             return;

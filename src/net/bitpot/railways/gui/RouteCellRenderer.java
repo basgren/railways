@@ -50,12 +50,17 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         Icon icon = null;
 
         // TODO: remove isActionAvailable, as it's unavailable when action visibility == null
-        boolean isError = (route.getParentEngine() == null) && !route.isActionAvailable();
-
-        // TODO: check mounted engine helpers namespace.
+        SimpleTextAttributes textAttrs;
+        if (route.getParentEngine() == null)
+            textAttrs = route.isActionAvailable() ?
+                    SimpleTextAttributes.REGULAR_ATTRIBUTES :
+                    RailwaysColors.MISSING_ACTION_ATTR;
+        else
+            textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
 
         appendHighlighted(route.getActionText(),
-                getFilter().getPathFilter(), isError);
+                getFilter().getPathFilter(), textAttrs);
+
 
         if (route.getType() == Route.MOUNTED || route.getParentEngine() != null) {
             icon = RailwaysIcons.RACK_APPLICATION;
