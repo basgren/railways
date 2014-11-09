@@ -135,6 +135,8 @@ public class RailwaysUtils {
         if (app == null)
             return;
 
+        // TODO: investigate multiple calls of this method when switching focus from code to tool window without any changes.
+
         for (Route route: routeList)
             route.updateActionStatus(app);
     }
