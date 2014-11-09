@@ -62,8 +62,10 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
                 getFilter().getPathFilter(), textAttrs);
 
 
-        if (route.getType() == Route.MOUNTED || route.getParentEngine() != null) {
+        if (route.getType() == Route.MOUNTED) {
             icon = RailwaysIcons.RACK_APPLICATION;
+        } else if (route.getParentEngine() != null) {
+            icon = RailwaysIcons.UNKNOWN;
         } else {
             Visibility vis = route.getActionVisibility();
             if (vis == null)

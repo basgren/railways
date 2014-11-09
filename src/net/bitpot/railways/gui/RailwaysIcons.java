@@ -15,7 +15,6 @@ public class RailwaysIcons {
         return IconLoader.getIcon(PLUGIN_ICONS_PATH + name);
     }
 
-
     public static final Icon HTTP_METHOD_ANY = pluginIcon("method_any.png");
     public static final Icon HTTP_METHOD_GET = pluginIcon("method_get.png");
     public static final Icon HTTP_METHOD_POST = pluginIcon("method_post.png");
@@ -23,6 +22,8 @@ public class RailwaysIcons {
     public static final Icon HTTP_METHOD_DELETE = pluginIcon("method_delete.png");
     public static final Icon RACK_APPLICATION = pluginIcon("rack.png");
     public static final Icon RUBY_ON_RAILS = pluginIcon("ruby_on_rails.png");
+
+    public static final Icon UNKNOWN = pluginIcon("unknown.png");
 
     public static final Icon UPDATE = IconLoader.getIcon("/actions/sync.png");
     public static final Icon SUSPEND = IconLoader.getIcon("/actions/suspend.png");
