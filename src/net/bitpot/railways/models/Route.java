@@ -235,6 +235,8 @@ public class Route implements NavigationItem {
             RMethod method = ctrl.getAction(action);
             if (method != null)
                 method.navigate(requestFocus);
+            else
+                ctrl.getRClass().navigate(requestFocus);
         }
     }
 
