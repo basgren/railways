@@ -350,12 +350,13 @@ public class MainPanel {
                     break;
 
                 default:
-                    if (route.getParentEngine() == null)
-                        actionLbl.setHyperlinkText(route.getControllerMethodName());
-                    else
-                        actionLbl.setText(route.getControllerMethodName());
-            }
+                    String actionText = route.getControllerMethodName();
 
+                    if (route.getParentEngine() == null) {
+                        actionLbl.setHyperlinkText(actionText);
+                    } else
+                        actionLbl.setText(actionText);
+            }
 
             nameLbl.setText(route.getRouteName());
         }

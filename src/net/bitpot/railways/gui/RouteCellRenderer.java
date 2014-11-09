@@ -51,12 +51,20 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         // TODO: remove isActionAvailable, as it's unavailable when action visibility == null
         SimpleTextAttributes textAttrs;
-        if (route.getParentEngine() == null)
-            textAttrs = route.isActionAvailable() ?
-                    SimpleTextAttributes.REGULAR_ATTRIBUTES :
-                    RailwaysColors.MISSING_ACTION_ATTR;
-        else
+        String tooltipText = null;
+
+        if (route.getParentEngine() == null) {
+            if (route.isActionAvailable()) {
+                textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
+            } else {
+                textAttrs = RailwaysColors.MISSING_ACTION_ATTR;
+                tooltipText = "Method not found";
+            }
+        } else
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
+
+        setToolTipText(tooltipText);
+
 
         appendHighlighted(route.getActionText(),
                 getFilter().getPathFilter(), textAttrs);
