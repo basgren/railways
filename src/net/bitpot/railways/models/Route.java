@@ -126,7 +126,15 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        return String.format("%sController#%s", toCamelCase(controller, false), action);
+        // Process namespaces.
+        String[] strings = controller.split("/");
+        for(int i = 0; i < strings.length; i++) {
+            strings[i] = toCamelCase(strings[i]);
+        }
+
+        String ctrlName = StringUtil.join(strings, "::");
+
+        return String.format("%sController#%s", ctrlName, action);
     }
 
 
@@ -150,13 +158,12 @@ public class Route implements NavigationItem {
     /**
      * Converts string to camel case.
      *
-     * @param value              String to convert
-     * @param startWithLowerCase Set to true if first letter should remain lower-case.
+     * @param value String to convert
      * @return String in CamelCase
      */
-    private static String toCamelCase(String value, boolean startWithLowerCase) {
+    private static String toCamelCase(String value) {
         String[] strings = value.toLowerCase().split("_");
-        for (int i = startWithLowerCase ? 1 : 0; i < strings.length; i++) {
+        for (int i = 0; i < strings.length; i++) {
             strings[i] = StringUtil.capitalize(strings[i]);
         }
 
