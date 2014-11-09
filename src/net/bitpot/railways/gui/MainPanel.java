@@ -350,6 +350,7 @@ public class MainPanel {
                     break;
 
                 default:
+                    // TODO: do not render inaccessible methods (missing, or engine methods) as a link
                     actionLbl.setHyperlinkText(route.getControllerMethodName());
             }
 

@@ -178,6 +178,21 @@ public class RakeRoutesParserTest
     }
 
 
+    @Test
+    public void testParsingEngineRoutesComputedProperties() throws Exception {
+        RouteList routes = parser.parseFile("test/data/engine_routes_parsing.data.txt");
+
+        // Engine routes should follow parent engine route which mounts them
+        Route route = routes.get(1);
+        // TODO: implement covered functionality
+        assertEquals("RailsAdmin::MainController#dashboard",
+                route.getControllerMethodName());
+
+        assertEquals("rails_admin.dashboard",
+                route.getRouteName());
+    }
+
+
     private String readFile( String file ) throws IOException {
         BufferedReader reader = new BufferedReader( new FileReader (file));
         StringBuilder  stringBuilder = new StringBuilder();
