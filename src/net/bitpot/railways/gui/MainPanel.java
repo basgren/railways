@@ -408,7 +408,8 @@ public class MainPanel {
 
 
     public void refresh() {
-        myTableModel.fireTableDataChanged();
+        // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
+        myTableModel.fireTableRowsUpdated(0, myTableModel.getRowCount() - 1);
     }
 
 
