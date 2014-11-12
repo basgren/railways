@@ -324,14 +324,17 @@ public class Route implements NavigationItem {
             return;
         }
 
+        // TODO: Enable isActionAvailable detection when method search in parent controllers is implemented.
+        isActionAvailable = true;
+
         RailsController appCtrl = app.findController(getController());
         if (appCtrl != null) {
             RMethod method = appCtrl.getAction(action);
 
-            isActionAvailable = (method != null);
+            // isActionAvailable = (method != null);
             actionVisibility = (method != null) ? method.getVisibility() : null;
         } else {
-            isActionAvailable = false;
+            // isActionAvailable = false;
             actionVisibility = null;
         }
     }
