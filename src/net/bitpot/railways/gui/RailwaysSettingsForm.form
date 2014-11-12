@@ -25,7 +25,7 @@
         </constraints>
         <properties>
           <minimumSize width="-1" height="-1"/>
-          <text value="Routes rake task name"/>
+          <text value="Rake task name"/>
         </properties>
       </component>
       <component id="3cbe" class="com.intellij.ui.LanguageTextField" binding="routesTaskEdit" custom-create="true">
