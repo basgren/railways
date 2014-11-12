@@ -73,7 +73,8 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         if (route.getType() == Route.MOUNTED) {
             icon = RailwaysIcons.RACK_APPLICATION;
         } else if (route.getParentEngine() != null) {
-            icon = RailwaysIcons.UNKNOWN;
+            //icon = RailwaysIcons.UNKNOWN;
+            icon = RailwaysIcons.RACK_APPLICATION;
         } else {
             Visibility vis = route.getActionVisibility();
             if (vis == null)
