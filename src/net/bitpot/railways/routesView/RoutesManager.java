@@ -304,8 +304,6 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private void parseRakeRoutesOutput(String stdOut, @Nullable String stdErr) {
         routeList = parser.parse(stdOut, stdErr);
 
-        RailwaysUtils.updateActionsStatus(getModule(), routeList);
-
         // After routes parsing we can have several situations:
         // 1. parser contains routes and isErrorReported = false. Everything is OK.
         // 2. parser contains no routes and isErrorsReported = true. It means that there was an exception thrown.

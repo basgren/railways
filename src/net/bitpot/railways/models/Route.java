@@ -35,9 +35,6 @@ public class Route implements NavigationItem {
     private String controller = "";
     private String action = "";
 
-    // By default let's assume that action exists.
-    private boolean isActionAvailable = true;
-
     @Nullable
     private Visibility actionVisibility = null;
 
@@ -303,46 +300,6 @@ public class Route implements NavigationItem {
 
     public String getAction() {
         return action;
-    }
-
-
-    public boolean isActionAvailable() {
-        return isActionAvailable;
-    }
-
-
-    /**
-     * Checks route action status and sets isActionAvailable flag.
-     *
-     * @param app Rails application which will be checked for controller action.
-     */
-    public void updateActionStatus(RailsApp app) {
-        int routeType = getType();
-
-        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED) {
-            isActionAvailable = true;
-            return;
-        }
-
-        // TODO: Enable isActionAvailable detection when method search in parent controllers is implemented.
-        isActionAvailable = true;
-
-        RailsController appCtrl = app.findController(getController());
-        if (appCtrl != null) {
-            RMethod method = appCtrl.getAction(action);
-
-            // isActionAvailable = (method != null);
-            actionVisibility = (method != null) ? method.getVisibility() : null;
-        } else {
-            // isActionAvailable = false;
-            actionVisibility = null;
-        }
-    }
-
-
-    @Nullable
-    public Visibility getActionVisibility() {
-        return actionVisibility;
     }
 
 
