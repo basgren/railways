@@ -22,6 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -233,15 +235,19 @@ public class MainPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-
                     JTable target = (JTable) e.getSource();
-                    int viewRow = target.rowAtPoint(e.getPoint());
-                    if (viewRow < 0)
-                        return;
+                    navigateToViewRow(target.rowAtPoint(e.getPoint()));
+                }
+            }
+        });
 
-                    int row = target.convertRowIndexToModel(viewRow);
-                    Route route = myTableModel.getRoute(row);
-                    route.navigate(false);
+
+        routesTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JTable target = (JTable) e.getSource();
+                    navigateToViewRow(target.getSelectedRow());
                 }
             }
         });
@@ -276,6 +282,19 @@ public class MainPanel {
                     currentRoute.navigate(false);
             }
         });
+    }
+
+
+    /**
+     * Navigates to a route in specified viewRow, if row exists.
+     * @param viewRow Row index which contains route to navigate to.
+     */
+    private void navigateToViewRow(int viewRow) {
+        if (viewRow < 0)
+            return;
+
+        int row = routesTable.convertRowIndexToModel(viewRow);
+        myTableModel.getRoute(row).navigate(false);
     }
 
 
