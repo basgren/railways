@@ -31,11 +31,21 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.7.1</version>
+    <version>0.7.2-SNAPSHOT</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+        <p><b>0.7.2</b><br/>
+        <ul>
+            <li>Add settings dialog to customize name of rake task that retrieves routes.</li>
+            <li>Fix engine routes display.</li>
+            <li>Navigate to selected route action when Enter is pressed in routes list</li>
+            <li>Navigate to controller if route action cannot be detected.</li>
+            <li>Change Railways tool window orientation depending on panel where it's docked to.</li>
+            <li>Persist selected module in Routes tool window between IDE restarts.</li>
+        </li>
+
         <p><b>0.7.1</b><br/>
         <ul>
             <li>Fix plugin crash when IDE is run using Java 1.6</li>
