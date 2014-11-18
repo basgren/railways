@@ -47,48 +47,24 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRouteAction(Route route) {
-        Icon icon = null;
+        Icon icon;
 
-        // TODO: remove isActionAvailable, as it's unavailable when action visibility == null
-        SimpleTextAttributes textAttrs;
+        SimpleTextAttributes textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
         String tooltipText = null;
 
-        if (route.getParentEngine() == null) {
-            if (route.isActionAvailable()) {
-                textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
-            } else {
-                textAttrs = RailwaysColors.MISSING_ACTION_ATTR;
-                tooltipText = "Method not found";
-            }
-        } else
-            textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
-
-        setToolTipText(tooltipText);
-
-
-        appendHighlighted(route.getActionText(),
-                getFilter().getPathFilter(), textAttrs);
-
-
-        if (route.getType() == Route.MOUNTED) {
-            icon = RailwaysIcons.RACK_APPLICATION;
-        } else if (route.getParentEngine() != null) {
-            //icon = RailwaysIcons.UNKNOWN;
-            icon = RailwaysIcons.RACK_APPLICATION;
+        if (route.isActionDeclarationFound() || route.getType() == Route.MOUNTED) {
+            icon = (route.getType() == Route.MOUNTED) ?
+                RailwaysIcons.RACK_APPLICATION : getActionVisibilityIcon(route);
         } else {
-            Visibility vis = route.getActionVisibility();
-            if (vis == null)
-                icon = AllIcons.General.Error;
-            else {
-                switch (vis) {
-                    case PRIVATE: icon = AllIcons.Nodes.C_private; break;
-                    case PROTECTED: icon = AllIcons.Nodes.C_protected; break;
-                    case PUBLIC: icon = AllIcons.Nodes.C_public; break;
-                }
-            }
+            icon = RailwaysIcons.UNKNOWN;
+            textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
+            tooltipText = "Cannot find declaration";
         }
 
         setIcon(icon);
+        setToolTipText(tooltipText);
+        appendHighlighted(route.getActionText(),
+                getFilter().getPathFilter(), textAttrs);
     }
 
 
@@ -99,7 +75,22 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         for(RouteToken token: tokens)
             append(token.text, getTextAttributes(token));
 
+        setToolTipText(null);
         setIcon(route.getIcon());
+    }
+
+
+    private Icon getActionVisibilityIcon(Route route) {
+        Visibility vis = route.getActionVisibility();
+        if (vis != null) {
+            switch (vis) {
+                case PRIVATE:   return AllIcons.Nodes.C_private;
+                case PROTECTED: return AllIcons.Nodes.C_protected;
+                case PUBLIC:    return AllIcons.Nodes.C_public;
+            }
+        }
+
+        return AllIcons.General.Error;
     }
 
 
