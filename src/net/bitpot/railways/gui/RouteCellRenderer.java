@@ -52,7 +52,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         if (route.isActionDeclarationFound() || route.getType() == Route.MOUNTED) {
             icon = (route.getType() == Route.MOUNTED) ?
-                RailwaysIcons.RACK_APPLICATION : route.getActionVisibilityIcon();
+                RailwaysIcons.RACK_APPLICATION : route.getActionIcon();
         } else {
             icon = RailwaysIcons.UNKNOWN;
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;

@@ -377,7 +377,7 @@ public class MainPanel {
 
                     if (route.canNavigate()) {
                         if (route.isActionDeclarationFound()) {
-                            actionLbl.setIcon(route.getActionVisibilityIcon());
+                            actionLbl.setIcon(route.getActionIcon());
                             actionLbl.setToolTipText("Go to method declaration");
                         }
                         else if (route.isControllerDeclarationFound()) {

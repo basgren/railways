@@ -6,6 +6,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
+import icons.RubyIcons;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
 import org.jetbrains.annotations.Nullable;
@@ -355,13 +356,16 @@ public class Route implements NavigationItem {
     }
 
 
-    public Icon getActionVisibilityIcon() {
+    public Icon getActionIcon() {
         Visibility vis = getActionVisibility();
         if (vis != null) {
             switch (vis) {
-                case PRIVATE:   return AllIcons.Nodes.C_private;
-                case PROTECTED: return AllIcons.Nodes.C_protected;
-                case PUBLIC:    return AllIcons.Nodes.C_public;
+                case PRIVATE:
+                case PROTECTED:
+                    return AllIcons.Nodes.Method;
+
+                case PUBLIC:
+                    return RubyIcons.Rails.ProjectView.Action_method;
             }
         }
 
