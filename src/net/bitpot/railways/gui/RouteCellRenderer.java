@@ -56,7 +56,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         } else {
             icon = RailwaysIcons.UNKNOWN;
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
-            tooltipText = "Cannot find method declaration";
+            tooltipText = "Cannot find action declaration";
         }
 
         setIcon(icon);

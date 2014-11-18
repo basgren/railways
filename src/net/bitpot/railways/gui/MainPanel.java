@@ -378,16 +378,20 @@ public class MainPanel {
                     if (route.canNavigate()) {
                         if (route.isActionDeclarationFound()) {
                             actionLbl.setIcon(route.getActionIcon());
-                            actionLbl.setToolTipText("Go to method declaration");
+                            actionLbl.setToolTipText("Go to action declaration");
                         }
                         else if (route.isControllerDeclarationFound()) {
+                            // TODO: move all icon references to RailwaysIcons.
                             actionLbl.setIcon(RubyIcons.Ruby.Nodes.Controllernode);
                             actionLbl.setToolTipText("Go to controller declaration");
                         }
 
                         actionLbl.setHyperlinkText(actionText);
-                    } else
+                    } else {
                         actionLbl.setText(actionText);
+                        actionLbl.setIcon(RailwaysIcons.UNKNOWN);
+                        actionLbl.setToolTipText("Cannot find controller and action declarations");
+                    }
             }
 
             nameLbl.setText(route.getRouteName());
