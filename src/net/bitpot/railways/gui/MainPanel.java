@@ -8,6 +8,7 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
+import icons.RubyIcons;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
@@ -359,6 +360,9 @@ public class MainPanel {
             methodLbl.setText(route.getRequestMethod().getName());
             methodLbl.setIcon(route.getIcon());
 
+            actionLbl.setIcon(null);
+            actionLbl.setToolTipText(null);
+
             switch (route.getType()) {
                 case Route.MOUNTED:
                     actionLbl.setText(String.format("%s (mounted)", route.getControllerMethodName()));
@@ -371,7 +375,16 @@ public class MainPanel {
                 default:
                     String actionText = route.getControllerMethodName();
 
-                    if (route.getParentEngine() == null) {
+                    if (route.canNavigate()) {
+                        if (route.isActionDeclarationFound()) {
+                            actionLbl.setIcon(route.getActionVisibilityIcon());
+                            actionLbl.setToolTipText("Go to method declaration");
+                        }
+                        else if (route.isControllerDeclarationFound()) {
+                            actionLbl.setIcon(RubyIcons.Ruby.Nodes.Controllernode);
+                            actionLbl.setToolTipText("Go to controller declaration");
+                        }
+
                         actionLbl.setHyperlinkText(actionText);
                     } else
                         actionLbl.setText(actionText);

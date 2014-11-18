@@ -1,6 +1,7 @@
 package net.bitpot.railways.models;
 
 
+import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
@@ -37,6 +38,7 @@ public class Route implements NavigationItem {
 
     // By default let's assume that action exists.
     private boolean isActionDeclarationFound = true;
+    private boolean isControllerDeclarationFound = true;
 
     @Nullable
     private Visibility actionVisibility = null;
@@ -102,7 +104,7 @@ public class Route implements NavigationItem {
         if (!controller.isEmpty() && action.isEmpty())
             return MOUNTED;
 
-        if (controller != null && controller.equals(":controller") &&
+        if (controller.equals(":controller") &&
                 action != null && action.equals(":action"))
             return REDIRECT;
 
@@ -253,13 +255,13 @@ public class Route implements NavigationItem {
 
     @Override
     public boolean canNavigate() {
-        return true;
+        return isControllerDeclarationFound || isActionDeclarationFound();
     }
 
 
     @Override
     public boolean canNavigateToSource() {
-        return true;
+        return canNavigate();
     }
 
 
@@ -317,22 +319,21 @@ public class Route implements NavigationItem {
      * @param app Rails application which will be checked for controller action.
      */
     public void updateActionStatus(RailsApp app) {
-        isActionDeclarationFound = true;
+        isActionDeclarationFound = false;
+        isControllerDeclarationFound = false;
 
         int routeType = getType();
-        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED) {
-            isActionDeclarationFound = false;
+        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
             return;
-        }
 
         RailsController appCtrl = app.findController(getController());
         if (appCtrl != null) {
+            isControllerDeclarationFound = true;
             RMethod method = appCtrl.getAction(action);
 
             isActionDeclarationFound = (method != null);
             actionVisibility = (method != null) ? method.getVisibility() : null;
         } else {
-            isActionDeclarationFound = false;
             actionVisibility = null;
         }
     }
@@ -351,5 +352,24 @@ public class Route implements NavigationItem {
     @Nullable
     public RailsEngine getParentEngine() {
         return myParentEngine;
+    }
+
+
+    public Icon getActionVisibilityIcon() {
+        Visibility vis = getActionVisibility();
+        if (vis != null) {
+            switch (vis) {
+                case PRIVATE:   return AllIcons.Nodes.C_private;
+                case PROTECTED: return AllIcons.Nodes.C_protected;
+                case PUBLIC:    return AllIcons.Nodes.C_public;
+            }
+        }
+
+        return AllIcons.General.Error;
+    }
+
+
+    public boolean isControllerDeclarationFound() {
+        return isControllerDeclarationFound;
     }
 }

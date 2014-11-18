@@ -1,6 +1,5 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
@@ -8,7 +7,6 @@ import net.bitpot.railways.models.RoutesFilter;
 import net.bitpot.railways.parser.route.RouteParser;
 import net.bitpot.railways.parser.route.RouteToken;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 
 import javax.swing.*;
 
@@ -54,11 +52,11 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         if (route.isActionDeclarationFound() || route.getType() == Route.MOUNTED) {
             icon = (route.getType() == Route.MOUNTED) ?
-                RailwaysIcons.RACK_APPLICATION : getActionVisibilityIcon(route);
+                RailwaysIcons.RACK_APPLICATION : route.getActionVisibilityIcon();
         } else {
             icon = RailwaysIcons.UNKNOWN;
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
-            tooltipText = "Cannot find declaration";
+            tooltipText = "Cannot find method declaration";
         }
 
         setIcon(icon);
@@ -77,20 +75,6 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         setToolTipText(null);
         setIcon(route.getIcon());
-    }
-
-
-    private Icon getActionVisibilityIcon(Route route) {
-        Visibility vis = route.getActionVisibility();
-        if (vis != null) {
-            switch (vis) {
-                case PRIVATE:   return AllIcons.Nodes.C_private;
-                case PROTECTED: return AllIcons.Nodes.C_protected;
-                case PUBLIC:    return AllIcons.Nodes.C_public;
-            }
-        }
-
-        return AllIcons.General.Error;
     }
 
 
