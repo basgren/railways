@@ -12,8 +12,10 @@ import net.bitpot.railways.models.routes.RequestMethod;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
+import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
 
 import javax.swing.*;
 
@@ -330,13 +332,42 @@ public class Route implements NavigationItem {
         RailsController appCtrl = app.findController(getController());
         if (appCtrl != null) {
             isControllerDeclarationFound = true;
-            RMethod method = appCtrl.getAction(action);
+            RMethod method = findMethod(app, appCtrl, action);
 
             isActionDeclarationFound = (method != null);
             actionVisibility = (method != null) ? method.getVisibility() : null;
         } else {
             actionVisibility = null;
         }
+    }
+
+
+    // TODO: refactor and unite with action search routing in navigation method.
+    // TODO: display actual controller name where action is defined in RouteInfo.
+    // TODO: think about using ControllersConventions class for other places where string conversion is required.
+    @Nullable
+    private RMethod findMethod(RailsApp app, RailsController ctrl, String methodName) {
+        RMethod method;
+
+        while ((method = ctrl.getAction(methodName)) == null) {
+            // Try to look in parents
+            RSuperClass parentClass = ctrl.getRClass().getPsiSuperClass();
+            if ((parentClass == null) || (parentClass.getName() == null))
+                return null;
+
+            // ControllerConventions is a ruby-plugin class that helps with
+            // Rails string conversions.
+            String ctrlName = ControllersConventions
+                    .getControllerNameByClassName(parentClass.getName());
+            if (ctrlName == null)
+                return null;
+
+            ctrl = app.findController(ctrlName);
+            if (ctrl == null)
+                return null;
+        }
+
+        return method;
     }
 
 
