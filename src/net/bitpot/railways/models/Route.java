@@ -9,6 +9,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import icons.RubyIcons;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
@@ -131,13 +132,7 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        // Process namespaces.
-        String[] strings = controller.split("/");
-        for(int i = 0; i < strings.length; i++) {
-            strings[i] = toCamelCase(strings[i]);
-        }
-
-        String ctrlName = StringUtil.join(strings, "::");
+        String ctrlName = RailwaysUtils.getRubyClassName(controller);
 
         return String.format("%sController#%s", ctrlName, action);
     }
@@ -243,8 +238,11 @@ public class Route implements NavigationItem {
             return;
 
         RailsController ctrl = app.findController(controller);
-        if (ctrl == null)
+        if (ctrl == null) {
+            RailwaysUtils.testIndexSearch(controller, module.getProject());
             return;
+        }
+
 
         if (!action.isEmpty()) {
             RMethod method = ctrl.getAction(action);

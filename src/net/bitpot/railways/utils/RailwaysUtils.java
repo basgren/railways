@@ -12,6 +12,9 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubIndex;
 import net.bitpot.railways.gui.ErrorInfoDlg;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
@@ -20,7 +23,14 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.gem.GemsRunner;
+import org.jetbrains.plugins.ruby.rails.RailsExcludeVendorScope;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyProjectAndLibrariesScope;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
+import org.jetbrains.plugins.ruby.utils.NamingConventions;
+
+import java.util.Collection;
 
 /**
  * Class that contains all API methods for Railways plugin.
@@ -139,6 +149,50 @@ public class RailwaysUtils {
 
         for (Route route: routeList)
             route.updateActionStatus(app);
+    }
+
+
+    public static void testIndexSearch(String name, Project project) {
+        String[] classPath = RailwaysUtils.getRubyClassPath(name + "_controller");
+
+        String className = classPath[classPath.length - 1];
+
+        Collection items = RailwaysUtils.getItemsByName(className, project, true);
+
+        System.out.println(String.format("Searched for: %s; found %d items.", className, items.size()));
+    }
+
+
+    @NotNull
+    public static Collection getItemsByName(String name, Project project,
+                                            boolean includeLibs) {
+        Object scope = includeLibs ?
+                new RubyProjectAndLibrariesScope(project) :
+                new RailsExcludeVendorScope(project);
+
+        // TODO: find out how com.intellij.ide.util.gotoByName.DefaultChooseByNameItemProvider handles name separators.
+
+        // TODO: check if StubIndex.getElements exists prior to RubyMine 6.3
+        Collection collection = StubIndex.getElements(
+                RubyClassModuleNameIndex.KEY,
+                name, project,
+                (GlobalSearchScope) scope, RContainer.class);
+
+        return collection;
+    }
+
+
+    public static String getRubyClassName(String shortName) {
+        return StringUtil.join(getRubyClassPath(shortName), "::");
+    }
+
+    public static String[] getRubyClassPath(String shortName) {
+        // Process namespaces
+        String[] classPath = shortName.split("/");
+        for(int i = 0; i < classPath.length; i++)
+            classPath[i] = NamingConventions.toCamelCase(classPath[i]);
+
+        return classPath;
     }
 
 }
