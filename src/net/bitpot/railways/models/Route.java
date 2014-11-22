@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
@@ -132,7 +133,7 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        String ctrlName = RailwaysUtils.getRubyClassName(controller);
+        String ctrlName = RailwaysUtils.getRubyClassNameByShortName(controller);
 
         return String.format("%sController#%s", ctrlName, action);
     }
@@ -239,7 +240,13 @@ public class Route implements NavigationItem {
 
         RailsController ctrl = app.findController(controller);
         if (ctrl == null) {
-            RailwaysUtils.testIndexSearch(controller, module.getProject());
+            //RailwaysUtils.testIndexSearch(controller, module.getProject());
+            RClass rubyClass = RailwaysUtils.findClassInIndex(controller + "_controller",
+                    module.getProject());
+
+            if (rubyClass != null)
+                rubyClass.navigate(requestFocus);
+
             return;
         }
 
