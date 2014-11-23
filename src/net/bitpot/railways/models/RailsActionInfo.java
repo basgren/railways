@@ -97,6 +97,8 @@ public class RailsActionInfo {
     }
 
 
+    // TODO: parent method can be from library. Handle this case.
+
     @Nullable
     private RMethod findMethod(RailsApp app, RailsController ctrl, String methodName) {
         RMethod method;

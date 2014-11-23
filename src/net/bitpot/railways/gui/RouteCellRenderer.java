@@ -48,6 +48,8 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
     private void renderRouteAction(Route route) {
         Icon icon;
 
+        // TODO: gray out method that's not found
+
         SimpleTextAttributes textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
         String tooltipText = null;
 

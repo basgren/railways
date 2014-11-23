@@ -159,15 +159,9 @@ public class RailwaysUtils {
     public static Collection getItemsByName(String name, Project project) {
         Object scope = new RubyProjectAndLibrariesScope(project);
 
-        // TODO: find out how com.intellij.ide.util.gotoByName.DefaultChooseByNameItemProvider handles name separators.
-
         // TODO: check if StubIndex.getElements exists prior to RubyMine 6.3
-        Collection collection = StubIndex.getElements(
-                RubyClassModuleNameIndex.KEY,
-                name, project,
-                (GlobalSearchScope) scope, RContainer.class);
-
-        return collection;
+        return StubIndex.getElements(RubyClassModuleNameIndex.KEY,
+                name, project, (GlobalSearchScope) scope, RContainer.class);
     }
 
 
@@ -189,10 +183,16 @@ public class RailwaysUtils {
 
     @Nullable
     public static RClass findControllerInIndex(String shortName, Project project) {
+        // Search should be performed using only class name, without modules.
+        // For example, if we have Devise::SessionsController, we should search
+        // for only 'SessionsController'
         String[] classPath = getControllerClassPathByShortName(shortName);
+        String qualifiedName = getControllerClassNameByShortName(shortName);
         String className = classPath[classPath.length - 1];
 
+
         Collection items = RailwaysUtils.getItemsByName(className, project);
+
         System.out.println(String.format("Searched for: %s; found %d items.",
                 className, items.size()));
 
@@ -205,7 +205,7 @@ public class RailwaysUtils {
             System.out.println("---=== Parent chain for PSI element: " + rubyClass.getName());
             logPsiParentChain(rubyClass);
 
-            if (isClassHierarchyMatchesClassPath(rubyClass, classPath))
+            if (qualifiedName.equals(rubyClass.getQualifiedName()))
                 return rubyClass;
         }
 
@@ -213,37 +213,15 @@ public class RailwaysUtils {
     }
 
 
-    private static boolean isClassHierarchyMatchesClassPath(RClass rubyClass, String[] classPath) {
-        // PSI tree traversal is a bit tricky - RClass may have parents which
-        // are not PsiNamedElement descendants. As we want to check class modules,
-        // we should traverse taking into account only named elements and
-        // their class. It's reasonable to stop traversal as soon as we get to
-        // RFile psi element.
-        PsiElement elem = rubyClass;
-        int i = classPath.length;
-
-        while (i >= 0 && elem != null && !(elem instanceof RFile)) {
-            if (elem instanceof PsiNamedElement) {
-                String psiName = ((PsiNamedElement)elem).getName();
-                if (!classPath[--i].equals(psiName))
-                    return false;
-            }
-
-            elem = elem.getParent();
-        }
-
-        // Return true only when we reached both ends in classPath and
-        // in PSI parent chain
-        return (i == 0) && (elem != null);
-    }
-
-
-
     public static void logPsiParentChain(PsiElement elem) {
         while (elem != null) {
-            if (elem instanceof PsiNamedElement)
+            if (elem instanceof PsiNamedElement) {
                 System.out.println(elem.getClass().getName() + " --> Name: " + ((PsiNamedElement)elem).getName());
-            else
+
+                if (elem instanceof RClass)
+                    System.out.println(" ----- Class qualified name: " + ((RClass)elem).getQualifiedName());
+
+            } else
                 System.out.println(elem.getClass().getName() + " --> No name");
 
             elem = elem.getParent();
