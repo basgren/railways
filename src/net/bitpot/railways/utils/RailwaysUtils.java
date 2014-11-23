@@ -34,7 +34,6 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex
 import org.jetbrains.plugins.ruby.utils.NamingConventions;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
 /**
  * Class that contains all API methods for Railways plugin.
@@ -156,17 +155,6 @@ public class RailwaysUtils {
     }
 
 
-    public static void testIndexSearch(String name, Project project) {
-        String[] classPath = RailwaysUtils.getRubyClassPathByShortName(name + "_controller");
-
-        String className = classPath[classPath.length - 1];
-
-        Collection items = RailwaysUtils.getItemsByName(className, project);
-
-        System.out.println(String.format("Searched for: %s; found %d items.", className, items.size()));
-    }
-
-
     @NotNull
     public static Collection getItemsByName(String name, Project project) {
         Object scope = new RubyProjectAndLibrariesScope(project);
@@ -183,23 +171,25 @@ public class RailwaysUtils {
     }
 
 
-    public static String getRubyClassNameByShortName(String shortName) {
-        return StringUtil.join(getRubyClassPathByShortName(shortName), "::");
+    public static String getControllerClassNameByShortName(String shortName) {
+        return StringUtil.join(getControllerClassPathByShortName(shortName), "::");
     }
 
-    public static String[] getRubyClassPathByShortName(String shortName) {
+    public static String[] getControllerClassPathByShortName(String shortName) {
         // Process namespaces
-        String[] classPath = shortName.split("/");
+        String[] classPath = (shortName + "_controller").split("/");
         for(int i = 0; i < classPath.length; i++)
             classPath[i] = NamingConventions.toCamelCase(classPath[i]);
 
         return classPath;
     }
 
+    // TODO: what about inflections? When we have, for example, module 'API', but in short name it will be as 'api'
+    // TODO: display controller icon for route item action when controller is found.
 
     @Nullable
-    public static RClass findClassInIndex(String classShortName, Project project) {
-        String[] classPath = getRubyClassPathByShortName(classShortName);
+    public static RClass findControllerInIndex(String shortName, Project project) {
+        String[] classPath = getControllerClassPathByShortName(shortName);
         String className = classPath[classPath.length - 1];
 
         Collection items = RailwaysUtils.getItemsByName(className, project);
@@ -210,50 +200,41 @@ public class RailwaysUtils {
             if (!(item instanceof RClass))
                 continue;
 
-
-
             RClass rubyClass = (RClass)item;
 
-            System.out.println("---=== Parent chain for class: " + rubyClass.getName());
+            System.out.println("---=== Parent chain for PSI element: " + rubyClass.getName());
             logPsiParentChain(rubyClass);
 
-
-            if (isClassMatchesPath(rubyClass, classPath))
+            if (isClassHierarchyMatchesClassPath(rubyClass, classPath))
                 return rubyClass;
         }
-
 
         return null;
     }
 
 
-    private static boolean isClassMatchesPath(RClass rubyClass, String[] classPath) {
+    private static boolean isClassHierarchyMatchesClassPath(RClass rubyClass, String[] classPath) {
         // PSI tree traversal is a bit tricky - RClass may have parents which
         // are not PsiNamedElement descendants. As we want to check class modules,
         // we should traverse taking into account only named elements and
-        // their class.
+        // their class. It's reasonable to stop traversal as soon as we get to
+        // RFile psi element.
         PsiElement elem = rubyClass;
-        LinkedList<PsiNamedElement> psiPath = new LinkedList<PsiNamedElement>();
+        int i = classPath.length;
 
-        while (elem != null && !(elem instanceof RFile)) {
-            if (elem instanceof PsiNamedElement)
-                psiPath.addFirst((PsiNamedElement)elem);
+        while (i >= 0 && elem != null && !(elem instanceof RFile)) {
+            if (elem instanceof PsiNamedElement) {
+                String psiName = ((PsiNamedElement)elem).getName();
+                if (!classPath[--i].equals(psiName))
+                    return false;
+            }
 
             elem = elem.getParent();
         }
 
-        if (psiPath.size() != classPath.length)
-            return false;
-
-        int i = classPath.length;
-        while (--i >= 0) {
-            String psiName = psiPath.pollLast().getName();
-
-            if (!classPath[i].equals(psiName))
-                return false;
-        }
-
-        return true;
+        // Return true only when we reached both ends in classPath and
+        // in PSI parent chain
+        return (i == 0) && (elem != null);
     }
 
 

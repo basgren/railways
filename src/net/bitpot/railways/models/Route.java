@@ -133,9 +133,9 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        String ctrlName = RailwaysUtils.getRubyClassNameByShortName(controller);
+        String ctrlName = RailwaysUtils.getControllerClassNameByShortName(controller);
 
-        return String.format("%sController#%s", ctrlName, action);
+        return String.format("%s#%s", ctrlName, action);
     }
 
 
@@ -241,7 +241,7 @@ public class Route implements NavigationItem {
         RailsController ctrl = app.findController(controller);
         if (ctrl == null) {
             //RailwaysUtils.testIndexSearch(controller, module.getProject());
-            RClass rubyClass = RailwaysUtils.findClassInIndex(controller + "_controller",
+            RClass rubyClass = RailwaysUtils.findControllerInIndex(controller,
                     module.getProject());
 
             if (rubyClass != null)
