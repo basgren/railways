@@ -1,8 +1,7 @@
 package net.bitpot.railways.models;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-import icons.RubyIcons;
+import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -41,19 +40,18 @@ public class RailsActionInfo {
 
     public Icon getIcon() {
         Visibility vis = getMethodVisibility();
-        if (vis != null) {
+        if (vis != null)
             switch (vis) {
                 case PRIVATE:
                 case PROTECTED:
                     // TODO: move icon references to RailwaysIcons
-                    return AllIcons.Nodes.Method;
+                    return RailwaysIcons.METHOD_NODE;
 
                 case PUBLIC:
-                    return RubyIcons.Rails.ProjectView.Action_method;
+                    return RailwaysIcons.ROUTE_ACTION_NODE;
             }
-        }
 
-        return AllIcons.General.Error;
+        return RailwaysIcons.ERROR_NODE;
     }
 
 
