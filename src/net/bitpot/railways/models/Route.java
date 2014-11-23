@@ -5,19 +5,13 @@ import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.text.StringUtil;
 import icons.RubyIcons;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-import org.jetbrains.plugins.ruby.rails.model.RailsController;
-import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
 
 import javax.swing.*;
 
@@ -50,6 +44,9 @@ public class Route implements NavigationItem {
 
     @Nullable
     private RailsEngine myParentEngine = null;
+
+
+    private RailsActionInfo actionInfo = new RailsActionInfo();
 
 
     public Route() {
@@ -157,22 +154,6 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Converts string to camel case.
-     *
-     * @param value String to convert
-     * @return String in CamelCase
-     */
-    private static String toCamelCase(String value) {
-        String[] strings = value.toLowerCase().split("_");
-        for (int i = 0; i < strings.length; i++) {
-            strings[i] = StringUtil.capitalize(strings[i]);
-        }
-
-        return StringUtil.join(strings);
-    }
-
-
-    /**
      * Returns rack icon if the route is for mounted rack-application, otherwise returns icon for
      * corresponding request method.
      *
@@ -234,31 +215,15 @@ public class Route implements NavigationItem {
         if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
             return;
 
-        RailsApp app = RailsApp.fromModule(module);
-        if ((app == null) || controller.isEmpty())
-            return;
+        actionInfo.update(module, controller, action);
 
-        RailsController ctrl = app.findController(controller);
-        if (ctrl == null) {
-            //RailwaysUtils.testIndexSearch(controller, module.getProject());
-            RClass rubyClass = RailwaysUtils.findControllerInIndex(controller,
-                    module.getProject());
-
-            if (rubyClass != null)
-                rubyClass.navigate(requestFocus);
-
-            return;
-        }
-
-
-        if (!action.isEmpty()) {
-            RMethod method = ctrl.getAction(action);
-            if (method != null)
-                method.navigate(requestFocus);
-            else
-                ctrl.getRClass().navigate(requestFocus);
-        }
+        if (actionInfo.getPsiMethod() != null)
+            actionInfo.getPsiMethod().navigate(requestFocus);
+        else if (actionInfo.getPsiClass() != null)
+            actionInfo.getPsiClass().navigate(requestFocus);
     }
+
+
 
 
     @Override
@@ -334,46 +299,14 @@ public class Route implements NavigationItem {
         if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
             return;
 
-        RailsController appCtrl = app.findController(getController());
-        if (appCtrl != null) {
-            isControllerDeclarationFound = true;
-            RMethod method = findMethod(app, appCtrl, action);
-
-            isActionDeclarationFound = (method != null);
-            actionVisibility = (method != null) ? method.getVisibility() : null;
-        } else {
-            actionVisibility = null;
-        }
+        actionInfo.update(app, controller, action);
     }
 
 
     // TODO: refactor and unite with action search routing in navigation method.
     // TODO: display actual controller name where action is defined in RouteInfo.
     // TODO: think about using ControllersConventions class for other places where string conversion is required.
-    @Nullable
-    private RMethod findMethod(RailsApp app, RailsController ctrl, String methodName) {
-        RMethod method;
 
-        while ((method = ctrl.getAction(methodName)) == null) {
-            // Try to look in parents
-            RSuperClass parentClass = ctrl.getRClass().getPsiSuperClass();
-            if ((parentClass == null) || (parentClass.getName() == null))
-                return null;
-
-            // ControllerConventions is a ruby-plugin class that helps with
-            // Rails string conversions.
-            String ctrlName = ControllersConventions
-                    .getControllerNameByClassName(parentClass.getName());
-            if (ctrlName == null)
-                return null;
-
-            ctrl = app.findController(ctrlName);
-            if (ctrl == null)
-                return null;
-        }
-
-        return method;
-    }
 
 
     @Nullable
