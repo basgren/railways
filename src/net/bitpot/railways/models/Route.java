@@ -1,17 +1,14 @@
 package net.bitpot.railways.models;
 
 
-import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
-import icons.RubyIcons;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 
 import javax.swing.*;
 
@@ -34,13 +31,6 @@ public class Route implements NavigationItem {
     private String routeName = "";
     private String controller = "";
     private String action = "";
-
-    // By default let's assume that action exists.
-    private boolean isActionDeclarationFound = true;
-    private boolean isControllerDeclarationFound = true;
-
-    @Nullable
-    private Visibility actionVisibility = null;
 
     @Nullable
     private RailsEngine myParentEngine = null;
@@ -228,7 +218,8 @@ public class Route implements NavigationItem {
 
     @Override
     public boolean canNavigate() {
-        return isControllerDeclarationFound || isActionDeclarationFound();
+        return actionInfo.getPsiMethod() != null ||
+                actionInfo.getPsiClass() != null;
     }
 
 
@@ -281,20 +272,12 @@ public class Route implements NavigationItem {
     }
 
 
-    public boolean isActionDeclarationFound() {
-        return isActionDeclarationFound;
-    }
-
-
     /**
      * Checks route action status and sets isActionDeclarationFound flag.
      *
      * @param app Rails application which will be checked for controller action.
      */
     public void updateActionStatus(RailsApp app) {
-        isActionDeclarationFound = false;
-        isControllerDeclarationFound = false;
-
         int routeType = getType();
         if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
             return;
@@ -308,13 +291,6 @@ public class Route implements NavigationItem {
     // TODO: think about using ControllersConventions class for other places where string conversion is required.
 
 
-
-    @Nullable
-    public Visibility getActionVisibility() {
-        return actionVisibility;
-    }
-
-
     public void setParentEngine(RailsEngine engine) {
         myParentEngine = engine;
     }
@@ -325,24 +301,7 @@ public class Route implements NavigationItem {
     }
 
 
-    public Icon getActionIcon() {
-        Visibility vis = getActionVisibility();
-        if (vis != null) {
-            switch (vis) {
-                case PRIVATE:
-                case PROTECTED:
-                    return AllIcons.Nodes.Method;
-
-                case PUBLIC:
-                    return RubyIcons.Rails.ProjectView.Action_method;
-            }
-        }
-
-        return AllIcons.General.Error;
-    }
-
-
-    public boolean isControllerDeclarationFound() {
-        return isControllerDeclarationFound;
+    public RailsActionInfo getActionInfo() {
+        return actionInfo;
     }
 }

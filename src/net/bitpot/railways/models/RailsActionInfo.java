@@ -1,6 +1,8 @@
 package net.bitpot.railways.models;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
+import icons.RubyIcons;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -8,7 +10,10 @@ import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
+
+import javax.swing.*;
 
 /**
  * Contains information about controller action.
@@ -31,6 +36,32 @@ public class RailsActionInfo {
 
     public RMethod getPsiMethod() {
         return psiMethod;
+    }
+
+
+    public Icon getIcon() {
+        Visibility vis = getMethodVisibility();
+        if (vis != null) {
+            switch (vis) {
+                case PRIVATE:
+                case PROTECTED:
+                    // TODO: move icon references to RailwaysIcons
+                    return AllIcons.Nodes.Method;
+
+                case PUBLIC:
+                    return RubyIcons.Rails.ProjectView.Action_method;
+            }
+        }
+
+        return AllIcons.General.Error;
+    }
+
+
+    public Visibility getMethodVisibility() {
+        if (getPsiMethod() == null)
+            return null;
+
+        return psiMethod.getVisibility();
     }
 
 

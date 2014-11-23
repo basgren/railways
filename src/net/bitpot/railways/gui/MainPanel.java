@@ -8,8 +8,8 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
-import icons.RubyIcons;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
+import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
@@ -376,13 +376,13 @@ public class MainPanel {
                     String actionText = route.getControllerMethodName();
 
                     if (route.canNavigate()) {
-                        if (route.isActionDeclarationFound()) {
-                            actionLbl.setIcon(route.getActionIcon());
+                        RailsActionInfo action = route.getActionInfo();
+                        if (action.getPsiMethod() != null) {
+                            actionLbl.setIcon(action.getIcon());
                             actionLbl.setToolTipText("Go to action declaration");
-                        }
-                        else if (route.isControllerDeclarationFound()) {
-                            // TODO: move all icon references to RailwaysIcons.
-                            actionLbl.setIcon(RubyIcons.Ruby.Nodes.Controllernode);
+
+                        } else if (action.getPsiClass() != null) {
+                            actionLbl.setIcon(RailwaysIcons.CONTROLLER_NODE);
                             actionLbl.setToolTipText("Go to controller declaration");
                         }
 

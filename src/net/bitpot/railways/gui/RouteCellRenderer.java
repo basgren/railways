@@ -1,6 +1,7 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.ui.SimpleTextAttributes;
+import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
@@ -50,9 +51,17 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         SimpleTextAttributes textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
         String tooltipText = null;
 
-        if (route.isActionDeclarationFound() || route.getType() == Route.MOUNTED) {
-            icon = (route.getType() == Route.MOUNTED) ?
-                RailwaysIcons.RACK_APPLICATION : route.getActionIcon();
+        RailsActionInfo action = route.getActionInfo();
+
+        if (route.getType() == Route.MOUNTED) {
+            icon = RailwaysIcons.RACK_APPLICATION;
+
+        } else if (action.getPsiMethod() != null) {
+            icon = action.getIcon();
+
+        } else if (action.getPsiClass() != null) {
+            icon = RailwaysIcons.CONTROLLER_NODE;
+
         } else {
             icon = RailwaysIcons.UNKNOWN;
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
