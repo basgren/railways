@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyPsiUtil;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
@@ -25,7 +26,11 @@ public class RailsActionInfo {
     //private String controllerName = "";
     //private String actionName = "";
 
+    // Class which is referenced by route action, it might not have
+    // implementation of the methid, as the method can be inherited.
     private RClass psiClass = null;
+
+    // Route action method.
     private RMethod psiMethod = null;
 
 
@@ -71,41 +76,34 @@ public class RailsActionInfo {
     // TODO: cache found classes and methods to reuse found values.
 
     public void update(RailsApp app, String controllerName, String actionName) {
-        //this.controllerName = controllerName;
-        //this.actionName = actionName;
         psiMethod = null;
         psiClass = null;
 
         if ((app == null) || controllerName.isEmpty())
             return;
 
+        psiClass = findController(app, controllerName);
+        if (psiClass != null)
+            psiMethod = findMethod(app, psiClass, actionName);
 
-        // Lookup in application controllers
-        RailsController ctrl = app.findController(controllerName);
-        if (ctrl != null) {
-            psiClass = ctrl.getRClass();
-
-            if (!actionName.isEmpty())
-                psiMethod = findMethod(app, ctrl, actionName);
-        } else {
-            psiClass = RailwaysUtils.findControllerInIndex(controllerName,
-                    app.getProject());
-
-            if (psiClass != null && !actionName.isEmpty())
-                psiMethod = psiClass.findMethodByName(actionName);
-        }
+//        System.out.println(String.format("Updated %s#%s: controller = %s, implementation class = %s",
+//                controllerName, actionName,
+//                (psiClass == null) ? "" : psiClass.getQualifiedName(),
+//                (psiMethod == null) ? "" : psiMethod.getParentContainer().getFullName()));
     }
 
 
-    // TODO: parent method can be from library. Handle this case.
-
     @Nullable
-    private RMethod findMethod(RailsApp app, RailsController ctrl, String methodName) {
+    private RMethod findMethod(RailsApp app, RClass ctrlClass, String methodName) {
         RMethod method;
 
-        while ((method = ctrl.getAction(methodName)) == null) {
+        while (true) {
+            method = RubyPsiUtil.getMethodWithPossibleZeroArgsByName(ctrlClass, methodName);
+            if (method != null)
+                return method;
+
             // Try to look in parents
-            RSuperClass parentClass = ctrl.getRClass().getPsiSuperClass();
+            RSuperClass parentClass = ctrlClass.getPsiSuperClass();
             if ((parentClass == null) || (parentClass.getName() == null))
                 return null;
 
@@ -116,12 +114,27 @@ public class RailsActionInfo {
             if (ctrlName == null)
                 return null;
 
-            ctrl = app.findController(ctrlName);
-            if (ctrl == null)
+            ctrlClass = findController(app, ctrlName);
+            if (ctrlClass == null)
                 return null;
         }
+    }
 
-        return method;
+
+    @Nullable
+    private RClass findController(RailsApp app, String qualifiedClassName) {
+        if ((app == null) || qualifiedClassName.isEmpty())
+            return null;
+
+        // Lookup in application controllers
+        RailsController ctrl = app.findController(qualifiedClassName);
+        if (ctrl != null)
+            return ctrl.getRClass();
+
+        // If controller is not found among application classes, proceed with
+        // global class lookup
+        return RailwaysUtils.findControllerInIndex(qualifiedClassName,
+                app.getProject());
     }
 
 }

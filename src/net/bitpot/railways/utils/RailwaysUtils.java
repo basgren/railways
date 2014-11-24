@@ -202,8 +202,8 @@ public class RailwaysUtils {
 
             RClass rubyClass = (RClass)item;
 
-            System.out.println("---=== Parent chain for PSI element: " + rubyClass.getName());
-            logPsiParentChain(rubyClass);
+            //System.out.println("---=== Parent chain for PSI element: " + rubyClass.getName());
+            //logPsiParentChain(rubyClass);
 
             if (qualifiedName.equals(rubyClass.getQualifiedName()))
                 return rubyClass;
