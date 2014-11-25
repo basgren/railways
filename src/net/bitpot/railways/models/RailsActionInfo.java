@@ -1,17 +1,23 @@
 package net.bitpot.railways.models;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiElementFilter;
+import com.intellij.psi.util.PsiTreeUtil;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.RPsiElement;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyPsiUtil;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.methodCall.RCall;
 
 import javax.swing.*;
 
@@ -102,6 +108,11 @@ public class RailsActionInfo {
             if (method != null)
                 return method;
 
+
+            method = findMethodInModules(ctrlClass, methodName);
+            if (method != null)
+                return method;
+
             // Try to look in parents
             RSuperClass parentClass = ctrlClass.getPsiSuperClass();
             if ((parentClass == null) || (parentClass.getName() == null))
@@ -118,6 +129,53 @@ public class RailsActionInfo {
             if (ctrlClass == null)
                 return null;
         }
+    }
+
+    private void log(String s) {
+        System.out.println(s);
+    }
+
+    private final static PsiElementFilter INCLUDE_MODULE_FILTER = new PsiElementFilter() {
+        @Override
+        public boolean isAccepted(PsiElement psiElement) {
+            return (psiElement instanceof RCall) &&
+                    ((RCall)psiElement).getCommand().equals("include");
+
+        }
+    };
+
+
+    /**
+     * Performs search in modules included in specified class.
+     *
+     * @param ctrlClass Class to look for modules.
+     */
+    private RMethod findMethodInModules(RClass ctrlClass, String methodName) {
+        log("------------------------------");
+
+        PsiElement[] elements = PsiTreeUtil.collectElements(ctrlClass, INCLUDE_MODULE_FILTER);
+
+        // Iterate from the end of the list as next included module can override
+        // same-named methods of previously included module.
+        int i = elements.length;
+        while (--i >= 0) {
+            RCall call = (RCall)elements[i];
+
+            RPsiElement arg = call.getCallArguments().getElement(0);
+            if (arg == null)
+                continue;
+
+            RModule module = RailwaysUtils.findModuleInIndex(arg.getText(), ctrlClass.getProject());
+            if (module == null)
+                continue;
+
+            return module.findMethodByName(methodName);
+
+            //log(String.format("Elem in %s: %s", ctrlClass.getQualifiedName(),
+            //        call.getCallArguments().getElement(0).getText()));
+        }
+
+        return null;
     }
 
 

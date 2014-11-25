@@ -29,6 +29,7 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RFile;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyProjectAndLibrariesScope;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
 import org.jetbrains.plugins.ruby.utils.NamingConventions;
@@ -211,6 +212,33 @@ public class RailwaysUtils {
 
         return null;
     }
+
+
+    public static RModule findModuleInIndex(String qualifiedName, Project project) {
+        String[] modulePath = qualifiedName.split("::");
+        String moduleName = modulePath[modulePath.length - 1];
+
+        Collection items = RailwaysUtils.getItemsByName(moduleName, project);
+
+        System.out.println(String.format("Searched for module: %s; found %d items.",
+                moduleName, items.size()));
+
+        for (Object item: items) {
+            if (!(item instanceof RModule))
+                continue;
+
+            RModule rubyModule = (RModule)item;
+
+            //System.out.println("---=== Parent chain for PSI element: " + rubyClass.getName());
+            //logPsiParentChain(rubyClass);
+
+            if (qualifiedName.equals(rubyModule.getQualifiedName()))
+                return rubyModule;
+        }
+
+        return null;
+    }
+
 
 
     public static void logPsiParentChain(PsiElement elem) {
