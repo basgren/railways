@@ -6,7 +6,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
-import net.bitpot.railways.utils.RailwaysUtils;
+import net.bitpot.railways.utils.RailwaysPsiUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
@@ -120,7 +120,7 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        String ctrlName = RailwaysUtils.getControllerClassNameByShortName(controller);
+        String ctrlName = RailwaysPsiUtils.getControllerClassNameByShortName(controller);
 
         return String.format("%s#%s", ctrlName, action);
     }

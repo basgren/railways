@@ -16,13 +16,13 @@ public class RailwaysUtilsTest {
     public void test_getRubyClassPathByShortName() {
         String[] result;
 
-        result = RailwaysUtils.getControllerClassPathByShortName("users");
+        result = RailwaysPsiUtils.getControllerClassPathByShortName("users");
         assertArrayEquals(new String[] {"UsersController"}, result);
 
-        result = RailwaysUtils.getControllerClassPathByShortName("rails_admin/main");
+        result = RailwaysPsiUtils.getControllerClassPathByShortName("rails_admin/main");
         assertArrayEquals(new String[] {"RailsAdmin", "MainController"}, result);
 
-        result = RailwaysUtils.getControllerClassPathByShortName("api/users/search");
+        result = RailwaysPsiUtils.getControllerClassPathByShortName("api/users/search");
         assertArrayEquals(new String[] {"Api", "Users", "SearchController"}, result);
     }
 
