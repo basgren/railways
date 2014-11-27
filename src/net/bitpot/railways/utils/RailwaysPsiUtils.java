@@ -20,7 +20,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.*;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.methodCall.RCall;
 import org.jetbrains.plugins.ruby.utils.NamingConventions;
@@ -35,8 +35,6 @@ import java.util.Collection;
 public class RailwaysPsiUtils {
 
     // TODO: what about inflections? When we have, for example, module 'API', but in short name it will be as 'api'
-    // TODO: display controller icon for route item action when controller is found.
-
 
     /**
      * Searches for controller in application and libraries.
@@ -57,8 +55,9 @@ public class RailwaysPsiUtils {
 
         // If controller is not found among application classes, proceed with
         // global class lookup
-        return findControllerInIndex(qualifiedClassName,
+        RContainer cont = findClassOrModuleInIndex(qualifiedClassName,
                 app.getProject());
+        return cont instanceof RClass ? (RClass)cont : null;
     }
 
 
@@ -88,7 +87,7 @@ public class RailwaysPsiUtils {
             if (method != null)
                 return method;
 
-            // Try to look in parents
+            // Search in parent classes
             RSuperClass psiParentRef = currentClass.getPsiSuperClass();
             if ((psiParentRef == null) || (psiParentRef.getName() == null))
                 return null;
@@ -106,15 +105,16 @@ public class RailwaysPsiUtils {
 
 
     /**
-     * Performs search of specified controller name in IDE indexes.
+     * Performs search of specified class or module in IDE indexes.
      *
-     * @param qualifiedName Full name of the controller (with modules, ex. Devise::SessionsController)
+     * @param qualifiedName Full name of specified class or module controller
+     *                      (with parent modules, ex. Devise::SessionsController)
      * @param project Current project.
-     * @return RClass object or null.
+     * @return RClass object, RModule object or null.
      */
     @Nullable
-    public static RClass findControllerInIndex(@NotNull String qualifiedName,
-                                               @NotNull Project project) {
+    public static RContainer findClassOrModuleInIndex(@NotNull String qualifiedName,
+                                                  @NotNull Project project) {
         // Search should be performed using only class name, without modules.
         // For example, if we have Devise::SessionsController, we should search
         // for only 'SessionsController'
@@ -125,33 +125,18 @@ public class RailwaysPsiUtils {
 
         // We can
         for (Object item: items) {
-            if (!(item instanceof RClass))
-                continue;
 
-            RClass rubyClass = (RClass)item;
+            if (item instanceof RClass) {
+                String name = ((RClass)item).getQualifiedName();
+                if (qualifiedName.equals(name))
+                    return (RContainer)item;
 
-            if (qualifiedName.equals(rubyClass.getQualifiedName()))
-                return rubyClass;
-        }
+            } else if (item instanceof RModule) {
+                String name = ((RModule)item).getQualifiedName();
+                if (qualifiedName.equals(name))
+                    return (RContainer)item;
+            }
 
-        return null;
-    }
-
-
-    public static RModule findModuleInIndex(String qualifiedName, Project project) {
-        String[] modulePath = qualifiedName.split("::");
-        String moduleName = modulePath[modulePath.length - 1];
-
-        Collection items = getClassOrModuleByName(moduleName, project);
-
-        for (Object item: items) {
-            if (!(item instanceof RModule))
-                continue;
-
-            RModule rubyModule = (RModule)item;
-
-            if (qualifiedName.equals(rubyModule.getQualifiedName()))
-                return rubyModule;
         }
 
         return null;
@@ -192,21 +177,6 @@ public class RailwaysPsiUtils {
         return classPath;
     }
 
-    public static void logPsiParentChain(PsiElement elem) {
-        while (elem != null) {
-            if (elem instanceof PsiNamedElement) {
-                System.out.println(elem.getClass().getName() + " --> Name: " + ((PsiNamedElement)elem).getName());
-
-                if (elem instanceof RClass)
-                    System.out.println(" ----- Class qualified name: " + ((RClass)elem).getQualifiedName());
-
-            } else
-                System.out.println(elem.getClass().getName() + " --> No name");
-
-            elem = elem.getParent();
-        }
-    }
-
 
     /**
      * Filter that selects only 'include Module::Name' expressions.
@@ -216,7 +186,6 @@ public class RailwaysPsiUtils {
         public boolean isAccepted(PsiElement psiElement) {
             return (psiElement instanceof RCall) &&
                     ((RCall)psiElement).getCommand().equals("include");
-
         }
     };
 
@@ -240,14 +209,30 @@ public class RailwaysPsiUtils {
             if (arg == null)
                 continue;
 
-            RModule module = findModuleInIndex(arg.getText(),
+            RContainer cont = findClassOrModuleInIndex(arg.getText(),
                     ctrlClass.getProject());
-            if (module == null)
-                continue;
 
-            return module.findMethodByName(methodName);
+            if (cont instanceof RModule)
+                return RubyPsiUtil.getMethodWithPossibleZeroArgsByName(
+                        cont, methodName);
         }
 
         return null;
+    }
+
+
+    public static void logPsiParentChain(PsiElement elem) {
+        while (elem != null) {
+            if (elem instanceof PsiNamedElement) {
+                System.out.println(elem.getClass().getName() + " --> Name: " + ((PsiNamedElement)elem).getName());
+
+                if (elem instanceof RClass)
+                    System.out.println(" ----- Class qualified name: " + ((RClass)elem).getQualifiedName());
+
+            } else
+                System.out.println(elem.getClass().getName() + " --> No name");
+
+            elem = elem.getParent();
+        }
     }
 }
