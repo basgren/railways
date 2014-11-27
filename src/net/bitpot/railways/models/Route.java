@@ -286,11 +286,6 @@ public class Route implements NavigationItem {
     }
 
 
-    // TODO: refactor and unite with action search routing in navigation method.
-    // TODO: display actual controller name where action is defined in RouteInfo.
-    // TODO: think about using ControllersConventions class for other places where string conversion is required.
-
-
     public void setParentEngine(RailsEngine engine) {
         myParentEngine = engine;
     }

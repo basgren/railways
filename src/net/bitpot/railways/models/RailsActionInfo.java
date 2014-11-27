@@ -42,7 +42,6 @@ public class RailsActionInfo {
             switch (vis) {
                 case PRIVATE:
                 case PROTECTED:
-                    // TODO: move icon references to RailwaysIcons
                     return RailwaysIcons.METHOD_NODE;
 
                 case PUBLIC:
