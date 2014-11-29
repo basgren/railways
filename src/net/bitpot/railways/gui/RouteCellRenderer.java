@@ -63,11 +63,11 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         } else if (action.getPsiClass() != null) {
             icon = RailwaysIcons.CONTROLLER_NODE;
-
+            tooltipText = "Cannot find action declaration";
         } else {
             icon = RailwaysIcons.UNKNOWN;
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
-            tooltipText = "Cannot find action declaration";
+            tooltipText = "Cannot find controller declaration";
         }
 
         setIcon(icon);

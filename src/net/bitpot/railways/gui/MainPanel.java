@@ -390,7 +390,7 @@ public class MainPanel {
                     } else {
                         actionLbl.setText(actionText);
                         actionLbl.setIcon(RailwaysIcons.UNKNOWN);
-                        actionLbl.setToolTipText("Cannot find controller and action declarations");
+                        actionLbl.setToolTipText("Cannot find controller declaration");
                     }
             }
 
