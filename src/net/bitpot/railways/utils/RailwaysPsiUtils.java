@@ -92,12 +92,7 @@ public class RailwaysPsiUtils {
             if ((psiParentRef == null) || (psiParentRef.getName() == null))
                 return null;
 
-            String parentName = ControllersConventions
-                    .getControllerNameByClassName(psiParentRef.getName());
-            if (parentName == null)
-                return null;
-
-            currentClass = findControllerClass(app, parentName);
+            currentClass = findControllerClass(app, psiParentRef.getName());
             if (currentClass == null)
                 return null;
         }
