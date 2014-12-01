@@ -7,8 +7,10 @@ import com.intellij.openapi.module.Module;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 import javax.swing.*;
 
@@ -36,6 +38,7 @@ public class Route implements NavigationItem {
     private RailsEngine myParentEngine = null;
 
 
+    @NotNull
     private RailsActionInfo actionInfo = new RailsActionInfo();
 
 
@@ -105,7 +108,7 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Returns fully-qualified controller method name as it's writte in ruby,
+     * Returns fully-qualified controller method name as it's written in ruby,
      * ex. 'UsersController#index'.
      * If route is mounted, returns only the name of the controller.
      *
@@ -120,16 +123,23 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        String ctrlName = RailwaysPsiUtils.getControllerClassNameByShortName(controller);
+        String ctrlName;
+        RClass ctrlClass = getActionInfo().getPsiClass();
+        if (ctrlClass != null)
+            ctrlName = ctrlClass.getQualifiedName();
+        else
+            ctrlName = RailwaysPsiUtils.getControllerClassNameByShortName(controller);
+
 
         return String.format("%s#%s", ctrlName, action);
     }
 
 
     /**
-     * Returns displayable text for route action. If route leads to mounted Rack application, it will return base class.
+     * Returns displayable text for route action. If route leads to mounted
+     * Rack application, it will return base class.
      *
-     * @return Displayable text for route action, ex. users#create
+     * @return Displayable text for route action, ex. "users#create"
      */
     public String getActionText() {
         switch (getType()) {
