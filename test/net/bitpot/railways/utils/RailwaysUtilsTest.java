@@ -26,10 +26,4 @@ public class RailwaysUtilsTest {
         assertArrayEquals(new String[] {"Api", "Users", "SearchController"}, result);
     }
 
-
-    @Test
-    public void test_isClassMatchesPath() {
-        // TODO: implement tests.
-    }
-
 }

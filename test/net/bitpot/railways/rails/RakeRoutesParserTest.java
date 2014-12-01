@@ -184,7 +184,7 @@ public class RakeRoutesParserTest
 
         // Engine routes should follow parent engine route which mounts them
         Route route = routes.get(1);
-        // TODO: implement covered functionality
+
         assertEquals("RailsAdmin::MainController#dashboard",
                 route.getControllerMethodName());
 

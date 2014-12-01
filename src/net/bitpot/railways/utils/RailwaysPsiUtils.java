@@ -33,7 +33,6 @@ import java.util.Collection;
  */
 public class RailwaysPsiUtils {
 
-    // TODO: what about inflections? When we have, for example, module 'API', but in short name it will be as 'api'
 
     /**
      * Searches for controller in application and libraries.
@@ -148,7 +147,7 @@ public class RailwaysPsiUtils {
     public static Collection findClassesAndModules(String name, Project project) {
         Object scope = new RubyProjectAndLibrariesScope(project);
 
-        // TODO: check if StubIndex.getElements exists prior to RubyMine 6.3
+        // StubIndex.getElements was introduced in 134.231 build (RubyMine 6.3)
         return StubIndex.getElements(RubyClassModuleNameIndex.KEY,
                 name, project, (GlobalSearchScope) scope, RContainer.class);
     }
