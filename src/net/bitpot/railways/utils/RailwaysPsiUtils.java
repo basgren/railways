@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
-import org.jetbrains.plugins.ruby.rails.nameConventions.ControllersConventions;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RPsiElement;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyProjectAndLibrariesScope;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyPsiUtil;
@@ -55,7 +54,7 @@ public class RailwaysPsiUtils {
 
         // If controller is not found among application classes, proceed with
         // global class lookup
-        RContainer cont = findClassOrModuleInIndex(qualifiedClassName,
+        RContainer cont = findClassOrModule(qualifiedClassName,
                 app.getProject());
         return cont instanceof RClass ? (RClass)cont : null;
     }
@@ -108,30 +107,27 @@ public class RailwaysPsiUtils {
      * @return RClass object, RModule object or null.
      */
     @Nullable
-    public static RContainer findClassOrModuleInIndex(@NotNull String qualifiedName,
-                                                  @NotNull Project project) {
+    public static RContainer findClassOrModule(@NotNull String qualifiedName,
+                                               @NotNull Project project) {
         // Search should be performed using only class name, without modules.
         // For example, if we have Devise::SessionsController, we should search
         // for only 'SessionsController'
         String[] classPath = qualifiedName.split("::");
         String className = classPath[classPath.length - 1];
 
-        Collection items = getClassOrModuleByName(className, project);
+        Collection items = findClassesAndModules(className, project);
 
-        // We can
         for (Object item: items) {
+            String name = null;
 
-            if (item instanceof RClass) {
-                String name = ((RClass)item).getQualifiedName();
-                if (qualifiedName.equals(name))
-                    return (RContainer)item;
+            if (item instanceof RClass)
+                name = ((RClass)item).getQualifiedName();
+            else if (item instanceof RModule)
+                name = ((RModule)item).getQualifiedName();
 
-            } else if (item instanceof RModule) {
-                String name = ((RModule)item).getQualifiedName();
-                if (qualifiedName.equals(name))
-                    return (RContainer)item;
-            }
-
+            // Perform case insensitive comparison to avoid mess with acronyms.
+            if ((name != null) && (qualifiedName.equalsIgnoreCase(name)))
+                return (RContainer)item;
         }
 
         return null;
@@ -149,7 +145,7 @@ public class RailwaysPsiUtils {
      * @return Collection of PSI elements which match specified name.
      */
     @NotNull
-    public static Collection getClassOrModuleByName(String name, Project project) {
+    public static Collection findClassesAndModules(String name, Project project) {
         Object scope = new RubyProjectAndLibrariesScope(project);
 
         // TODO: check if StubIndex.getElements exists prior to RubyMine 6.3
@@ -204,7 +200,7 @@ public class RailwaysPsiUtils {
             if (arg == null)
                 continue;
 
-            RContainer cont = findClassOrModuleInIndex(arg.getText(),
+            RContainer cont = findClassOrModule(arg.getText(),
                     ctrlClass.getProject());
 
             if (cont instanceof RModule)
