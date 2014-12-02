@@ -1,6 +1,7 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.ui.SimpleTextAttributes;
+import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
@@ -45,13 +46,32 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRouteAction(Route route) {
-        SimpleTextAttributes textAttrs;
+        Icon icon;
 
-        if (route.getParentEngine() == null) {
-            textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
-        } else
+        // TODO: gray out method that's not found
+
+        SimpleTextAttributes textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
+        String tooltipText = null;
+
+        RailsActionInfo action = route.getActionInfo();
+
+        if (route.getType() == Route.MOUNTED) {
+            icon = RailwaysIcons.RACK_APPLICATION;
+
+        } else if (action.getPsiMethod() != null) {
+            icon = action.getIcon();
+
+        } else if (action.getPsiClass() != null) {
+            icon = RailwaysIcons.CONTROLLER_NODE;
+            tooltipText = "Cannot find action declaration";
+        } else {
+            icon = RailwaysIcons.UNKNOWN;
             textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
+            tooltipText = "Cannot find controller declaration";
+        }
 
+        setIcon(icon);
+        setToolTipText(tooltipText);
         appendHighlighted(route.getActionText(),
                 getFilter().getPathFilter(), textAttrs);
     }
@@ -64,6 +84,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         for(RouteToken token: tokens)
             append(token.text, getTextAttributes(token));
 
+        setToolTipText(null);
         setIcon(route.getIcon());
     }
 

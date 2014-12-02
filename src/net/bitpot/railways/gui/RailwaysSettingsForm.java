@@ -6,7 +6,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.TextFieldWithAutoCompletion;
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider;
-import icons.RubyIcons;
 import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +40,7 @@ public class RailwaysSettingsForm {
                     @Nullable
                     @Override
                     protected Icon getIcon(@NotNull RakeTask rakeTask) {
-                        return RubyIcons.Rake.Rake_runConfiguration;
+                        return RailwaysIcons.RAKE;
                     }
 
                     @NotNull

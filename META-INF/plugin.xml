@@ -79,7 +79,7 @@
     </change-notes>
 
 
-    <idea-version since-build="122.633"/>
+    <idea-version since-build="134.231"/>
 
 
     <depends>com.intellij.modules.ruby</depends>

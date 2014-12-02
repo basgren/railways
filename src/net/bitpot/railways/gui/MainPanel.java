@@ -9,6 +9,7 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
+import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
@@ -359,6 +360,9 @@ public class MainPanel {
             methodLbl.setText(route.getRequestMethod().getName());
             methodLbl.setIcon(route.getIcon());
 
+            actionLbl.setIcon(null);
+            actionLbl.setToolTipText(null);
+
             switch (route.getType()) {
                 case Route.MOUNTED:
                     actionLbl.setText(String.format("%s (mounted)", route.getControllerMethodName()));
@@ -371,10 +375,23 @@ public class MainPanel {
                 default:
                     String actionText = route.getControllerMethodName();
 
-                    if (route.getParentEngine() == null) {
+                    if (route.canNavigate()) {
+                        RailsActionInfo action = route.getActionInfo();
+                        if (action.getPsiMethod() != null) {
+                            actionLbl.setIcon(action.getIcon());
+                            actionLbl.setToolTipText("Go to action declaration");
+
+                        } else if (action.getPsiClass() != null) {
+                            actionLbl.setIcon(RailwaysIcons.CONTROLLER_NODE);
+                            actionLbl.setToolTipText("Go to controller declaration");
+                        }
+
                         actionLbl.setHyperlinkText(actionText);
-                    } else
+                    } else {
                         actionLbl.setText(actionText);
+                        actionLbl.setIcon(RailwaysIcons.UNKNOWN);
+                        actionLbl.setToolTipText("Cannot find controller declaration");
+                    }
             }
 
             nameLbl.setText(route.getRouteName());

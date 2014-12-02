@@ -4,14 +4,13 @@ package net.bitpot.railways.models;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.text.StringUtil;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.utils.RailwaysPsiUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-import org.jetbrains.plugins.ruby.rails.model.RailsController;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 import javax.swing.*;
 
@@ -36,10 +35,11 @@ public class Route implements NavigationItem {
     private String action = "";
 
     @Nullable
-    private Visibility actionVisibility = null;
-
-    @Nullable
     private RailsEngine myParentEngine = null;
+
+
+    @NotNull
+    private RailsActionInfo actionInfo = new RailsActionInfo();
 
 
     public Route() {
@@ -99,7 +99,7 @@ public class Route implements NavigationItem {
         if (!controller.isEmpty() && action.isEmpty())
             return MOUNTED;
 
-        if (controller != null && controller.equals(":controller") &&
+        if (controller.equals(":controller") &&
                 action != null && action.equals(":action"))
             return REDIRECT;
 
@@ -108,7 +108,7 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Returns fully-qualified controller method name as it's writte in ruby,
+     * Returns fully-qualified controller method name as it's written in ruby,
      * ex. 'UsersController#index'.
      * If route is mounted, returns only the name of the controller.
      *
@@ -123,22 +123,23 @@ public class Route implements NavigationItem {
         if (routeType == MOUNTED)
             return controller;
 
-        // Process namespaces.
-        String[] strings = controller.split("/");
-        for(int i = 0; i < strings.length; i++) {
-            strings[i] = toCamelCase(strings[i]);
-        }
+        String ctrlName;
+        RClass ctrlClass = getActionInfo().getPsiClass();
+        if (ctrlClass != null)
+            ctrlName = ctrlClass.getQualifiedName();
+        else
+            ctrlName = RailwaysPsiUtils.getControllerClassNameByShortName(controller);
 
-        String ctrlName = StringUtil.join(strings, "::");
 
-        return String.format("%sController#%s", ctrlName, action);
+        return String.format("%s#%s", ctrlName, action);
     }
 
 
     /**
-     * Returns displayable text for route action. If route leads to mounted Rack application, it will return base class.
+     * Returns displayable text for route action. If route leads to mounted
+     * Rack application, it will return base class.
      *
-     * @return Displayable text for route action, ex. users#create
+     * @return Displayable text for route action, ex. "users#create"
      */
     public String getActionText() {
         switch (getType()) {
@@ -149,22 +150,6 @@ public class Route implements NavigationItem {
             default:
                 return String.format("%s#%s", controller, action);
         }
-    }
-
-
-    /**
-     * Converts string to camel case.
-     *
-     * @param value String to convert
-     * @return String in CamelCase
-     */
-    private static String toCamelCase(String value) {
-        String[] strings = value.toLowerCase().split("_");
-        for (int i = 0; i < strings.length; i++) {
-            strings[i] = StringUtil.capitalize(strings[i]);
-        }
-
-        return StringUtil.join(strings);
     }
 
 
@@ -230,33 +215,27 @@ public class Route implements NavigationItem {
         if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
             return;
 
-        RailsApp app = RailsApp.fromModule(module);
-        if ((app == null) || controller.isEmpty())
-            return;
+        actionInfo.update(module, controller, action);
 
-        RailsController ctrl = app.findController(controller);
-        if (ctrl == null)
-            return;
-
-        if (!action.isEmpty()) {
-            RMethod method = ctrl.getAction(action);
-            if (method != null)
-                method.navigate(requestFocus);
-            else
-                ctrl.getRClass().navigate(requestFocus);
-        }
+        if (actionInfo.getPsiMethod() != null)
+            actionInfo.getPsiMethod().navigate(requestFocus);
+        else if (actionInfo.getPsiClass() != null)
+            actionInfo.getPsiClass().navigate(requestFocus);
     }
+
+
 
 
     @Override
     public boolean canNavigate() {
-        return true;
+        return actionInfo.getPsiMethod() != null ||
+                actionInfo.getPsiClass() != null;
     }
 
 
     @Override
     public boolean canNavigateToSource() {
-        return true;
+        return canNavigate();
     }
 
 
@@ -303,6 +282,20 @@ public class Route implements NavigationItem {
     }
 
 
+    /**
+     * Checks route action status and sets isActionDeclarationFound flag.
+     *
+     * @param app Rails application which will be checked for controller action.
+     */
+    public void updateActionStatus(RailsApp app) {
+        int routeType = getType();
+        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
+            return;
+
+        actionInfo.update(app, controller, action);
+    }
+
+
     public void setParentEngine(RailsEngine engine) {
         myParentEngine = engine;
     }
@@ -310,5 +303,10 @@ public class Route implements NavigationItem {
     @Nullable
     public RailsEngine getParentEngine() {
         return myParentEngine;
+    }
+
+
+    public RailsActionInfo getActionInfo() {
+        return actionInfo;
     }
 }
