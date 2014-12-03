@@ -351,8 +351,8 @@ public class MainPanel {
             methodLbl.setText(NO_INFO);
             methodLbl.setIcon(null);
 
-            actionLbl.setHyperlinkText("Test");
             actionLbl.setText(NO_INFO);
+            actionLbl.setIcon(null);
 
             nameLbl.setText(NO_INFO);
         } else {
