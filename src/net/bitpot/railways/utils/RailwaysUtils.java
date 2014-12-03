@@ -9,14 +9,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
 import net.bitpot.railways.gui.ErrorInfoDlg;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
@@ -26,15 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.gem.GemsRunner;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.RFile;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyProjectAndLibrariesScope;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
-import org.jetbrains.plugins.ruby.utils.NamingConventions;
-
-import java.util.Collection;
 
 /**
  * Class that contains all API methods for Railways plugin.
@@ -146,7 +133,7 @@ public class RailwaysUtils {
 
     public static void updateActionsStatus(Module module, RouteList routeList) {
         RailsApp app = RailsApp.fromModule(module);
-        if (app == null)
+        if ((app == null) || (DumbService.isDumb(module.getProject())))
             return;
 
         // TODO: investigate multiple calls of this method when switching focus from code to tool window without any changes.
