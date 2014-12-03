@@ -19,11 +19,13 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.*;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.methodCall.RCall;
 import org.jetbrains.plugins.ruby.utils.NamingConventions;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
@@ -76,7 +78,7 @@ public class RailwaysPsiUtils {
         RClass currentClass = ctrlClass;
 
         while (true) {
-            RMethod method = RubyPsiUtil.getMethodWithPossibleZeroArgsByName(
+            RMethod method = getMethodWithPossibleZeroArgsByName(
                     currentClass, methodName);
             if (method != null)
                 return method;
@@ -203,11 +205,58 @@ public class RailwaysPsiUtils {
                     ctrlClass.getProject());
 
             if (cont instanceof RModule)
-                return RubyPsiUtil.getMethodWithPossibleZeroArgsByName(
+                return getMethodWithPossibleZeroArgsByName(
                         cont, methodName);
         }
 
         return null;
+    }
+
+
+    /**
+     * Method wraps RubyPsiUtils.getMethodWithPossibleZeroArgsByName method,
+     * which declaration was changed in RubyMine 7.0.
+     */
+    private static RMethod getMethodWithPossibleZeroArgsByName(@NotNull RContainer container,
+                                                               @Nullable String methodName) {
+        // Declaration in RubyMine 6.3:
+        //
+        //     public static RMethod getMethodWithPossibleZeroArgsByName(
+        //             @NotNull RContainer var0, @Nullable String var1)
+        //
+        // Declaration in RubyMine 7.0:
+        //
+        //     public RMethod getMethodWithPossibleZeroArgsByName(
+        //             @NotNull RContainer container, @Nullable String name)
+
+        Object psiUtils = getRubyPsiUtilObject();
+        if (psiUtils == null)
+            return null;
+
+        try {
+            Method method = RubyPsiUtil.class.getMethod(
+                    "getMethodWithPossibleZeroArgsByName", RContainer.class, String.class);
+            return (RMethod)(method.invoke(psiUtils, container, methodName));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    @Nullable
+    private static Object getRubyPsiUtilObject() {
+        try {
+            // New version of RubyPsiUtil has getInstance() method
+            Method method = RubyPsiUtil.class.getMethod("getInstance");
+            return method.invoke(RubyPsiUtil.class);
+        } catch (NoSuchMethodException e) {
+            // No getInstance() method => we use RubyMine < 7.0
+            return RubyPsiUtil.class;
+        } catch (InvocationTargetException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            return null;
+        }
     }
 
 
