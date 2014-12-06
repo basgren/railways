@@ -34,6 +34,16 @@
 
 
     <change-notes><![CDATA[
+        <p><b>0.7.2</b><br/>
+        <ul>
+            <li>Add settings dialog to customize name of rake task that retrieves routes.</li>
+            <li>Fix engine routes display.</li>
+            <li>Navigate to selected route action when Enter is pressed in routes list</li>
+            <li>Navigate to controller if route action cannot be detected.</li>
+            <li>Change Railways tool window orientation depending on panel where it's docked to.</li>
+            <li>Persist selected module in Routes tool window between IDE restarts.</li>
+        </li>
+
         <p><b>0.7.1</b><br/>
         <ul>
             <li>Fix plugin crash when IDE is run using Java 1.6</li>
@@ -106,12 +116,20 @@
 
         <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
                         serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
+
+        <moduleService  serviceInterface="net.bitpot.railways.routesView.RoutesManager"
+                        serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
     </extensions>
 
 
     <actions>
-        <action id="railways.UpdateRoutesList" class="net.bitpot.railways.actions.UpdateRoutesListAction" text="Update routes list"
-                description="Update the list of routes" icon="/actions/sync.png"/>
+        <action id="railways.UpdateRoutesList"
+                class="net.bitpot.railways.actions.UpdateRoutesListAction"
+                text="Update routes list"
+                description="Update the list of routes"
+                icon="/actions/sync.png">
+            <keyboard-shortcut first-keystroke="shift control BACK_SLASH" keymap="$default" />
+        </action>
 
 
         <action id="Railways.gotoRouteAction" class="net.bitpot.railways.actions.GotoRouteMethodAction"
@@ -121,8 +139,15 @@
         </action>
 
 
+        <action id="Railways.settingsAction" class="net.bitpot.railways.actions.SettingsAction"
+                text="Settings"
+                description="Open Railways settings dialog."
+                icon="AllIcons.Actions.Properties" />
+
+
         <group id="railways.MainToolbar">
             <reference ref="railways.UpdateRoutesList"/>
+            <reference ref="Railways.settingsAction"/>
         </group>
 
 
