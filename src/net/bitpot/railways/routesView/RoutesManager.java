@@ -214,11 +214,11 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
 
     /**
-     * Returns ruby exception stacktrace from output of executed rake-task.
+     * Returns ruby exception stack trace from output of executed rake-task.
      *
-     * @return Error stacktrace.
+     * @return Error stack trace.
      */
-    public String getParseErrorStacktrace() {
+    public String getParseErrorStackTrace() {
         return parser.getErrorStacktrace();
     }
 

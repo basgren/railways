@@ -79,23 +79,23 @@ public class RouteParser {
      * end offsets of a substring:
      *
      * @param s String which will be searched for substring.
-     * @param substr Substring to find.
+     * @param subStr Substring to find.
      * @return Array of substring regions (begin and end offsets) or null if
      *         specified substring is empty.
      */
-    private static int[][] findSubstringRegions(String s, String substr) {
+    private static int[][] findSubstringRegions(String s, String subStr) {
         // Prevent infinite loop
-        if (substr.equals(""))
+        if (subStr.equals(""))
             return null;
 
         int lastIndex = 0, regionEnd;
         ArrayList<int[]> regions = new ArrayList<int[]>();
 
         while(lastIndex != -1) {
-            lastIndex = s.indexOf(substr, lastIndex);
+            lastIndex = s.indexOf(subStr, lastIndex);
 
             if (lastIndex != -1) {
-                regionEnd = lastIndex + substr.length();
+                regionEnd = lastIndex + subStr.length();
                 regions.add(new int[]{lastIndex, regionEnd});
                 lastIndex = regionEnd;
             }
@@ -121,25 +121,25 @@ public class RouteParser {
             int startPos = token.startPos + lastPos;
 
             // Get intersection of token and region
-            int intsBegin = Math.max(startPos, region[0]);
-            int intsEnd = Math.min(token.endPos, region[1]);
+            int intersectionBegin = Math.max(startPos, region[0]);
+            int intersectionEnd = Math.min(token.endPos, region[1]);
 
             // Now breakdown token into parts.
             // 1st part - between token begin and intersection begin
-            partSize = intsBegin - startPos;
+            partSize = intersectionBegin - startPos;
             if (partSize > 0) {
                 result.add(new RouteToken(token.tokenType,
                         token.text.substring(lastPos, lastPos + partSize),
-                        startPos, intsBegin));
+                        startPos, intersectionBegin));
             }
             lastPos += partSize;
 
             // 2nd part - intersection itself (highlighted part).
-            partSize = intsEnd - intsBegin;
+            partSize = intersectionEnd - intersectionBegin;
             if (partSize > 0) {
                 RouteToken hlToken = new RouteToken(token.tokenType,
                         token.text.substring(lastPos, lastPos + partSize),
-                        intsBegin, intsEnd);
+                        intersectionBegin, intersectionEnd);
                 hlToken.isHighlighted = true;
 
                 result.add(hlToken);

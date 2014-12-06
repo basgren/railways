@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import net.bitpot.railways.gui.RailwaysSettingsDialog;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Basil Gren
@@ -20,7 +21,7 @@ public class SettingsAction extends AnAction {
      * @param e Carries information on the invocation place
      */
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getData(CommonDataKeys.PROJECT);
 
         RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();

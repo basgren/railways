@@ -12,7 +12,7 @@ import java.awt.*;
  * @author Basil Gren
  *         on 23.02.14.
  */
-public abstract class RailwaysColors {
+public class RailwaysColors {
 
     // Color of selection.
     public static Color HIGHLIGHT_BG_COLOR =
@@ -24,7 +24,7 @@ public abstract class RailwaysColors {
     public static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
 
     // Color of the nonexistent action that's referenced by a route.
-    public static Color MISSING_ACTION_COLOR = JBColor.RED;
+    //public static Color MISSING_ACTION_COLOR = JBColor.RED;
     public static Color DISABLED_ITEM_COLOR = JBColor.GRAY;
 
 
@@ -46,8 +46,8 @@ public abstract class RailwaysColors {
     public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
             plainTextAttr(OPTIONAL_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
 
-    public static final SimpleTextAttributes MISSING_ACTION_ATTR =
-            plainTextAttr(MISSING_ACTION_COLOR, null);
+    //public static final SimpleTextAttributes MISSING_ACTION_ATTR =
+    //        plainTextAttr(MISSING_ACTION_COLOR, null);
 
     public static final SimpleTextAttributes DISABLED_ITEM_ATTR =
             plainTextAttr(DISABLED_ITEM_COLOR, null);

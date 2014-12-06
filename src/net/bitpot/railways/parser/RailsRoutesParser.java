@@ -32,15 +32,14 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?\\}\\s*$)");
-    private static final Pattern REQUIREMENT_PATTERN = Pattern.compile(":([a-zA-Z0-9_]\\w*)\\s*=>\\s*(.+?)[,]");
 
     private static final String EXCEPTION_REGEX = "(?s)rake aborted!\\s*(.+?)Tasks:";
 
     // Will capture both {:to => Test::Server} and Test::Server.
     private static final Pattern RACK_CONTROLLER_PATTERN = Pattern.compile("([A-Z_][A-Za-z0-9_:/]+)");
 
-    public static final Pattern HEADER_LINE = Pattern.compile("^\\s*Prefix\\s+Verb");
-    public static final Pattern ENGINE_ROUTES_HEADER_LINE = Pattern.compile("^Routes for ([a-zA-Z0-9:_]+):");
+    private static final Pattern HEADER_LINE = Pattern.compile("^\\s*Prefix\\s+Verb");
+    private static final Pattern ENGINE_ROUTES_HEADER_LINE = Pattern.compile("^Routes for ([a-zA-Z0-9:_]+):");
 
     private String stacktrace;
 
@@ -69,7 +68,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     }
 
 
-    public void clearErrors() {
+    private void clearErrors() {
         stacktrace = "";
         errorCode = NO_ERRORS;
     }

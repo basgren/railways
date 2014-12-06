@@ -96,7 +96,7 @@ public class RailwaysUtils {
      */
     public static void showErrorInfo(@NotNull RoutesManager routesManager) {
         ErrorInfoDlg.showError("Error information:",
-                routesManager.getParseErrorStacktrace());
+                routesManager.getParseErrorStackTrace());
     }
 
 

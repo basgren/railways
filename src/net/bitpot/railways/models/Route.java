@@ -306,6 +306,7 @@ public class Route implements NavigationItem {
     }
 
 
+    @NotNull
     public RailsActionInfo getActionInfo() {
         return actionInfo;
     }

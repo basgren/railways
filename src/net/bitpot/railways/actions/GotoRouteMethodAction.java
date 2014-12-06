@@ -56,7 +56,7 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
 
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@NotNull AnActionEvent event) {
         Project project = event.getProject();
         if (project == null)
             return;
