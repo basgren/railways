@@ -124,8 +124,13 @@
 
 
     <actions>
-        <action id="railways.UpdateRoutesList" class="net.bitpot.railways.actions.UpdateRoutesListAction" text="Update routes list"
-                description="Update the list of routes" icon="/actions/sync.png"/>
+        <action id="railways.UpdateRoutesList"
+                class="net.bitpot.railways.actions.UpdateRoutesListAction"
+                text="Update routes list"
+                description="Update the list of routes"
+                icon="/actions/sync.png">
+            <keyboard-shortcut first-keystroke="shift control BACK_SLASH" keymap="$default" />
+        </action>
 
 
         <action id="Railways.gotoRouteAction" class="net.bitpot.railways.actions.GotoRouteMethodAction"
