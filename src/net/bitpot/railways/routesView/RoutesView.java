@@ -22,7 +22,6 @@ import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import net.bitpot.railways.actions.RailwaysActionsFields;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
@@ -59,9 +58,6 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<RoutesViewPane>();
     private RoutesViewPane currentPane = null;
     private ToolWindow myToolWindow;
-
-    // Hmmm... I don't remember why I needed this... Some glitches with action state update?
-    private RailwaysActionsFields railwaysActionsFields = new RailwaysActionsFields();
 
     private State myState = new State();
 
@@ -272,16 +268,6 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                         .removeContributor(pane.getRoutesManager());
                 break;
             }
-    }
-
-
-    /**
-     * Returns an object with information used internally by plugin actions.
-     *
-     * @return Object with info
-     */
-    public RailwaysActionsFields getRailwaysActionsFields() {
-        return railwaysActionsFields;
     }
 
 
