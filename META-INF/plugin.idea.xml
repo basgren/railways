@@ -36,12 +36,16 @@
     <change-notes><![CDATA[
         <p><b>0.7.2</b><br/>
         <ul>
-            <li>Add settings dialog to customize name of rake task that retrieves routes.</li>
-            <li>Fix engine routes display.</li>
-            <li>Navigate to selected route action when Enter is pressed in routes list</li>
-            <li>Navigate to controller if route action cannot be detected.</li>
-            <li>Change Railways tool window orientation depending on panel where it's docked to.</li>
+            <li>Add settings dialog to customize rake task that retrieves routes.</li>
+            <li>Live update route action status and icon (it's disabled in Power Save mode).</li>
+            <li>Implement navigation to route action implementation from engines, parent controllers and included modules.</li>
+            <li>Navigate to selected route action when Enter is pressed in routes list.</li>
+            <li>Navigate to controller class when route action cannot be found.</li>
+            <li>Fix displaying of engine routes and order.</li>
+            <li>Add hotkey for routes list refresh.</li>
+            <li>Change Routes tool window orientation depending on panel where it's docked to.</li>
             <li>Persist selected module in Routes tool window between IDE restarts.</li>
+            <li>Minor fixes and UI improvements</li>
         </li>
 
         <p><b>0.7.1</b><br/>
