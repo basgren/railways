@@ -7,18 +7,10 @@
 
     Features:
     <ul>
-        <li>
-            Separate Routes panel with list of all routes of Ruby On Rails
-            project
-        </li>
-        <li>
-            Route filter for quick filtering by route path, controller, action
-            or route name
-        </li>
-        <li>
-            "Go to route action" popup available by pressing
-            <strong>Ctrl+Shift+G</strong> in Ruby On Rails projects
-        </li>
+        <li>Displays routes of Ruby On Rails application/engine in a separate "Routes" panel</li>
+        <li>Adds quick navigation to action implementation from "Routes" panel or
+            "Go to route action" popup available in code editor (invoked by **Ctrl + Shift + G**)</li>
+        <li>Provides quick routes filtering by route path, controller/action or route name</li>
     </ul>
 
     If you want to use Railways in IntelliJ IDEA, please use 'Railways for IDEA'

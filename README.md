@@ -1,16 +1,17 @@
 Railways
 ========
 
-Railways is a plugin for RubyMine that provides convenient way to navigate
-between route actions.
+Railways is a plugin for RubyMine and IntelliJ IDEA Ultimate (with Ruby plugin)
+that provides convenient way to navigate between route actions.
 
 Features:
 
-* Separate Routes panel with list of all routes of Ruby On Rails project
-* Route filter for quick filtering by route path, controller/action or route name
-* "Goto route action" popup available by pressing **Ctrl + Shift + G** in
-  Ruby On Rails projects
+* Displays routes of Ruby On Rails application/engine in a separate "Routes" panel
+* Adds quick navigation to action implementation from routes panel or
+  "Goto route action" popup available in code editor by pressing **Ctrl + Shift + G**
+* Provides quick routes filtering by route path, controller/action or route name
 
+Current release is tested on RubyMine 7.0, RubyMine 6.3, IntelliJ IDEA 14.0.
 
 ## Development Environment
 

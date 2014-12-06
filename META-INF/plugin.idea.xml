@@ -2,27 +2,20 @@
     <name>Railways for IDEA</name>
     <category>Navigation</category>
     <description><![CDATA[
-    This is a separate release of RubyMine Railways plugin that is compatible
-    only with IntelliJ IDEA Ultimate with Ruby plugin installed.<br/>
-
     Railways plugin makes navigation between Ruby On Rails route actions much
     quicker.<br/>
 
+    This is a separate release of RubyMine Railways plugin that is compatible
+    only with IntelliJ IDEA Ultimate with Ruby plugin installed.<br/>
+
     Features:
     <ul>
-        <li>
-            Separate Routes panel with list of all routes of Ruby On Rails
-            project
-        </li>
-        <li>
-            Route filter for quick filtering by route path, controller, action
-            or route name
-        </li>
-        <li>
-            "Go to route action" popup available by pressing
-            <strong>Ctrl+Shift+G</strong> in Ruby On Rails projects
-        </li>
+        <li>Displays routes of Ruby On Rails application/engine in a separate "Routes" panel</li>
+        <li>Adds quick navigation to action implementation from "Routes" panel or
+            "Go to route action" popup available in code editor (invoked by **Ctrl + Shift + G**)</li>
+        <li>Provides quick routes filtering by route path, controller/action or route name</li>
     </ul>
+
     <br/>
 
     Please feel free to report a bug or a suggestion on
