@@ -5,7 +5,7 @@ import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
-import net.bitpot.railways.parser.route.RouteParser;
+import net.bitpot.railways.parser.route.RoutePathParser;
 import net.bitpot.railways.parser.route.RouteToken;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,7 +78,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRoutePath(Route route) {
-        RouteToken[] tokens = RouteParser.parseAndHighlight(route.getPath(),
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight(route.getPath(),
                 getFilter().getPathFilter());
 
         for(RouteToken token: tokens)

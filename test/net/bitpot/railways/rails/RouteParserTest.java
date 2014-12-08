@@ -1,7 +1,7 @@
 package net.bitpot.railways.rails;
 
 
-import net.bitpot.railways.parser.route.RouteParser;
+import net.bitpot.railways.parser.route.RoutePathParser;
 import net.bitpot.railways.parser.route.RouteToken;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class RouteParserTest
 {
     @Test
     public void testParseAndHighlight() {
-        RouteToken[] tokens = RouteParser.parseAndHighlight("/test(.:test)", "st");
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight("/test(.:test)", "st");
 
         RouteToken[] expectedTokens = new RouteToken[] {
                 token_plain("/te", false),
@@ -29,7 +29,7 @@ public class RouteParserTest
 
     @Test
     public void testParseAndHighlightWhenOneTokenHasNoHighlightedText() {
-        RouteToken[] tokens = RouteParser.parseAndHighlight("/tasks/:id", "t");
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight("/tasks/:id", "t");
 
         RouteToken[] expectedTokens = new RouteToken[] {
                 token_plain("/", false),
@@ -44,7 +44,7 @@ public class RouteParserTest
 
     @Test
     public void testParseAndHighlightMultipleRegionsInSingleToken() {
-        RouteToken[] tokens = RouteParser.parseAndHighlight("/test/test", "es");
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight("/test/test", "es");
 
         RouteToken[] expectedTokens = new RouteToken[] {
                 token_plain("/t", false),
@@ -59,7 +59,7 @@ public class RouteParserTest
 
     @Test
     public void testParseAndHighlightSingleRegionInMultipleTokens() {
-        RouteToken[] tokens = RouteParser.parseAndHighlight("/test/:test", "t/:te");
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight("/test/:test", "t/:te");
 
         RouteToken[] expectedTokens = new RouteToken[] {
                 token_plain("/tes", false),
@@ -74,7 +74,7 @@ public class RouteParserTest
 
     @Test
     public void testParseAndHighlightWithEmptySubstring() {
-        RouteToken[] tokens = RouteParser.parseAndHighlight("/test/:test", "");
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight("/test/:test", "");
 
         RouteToken[] expectedTokens = new RouteToken[] {
                 token_plain("/test/", false),
@@ -86,7 +86,7 @@ public class RouteParserTest
 
     @Test
     public void testParseAndHighlightWithBlankSubstring() {
-        RouteToken[] tokens = RouteParser.parseAndHighlight("/test/:test", "   ");
+        RouteToken[] tokens = RoutePathParser.parseAndHighlight("/test/:test", "   ");
 
         RouteToken[] expectedTokens = new RouteToken[] {
                 token_plain("/test/", false),

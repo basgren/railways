@@ -1,7 +1,7 @@
 package net.bitpot.railways.rails;
 
 
-import net.bitpot.railways.parser.route.RouteParser;
+import net.bitpot.railways.parser.route.RoutePathParser;
 import net.bitpot.railways.parser.route.RouteToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,7 +85,7 @@ public class RouteParseTest
 
     @Test
     public void testParseRoute() {
-        RouteToken[] tokens = RouteParser.parseRoute(myRouteStr);
+        RouteToken[] tokens = RoutePathParser.parseRoute(myRouteStr);
 
         assertEquals("Token lists have the same length",
                 expectedTokens.length, tokens.length);

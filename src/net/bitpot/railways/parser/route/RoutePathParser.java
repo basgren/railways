@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * @author Basil Gren
  *         on 21.02.14.
  */
-public class RouteParser {
+public class RoutePathParser {
 
     private static final Pattern PLAIN_URI = Pattern.compile("^[^(:]+");
     private static final Pattern PARAMETER = Pattern.compile("^:[a-zA-Z_]+");
@@ -105,7 +105,8 @@ public class RouteParser {
     }
 
 
-    private static Collection<RouteToken> breakdownToken(RouteToken token, @NotNull int[][] highlightedRegions) {
+    private static Collection<RouteToken> breakdownToken(RouteToken token,
+                                                         @NotNull int[][] highlightedRegions) {
         ArrayList<RouteToken> result = new ArrayList<RouteToken>();
         int lastPos = 0, partSize;
 
