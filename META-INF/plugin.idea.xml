@@ -39,7 +39,7 @@
             <li>Change Routes tool window orientation depending on panel where it's docked to.</li>
             <li>Persist selected module in Routes tool window between IDE restarts.</li>
             <li>Minor fixes and UI improvements</li>
-        </li>
+        </ul>
 
         <p><b>0.7.1</b><br/>
         <ul>
