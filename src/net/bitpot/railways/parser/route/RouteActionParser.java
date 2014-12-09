@@ -1,6 +1,6 @@
 package net.bitpot.railways.parser.route;
 
-import java.util.ArrayList;
+import org.antlr.v4.runtime.misc.NotNull;
 
 /**
  * Simple route action parser.
@@ -10,17 +10,26 @@ import java.util.ArrayList;
  */
 public class RouteActionParser {
 
+    @NotNull
     public static RouteActionChunk[] parse(String subject) {
-        ArrayList<RouteActionChunk> result = new ArrayList<RouteActionChunk>();
-        if (!subject.trim().equals("")) {
-            String[] chunks = subject.split("#", 2);
-            result.add(new RouteActionChunk(chunks[0], RouteActionChunk.CONTAINER));
+        if (subject.trim().equals(""))
+            return new RouteActionChunk[] {};
 
-            if (chunks.length > 1) {
-                result.add(new RouteActionChunk(chunks[1], RouteActionChunk.ACTION));
-            }
-        }
+        RouteActionChunk[] chunks;
+        int pos = subject.indexOf("#");
 
-        return result.toArray(new RouteActionChunk[result.size()]);
+        if (pos >= 0) {
+            chunks = new RouteActionChunk[] {
+                    new RouteActionChunk(subject.substring(0, pos),
+                            RouteActionChunk.CONTAINER),
+                    new RouteActionChunk(subject.substring(pos),
+                            RouteActionChunk.ACTION)
+            };
+        } else
+            chunks = new RouteActionChunk[] {
+                    new RouteActionChunk(subject, RouteActionChunk.CONTAINER)
+            };
+
+        return chunks;
     }
 }

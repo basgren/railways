@@ -23,4 +23,12 @@ public class RouteActionChunk {
         return isHighlighted;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public int getType() {
+        return chunkType;
+    }
+
 }
