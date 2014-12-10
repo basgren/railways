@@ -1,10 +1,7 @@
 package net.bitpot.railways.parser.route;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -13,22 +10,11 @@ import java.util.List;
  */
 public class TextChunkHighlighter {
 
-    private static class TextRegion {
-        public int startOffset;
-        public int endOffset;
-
-        public TextRegion(int startOffset, int endOffset) {
-            this.startOffset = startOffset;
-            this.endOffset = endOffset;
-        }
-    }
-
-
     public static RouteToken[] highlight(RouteToken[] textChunks,
                                                String highlightSubstr) {
 
         highlightSubstr = highlightSubstr.trim();
-        LinkedList<RouteToken> result = new LinkedList<RouteToken>();
+        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
 
         StringBuilder sb = new StringBuilder();
         for(RouteToken t: textChunks)
@@ -41,10 +27,8 @@ public class TextChunkHighlighter {
 
         // Now go through every RouteToken and break it down if it intersects
         // with any region. Token type is preserved.
-        for(RouteToken chunk: textChunks) {
-            Collection<RouteToken> resultingTokens = breakdownToken(chunk, regions);
-            result.addAll(resultingTokens);
-        }
+        for(RouteToken chunk: textChunks)
+            highlightChunk(chunk, regions, result);
 
         return result.toArray(new RouteToken[result.size()]);
     }
@@ -82,58 +66,77 @@ public class TextChunkHighlighter {
     }
 
 
-    private static Collection<RouteToken> breakdownToken(RouteToken token,
-                                                         @NotNull List<TextRegion> highlightedRegions) {
-        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
-        int lastPos = 0, partSize;
+    /**
+     * Creates a set of chunks from the passed one. New chunks are determined
+     * by intersection with passed regions, so that every new chunk that is
+     * inside a region is marked as highlighted.
+     *
+     * @param chunk Text chunk.
+     * @param highlightedRegions A list of regions in original string, which
+     *                           should be highlighted.
+     * @param chunkList Target chunk collection, that will receive new chunks.
+     */
+    private static void highlightChunk(RouteToken chunk,
+                                       List<TextRegion> highlightedRegions,
+                                       Collection<RouteToken> chunkList) {
+        int newChunkSize;
+        int offsRel = 0; // Offset relative to current text chunk
 
         // We assume that regions are sorted.
         for(TextRegion region: highlightedRegions) {
-            int startPos = token.getStartPos() + lastPos;
+            // Absolute offset - offset in original string, which text chunk belongs to.
+            int offsAbs = chunk.getStartPos() + offsRel;
 
-            // Skip to the next region if current does not intersect with token
-            if (region.endOffset <= startPos ||
-                    token.getEndPos() < region.startOffset)
+            // Skip to the next region if current does not intersect with chunk
+            if (region.endOffset <= offsAbs ||
+                    chunk.getEndPos() < region.startOffset)
                 continue;
 
+            // Get intersection of chunk and region
+            int intersectionBegin = Math.max(offsAbs, region.startOffset);
+            int intersectionEnd = Math.min(chunk.getEndPos(), region.endOffset);
 
-            // Get intersection of token and region
-            int intersectionBegin = Math.max(startPos, region.startOffset);
-            int intersectionEnd = Math.min(token.getEndPos(), region.endOffset);
-
-            // Now breakdown token into parts.
-            // 1st part - between token begin and intersection begin
-            partSize = intersectionBegin - startPos;
-            if (partSize > 0) {
-                result.add(new RouteToken(token.getTokenType(),
-                        token.getText().substring(lastPos, lastPos + partSize),
-                        startPos));
+            // Now breakdown chunk into parts.
+            // 1st part - between chunk begin and intersection begin
+            newChunkSize = intersectionBegin - offsAbs;
+            if (newChunkSize > 0) {
+                chunkList.add(new RouteToken(chunk.getTokenType(),
+                        chunk.getText().substring(offsRel, offsRel + newChunkSize),
+                        offsAbs));
+                offsRel += newChunkSize;
             }
-            lastPos += partSize;
 
             // 2nd part - intersection itself (highlighted part).
-            partSize = intersectionEnd - intersectionBegin;
-            if (partSize > 0) {
-                RouteToken hlToken = new RouteToken(token.getTokenType(),
-                        token.getText().substring(lastPos, lastPos + partSize),
+            newChunkSize = intersectionEnd - intersectionBegin;
+            if (newChunkSize > 0) {
+                RouteToken hlToken = new RouteToken(chunk.getTokenType(),
+                        chunk.getText().substring(offsRel, offsRel + newChunkSize),
                         intersectionBegin);
-                hlToken.isHighlighted = true;
+                hlToken.setHighlighted(true);
 
-                result.add(hlToken);
+                chunkList.add(hlToken);
+                offsRel += newChunkSize;
             }
-            lastPos += partSize;
         }
 
-        // the last part - between intersection and token ends, if it's necessary
-        partSize = token.getText().length() - lastPos;
-        if (partSize > 0) {
-            result.add(new RouteToken(token.getTokenType(),
-                    token.getText().substring(lastPos, lastPos + partSize),
-                    token.getStartPos() + lastPos));
+        // the last part - between intersection and chunk ends, if it's necessary
+        newChunkSize = chunk.getText().length() - offsRel;
+        if (newChunkSize > 0) {
+            chunkList.add(new RouteToken(chunk.getTokenType(),
+                    chunk.getText().substring(offsRel, offsRel + newChunkSize),
+                    chunk.getStartPos() + offsRel));
         }
-
-        return result;
     }
 
+
+    private static class TextRegion {
+        public int startOffset;
+        public int endOffset;
+
+        public TextRegion(int startOffset, int endOffset) {
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+        }
+    }
 
 }

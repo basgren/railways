@@ -93,17 +93,17 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         switch(token.getTokenType()) {
             case RouteToken.PARAMETER:
-                return token.isHighlighted ?
+                return token.isHighlighted() ?
                         RailwaysColors.PARAM_TOKEN_HL_ATTR :
                         RailwaysColors.PARAM_TOKEN_ATTR;
 
             case RouteToken.OPTIONAL:
-                return token.isHighlighted ?
+                return token.isHighlighted() ?
                         RailwaysColors.OPTIONAL_TOKEN_HL_ATTR :
                         RailwaysColors.OPTIONAL_TOKEN_ATTR;
 
             default:
-                return token.isHighlighted ?
+                return token.isHighlighted() ?
                         RailwaysColors.REGULAR_HL_ATTR :
                         SimpleTextAttributes.REGULAR_ATTRIBUTES;
         }

@@ -15,7 +15,7 @@ public class RouteToken {
     private String text;
     private int tokenType = PLAIN;
     private int startPos;
-    public boolean isHighlighted = false;
+    private boolean isHighlighted = false;
 
 
     public RouteToken(int tokenType, @NotNull String text) {
@@ -43,5 +43,15 @@ public class RouteToken {
     @NotNull
     public String getText() {
         return text;
+    }
+
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+
+    public void setHighlighted(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
     }
 }

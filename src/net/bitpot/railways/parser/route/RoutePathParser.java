@@ -141,7 +141,7 @@ public class RoutePathParser {
                 RouteToken hlToken = new RouteToken(token.getTokenType(),
                         token.getText().substring(lastPos, lastPos + partSize),
                         intersectionBegin);
-                hlToken.isHighlighted = true;
+                hlToken.setHighlighted(true);
 
                 result.add(hlToken);
             }

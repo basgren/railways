@@ -112,7 +112,7 @@ public class RouteParserTest
                     expectedToken.getText(), token.getText());
 
             assertEquals("Token highlight flags are the same",
-                    expectedToken.isHighlighted, token.isHighlighted);
+                    expectedToken.isHighlighted(), token.isHighlighted());
         }
     }
 
@@ -132,7 +132,7 @@ public class RouteParserTest
 
     private static RouteToken createToken(int type, String text, boolean isHighlighted) {
         RouteToken token = new RouteToken(type, text);
-        token.isHighlighted = isHighlighted;
+        token.setHighlighted(isHighlighted);
 
         return token;
     }
