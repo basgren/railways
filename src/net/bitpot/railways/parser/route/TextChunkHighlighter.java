@@ -32,7 +32,7 @@ public class TextChunkHighlighter {
 
         StringBuilder sb = new StringBuilder();
         for(RouteToken t: textChunks)
-            sb.append(t.text);
+            sb.append(t.getText());
 
         // First, find all substring regions to be highlighted.
         List<TextRegion> regions = findSubstringRegions(sb.toString(), highlightSubstr);
@@ -89,33 +89,34 @@ public class TextChunkHighlighter {
 
         // We assume that regions are sorted.
         for(TextRegion region: highlightedRegions) {
+            int startPos = token.getStartPos() + lastPos;
+
             // Skip to the next region if current does not intersect with token
-            if (region.endOffset <= token.startPos + lastPos ||
-                    token.endPos < region.startOffset)
+            if (region.endOffset <= startPos ||
+                    token.getEndPos() < region.startOffset)
                 continue;
 
-            int startPos = token.startPos + lastPos;
 
             // Get intersection of token and region
             int intersectionBegin = Math.max(startPos, region.startOffset);
-            int intersectionEnd = Math.min(token.endPos, region.endOffset);
+            int intersectionEnd = Math.min(token.getEndPos(), region.endOffset);
 
             // Now breakdown token into parts.
             // 1st part - between token begin and intersection begin
             partSize = intersectionBegin - startPos;
             if (partSize > 0) {
-                result.add(new RouteToken(token.tokenType,
-                        token.text.substring(lastPos, lastPos + partSize),
-                        startPos, intersectionBegin));
+                result.add(new RouteToken(token.getTokenType(),
+                        token.getText().substring(lastPos, lastPos + partSize),
+                        startPos));
             }
             lastPos += partSize;
 
             // 2nd part - intersection itself (highlighted part).
             partSize = intersectionEnd - intersectionBegin;
             if (partSize > 0) {
-                RouteToken hlToken = new RouteToken(token.tokenType,
-                        token.text.substring(lastPos, lastPos + partSize),
-                        intersectionBegin, intersectionEnd);
+                RouteToken hlToken = new RouteToken(token.getTokenType(),
+                        token.getText().substring(lastPos, lastPos + partSize),
+                        intersectionBegin);
                 hlToken.isHighlighted = true;
 
                 result.add(hlToken);
@@ -124,11 +125,11 @@ public class TextChunkHighlighter {
         }
 
         // the last part - between intersection and token ends, if it's necessary
-        partSize = token.text.length() - lastPos;
+        partSize = token.getText().length() - lastPos;
         if (partSize > 0) {
-            result.add(new RouteToken(token.tokenType,
-                    token.text.substring(lastPos, lastPos + partSize),
-                    token.startPos + lastPos, token.endPos));
+            result.add(new RouteToken(token.getTokenType(),
+                    token.getText().substring(lastPos, lastPos + partSize),
+                    token.getStartPos() + lastPos));
         }
 
         return result;

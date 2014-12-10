@@ -112,10 +112,10 @@ public class TextChunkHighlighterTest {
             RouteToken token = actual[i];
 
             assertEquals("Token types are the same",
-                    expectedToken.tokenType, token.tokenType);
+                    expectedToken.getTokenType(), token.getTokenType());
 
             assertEquals("Token texts are the same",
-                    expectedToken.text, token.text);
+                    expectedToken.getText(), token.getText());
 
             assertEquals("Token highlight flags are the same",
                     expectedToken.isHighlighted, token.isHighlighted);

@@ -66,7 +66,7 @@ public class RoutePathParser {
         // Try to find token
         while((token = parseToken(route, pos)) != null) {
             tokens.add(token);
-            pos = token.endPos;
+            pos = token.getEndPos();
         }
 
         return tokens.toArray(new RouteToken[tokens.size()]);
@@ -116,31 +116,31 @@ public class RoutePathParser {
             // region[1] is an offset of substring end (exclusive)
 
             // Skip to the next region if current does not intersect with token
-            if (region[1] <= token.startPos + lastPos || token.endPos < region[0])
+            if (region[1] <= token.getStartPos() + lastPos || token.getEndPos() < region[0])
                 continue;
 
-            int startPos = token.startPos + lastPos;
+            int startPos = token.getStartPos() + lastPos;
 
             // Get intersection of token and region
             int intersectionBegin = Math.max(startPos, region[0]);
-            int intersectionEnd = Math.min(token.endPos, region[1]);
+            int intersectionEnd = Math.min(token.getEndPos(), region[1]);
 
             // Now breakdown token into parts.
             // 1st part - between token begin and intersection begin
             partSize = intersectionBegin - startPos;
             if (partSize > 0) {
-                result.add(new RouteToken(token.tokenType,
-                        token.text.substring(lastPos, lastPos + partSize),
-                        startPos, intersectionBegin));
+                result.add(new RouteToken(token.getTokenType(),
+                        token.getText().substring(lastPos, lastPos + partSize),
+                        startPos));
             }
             lastPos += partSize;
 
             // 2nd part - intersection itself (highlighted part).
             partSize = intersectionEnd - intersectionBegin;
             if (partSize > 0) {
-                RouteToken hlToken = new RouteToken(token.tokenType,
-                        token.text.substring(lastPos, lastPos + partSize),
-                        intersectionBegin, intersectionEnd);
+                RouteToken hlToken = new RouteToken(token.getTokenType(),
+                        token.getText().substring(lastPos, lastPos + partSize),
+                        intersectionBegin);
                 hlToken.isHighlighted = true;
 
                 result.add(hlToken);
@@ -149,11 +149,11 @@ public class RoutePathParser {
         }
 
         // the last part - between intersection and token ends, if it's necessary
-        partSize = token.text.length() - lastPos;
+        partSize = token.getText().length() - lastPos;
         if (partSize > 0) {
-            result.add(new RouteToken(token.tokenType,
-                    token.text.substring(lastPos, lastPos + partSize),
-                    token.startPos + lastPos, token.endPos));
+            result.add(new RouteToken(token.getTokenType(),
+                    token.getText().substring(lastPos, lastPos + partSize),
+                    token.getStartPos() + lastPos));
         }
 
         return result;
@@ -184,7 +184,7 @@ public class RoutePathParser {
 
         if (matcher.find())
             token = new RouteToken(RouteToken.PLAIN, matcher.group(),
-                    matcher.start(), matcher.end());
+                    matcher.start());
 
         return token;
     }
@@ -198,7 +198,7 @@ public class RoutePathParser {
 
         if (matcher.find())
             token = new RouteToken(RouteToken.PARAMETER, matcher.group(),
-                    matcher.start(), matcher.end());
+                    matcher.start());
 
         return token;
     }
@@ -230,6 +230,6 @@ public class RoutePathParser {
 
         return new RouteToken(
                 isBalanced ? RouteToken.OPTIONAL : RouteToken.PLAIN,
-                routePart.substring(startPos, endPos), startPos, endPos);
+                routePart.substring(startPos, endPos), startPos);
     }
 }

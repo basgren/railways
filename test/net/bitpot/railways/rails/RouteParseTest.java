@@ -95,10 +95,10 @@ public class RouteParseTest
             RouteToken token = tokens[i];
 
             assertEquals("Token types are the same",
-                    expectedToken.tokenType, token.tokenType);
+                    expectedToken.getTokenType(), token.getTokenType());
 
             assertEquals("Token text are the same",
-                    expectedToken.text, token.text);
+                    expectedToken.getText(), token.getText());
         }
     }
 }

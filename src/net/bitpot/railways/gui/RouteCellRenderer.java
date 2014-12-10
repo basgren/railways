@@ -82,7 +82,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
                 getFilter().getPathFilter());
 
         for(RouteToken token: tokens)
-            append(token.text, getTextAttributes(token));
+            append(token.getText(), getTextAttributes(token));
 
         setToolTipText(null);
         setIcon(route.getIcon());
@@ -91,7 +91,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
     private SimpleTextAttributes getTextAttributes(RouteToken token) {
 
-        switch(token.tokenType) {
+        switch(token.getTokenType()) {
             case RouteToken.PARAMETER:
                 return token.isHighlighted ?
                         RailwaysColors.PARAM_TOKEN_HL_ATTR :
