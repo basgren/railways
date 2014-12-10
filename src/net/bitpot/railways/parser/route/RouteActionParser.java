@@ -21,13 +21,13 @@ public class RouteActionParser {
         if (pos >= 0) {
             chunks = new RouteActionChunk[] {
                     new RouteActionChunk(subject.substring(0, pos),
-                            RouteActionChunk.CONTAINER),
+                            RouteActionChunk.CONTAINER, 0),
                     new RouteActionChunk(subject.substring(pos),
-                            RouteActionChunk.ACTION)
+                            RouteActionChunk.ACTION, pos)
             };
         } else
             chunks = new RouteActionChunk[] {
-                    new RouteActionChunk(subject, RouteActionChunk.CONTAINER)
+                    new RouteActionChunk(subject, RouteActionChunk.CONTAINER, 0)
             };
 
         return chunks;

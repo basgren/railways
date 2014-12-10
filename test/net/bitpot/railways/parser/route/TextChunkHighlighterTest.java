@@ -13,10 +13,10 @@ public class TextChunkHighlighterTest {
 
     @Test
     public void testParseAndHighlight() {
-        RouteToken[] chunks = RoutePathParser.parseRoute("/test(.:test)");
-        RouteToken[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "st");
+        RoutePathChunk[] chunks = RoutePathParser.parse("/test(.:test)");
+        RoutePathChunk[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "st");
 
-        RouteToken[] expectedChunks = new RouteToken[] {
+        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
                 token_plain("/te", false),
                 token_plain("st", true),
                 token_optional("(.:te", false),
@@ -29,10 +29,10 @@ public class TextChunkHighlighterTest {
 
     @Test
     public void testParseAndHighlightWhenOneTokenHasNoHighlightedText() {
-        RouteToken[] chunks = RoutePathParser.parseRoute("/tasks/:id");
-        RouteToken[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "t");
+        RoutePathChunk[] chunks = RoutePathParser.parse("/tasks/:id");
+        RoutePathChunk[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "t");
 
-        RouteToken[] expectedTokens = new RouteToken[] {
+        RoutePathChunk[] expectedTokens = new RoutePathChunk[] {
                 token_plain("/", false),
                 token_plain("t", true),
                 token_plain("asks/", false),
@@ -45,10 +45,10 @@ public class TextChunkHighlighterTest {
 
     @Test
     public void testParseAndHighlightMultipleRegionsInSingleToken() {
-        RouteToken[] chunks = RoutePathParser.parseRoute("/test/test");
-        RouteToken[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "es");
+        RoutePathChunk[] chunks = RoutePathParser.parse("/test/test");
+        RoutePathChunk[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "es");
 
-        RouteToken[] expectedChunks = new RouteToken[] {
+        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
                 token_plain("/t", false),
                 token_plain("es", true),
                 token_plain("t/t", false),
@@ -62,10 +62,10 @@ public class TextChunkHighlighterTest {
 
     @Test
     public void testParseAndHighlightSingleRegionInMultipleTokens() {
-        RouteToken[] chunks = RoutePathParser.parseRoute("/test/:test");
-        RouteToken[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "t/:te");
+        RoutePathChunk[] chunks = RoutePathParser.parse("/test/:test");
+        RoutePathChunk[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "t/:te");
 
-        RouteToken[] expectedChunks = new RouteToken[] {
+        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
                 token_plain("/tes", false),
                 token_plain("t/", true),
                 token_param(":te", true),
@@ -78,10 +78,10 @@ public class TextChunkHighlighterTest {
 
     @Test
     public void testParseAndHighlightWithEmptySubstring() {
-        RouteToken[] chunks = RoutePathParser.parseRoute("/test/:test");
-        RouteToken[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "");
+        RoutePathChunk[] chunks = RoutePathParser.parse("/test/:test");
+        RoutePathChunk[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "");
 
-        RouteToken[] expectedChunks = new RouteToken[] {
+        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
                 token_plain("/test/", false),
                 token_param(":test", false)
         };
@@ -91,10 +91,10 @@ public class TextChunkHighlighterTest {
 
     @Test
     public void testParseAndHighlightWithBlankSubstring() {
-        RouteToken[] chunks = RoutePathParser.parseRoute("/test/:test");
-        RouteToken[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "   ");
+        RoutePathChunk[] chunks = RoutePathParser.parse("/test/:test");
+        RoutePathChunk[] highlightedChunks = TextChunkHighlighter.highlight(chunks, "   ");
 
-        RouteToken[] expectedChunks = new RouteToken[] {
+        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
                 token_plain("/test/", false),
                 token_param(":test", false)
         };
@@ -103,16 +103,16 @@ public class TextChunkHighlighterTest {
     }
 
 
-    private void assertTokenArraysEqual(RouteToken[] expected, RouteToken[] actual) {
+    private void assertTokenArraysEqual(RoutePathChunk[] expected, RoutePathChunk[] actual) {
         assertEquals("Chunks count are equal",
                 expected.length, actual.length);
 
         for(int i = 0; i < actual.length; i++) {
-            RouteToken expectedToken = expected[i];
-            RouteToken token = actual[i];
+            RoutePathChunk expectedToken = expected[i];
+            RoutePathChunk token = actual[i];
 
             assertEquals("Token types are the same",
-                    expectedToken.getTokenType(), token.getTokenType());
+                    expectedToken.getType(), token.getType());
 
             assertEquals("Token texts are the same",
                     expectedToken.getText(), token.getText());
@@ -123,21 +123,21 @@ public class TextChunkHighlighterTest {
     }
 
 
-    private static RouteToken token_plain(String text, boolean isHighlighted) {
-        return createToken(RouteToken.PLAIN, text, isHighlighted);
+    private static RoutePathChunk token_plain(String text, boolean isHighlighted) {
+        return createChunk(RoutePathChunk.PLAIN, text, isHighlighted);
     }
 
-    private static RouteToken token_param(String text, boolean isHighlighted) {
-        return createToken(RouteToken.PARAMETER, text, isHighlighted);
+    private static RoutePathChunk token_param(String text, boolean isHighlighted) {
+        return createChunk(RoutePathChunk.PARAMETER, text, isHighlighted);
     }
 
-    private static RouteToken token_optional(String text, boolean isHighlighted) {
-        return createToken(RouteToken.OPTIONAL, text, isHighlighted);
+    private static RoutePathChunk token_optional(String text, boolean isHighlighted) {
+        return createChunk(RoutePathChunk.OPTIONAL, text, isHighlighted);
     }
 
 
-    private static RouteToken createToken(int type, String text, boolean isHighlighted) {
-        RouteToken token = new RouteToken(type, text);
+    private static RoutePathChunk createChunk(int type, String text, boolean isHighlighted) {
+        RoutePathChunk token = new RoutePathChunk(text, type, 0);
         token.setHighlighted(isHighlighted);
 
         return token;

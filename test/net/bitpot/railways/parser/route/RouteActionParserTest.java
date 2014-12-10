@@ -17,11 +17,11 @@ import static org.junit.Assert.assertEquals;
 public class RouteActionParserTest {
 
     private String myActionStr;
-    private RouteActionChunk[] expectedTokens;
+    private RouteActionChunk[] expectedChunks;
 
-    public RouteActionParserTest(String routeStr, RouteActionChunk[] tokens) {
+    public RouteActionParserTest(String routeStr, RouteActionChunk[] chunks) {
         myActionStr = routeStr;
-        expectedTokens = tokens;
+        expectedChunks = chunks;
     }
 
 
@@ -41,31 +41,31 @@ public class RouteActionParserTest {
     }
 
     private static RouteActionChunk chunkContainer(String text) {
-        return new RouteActionChunk(text, RouteActionChunk.CONTAINER);
+        return new RouteActionChunk(text, RouteActionChunk.CONTAINER, 0);
     }
 
     private static RouteActionChunk chunkAction(String text) {
-        return new RouteActionChunk(text, RouteActionChunk.ACTION);
+        return new RouteActionChunk(text, RouteActionChunk.ACTION, 0);
     }
 
 
 
     @Test
     public void testParseRoute() {
-        RouteActionChunk[] tokens = RouteActionParser.parse(myActionStr);
+        RouteActionChunk[] chunks = RouteActionParser.parse(myActionStr);
 
         assertEquals("Chunk lists have the same length",
-                expectedTokens.length, tokens.length);
+                expectedChunks.length, chunks.length);
 
-        for(int i = 0; i < tokens.length; i++) {
-            RouteActionChunk expectedToken = expectedTokens[i];
-            RouteActionChunk token = tokens[i];
+        for(int i = 0; i < chunks.length; i++) {
+            RouteActionChunk expectedChunk = expectedChunks[i];
+            RouteActionChunk chunk = chunks[i];
 
             assertEquals("Chunk types are the same",
-                    expectedToken.getType(), token.getType());
+                    expectedChunk.getType(), chunk.getType());
 
             assertEquals("Chunk text is the same",
-                    expectedToken.getText(), token.getText());
+                    expectedChunk.getText(), chunk.getText());
         }
     }
 }

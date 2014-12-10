@@ -1,34 +1,18 @@
 package net.bitpot.railways.parser.route;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author Basil Gren
  *         on 09.12.2014.
  */
-public class RouteActionChunk {
+public class RouteActionChunk extends TextChunk {
 
     public static final int CONTAINER = 0; // Class or module
     public static final int ACTION = 1;
-    private final int chunkType;
-    private final String text;
 
-    private boolean isHighlighted = false;
 
-    public RouteActionChunk(String textChunk, int chunkType) {
-        this.text = textChunk;
-        this.chunkType = chunkType;
+    public RouteActionChunk(@NotNull String text, int chunkType, int startPos) {
+        super(text, chunkType, startPos);
     }
-
-
-    public boolean isHighlighted() {
-        return isHighlighted;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public int getType() {
-        return chunkType;
-    }
-
 }

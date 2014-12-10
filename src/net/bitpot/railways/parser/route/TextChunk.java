@@ -4,40 +4,32 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Basil Gren
- *         on 21.02.14.
+ *         on 11.12.2014.
  */
-public class RouteToken {
-    public final static int PLAIN = 0;
-    public final static int PARAMETER = 1;
-    public final static int OPTIONAL = 2;
-
+public class TextChunk {
 
     private String text;
-    private int tokenType = PLAIN;
+    private int type;
     private int startPos;
     private boolean isHighlighted = false;
 
 
-    public RouteToken(int tokenType, @NotNull String text) {
-        this(tokenType, text, 0);
-    }
-
-    public RouteToken(int tokenType, @NotNull String text, int startPos) {
-        this.tokenType = tokenType;
+    public TextChunk(@NotNull String text, int chunkType, int startPos) {
+        this.type = chunkType;
         this.text = text;
         this.startPos = startPos;
     }
 
-    public int getEndPos() {
+    public int getEndOffset() {
         return startPos + text.length();
     }
 
-    public int getStartPos() {
+    public int getBeginOffset() {
         return startPos;
     }
 
-    public int getTokenType() {
-        return tokenType;
+    public int getType() {
+        return type;
     }
 
     @NotNull
@@ -54,4 +46,5 @@ public class RouteToken {
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
     }
+
 }

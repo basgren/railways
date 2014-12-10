@@ -29,47 +29,47 @@ public class RoutePathParser {
      * @return Array of RouteTokens with highlighted substring.
      */
     @NotNull
-    public static RouteToken[] parseAndHighlight(String routePath, String highlightText) {
-        RouteToken[] tokens = parseRoute(routePath);
+    public static RoutePathChunk[] parseAndHighlight(String routePath, String highlightText) {
+        RoutePathChunk[] chunks = parse(routePath);
         highlightText = highlightText.trim();
 
         // First, find all substring regions to be highlighted.
         int[][] regions = findSubstringRegions(routePath, highlightText);
         if (regions == null)
-            return tokens;
+            return chunks;
 
-        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
+        ArrayList<RoutePathChunk> result = new ArrayList<RoutePathChunk>();
 
-        // Now go through every RouteToken and break it down if it intersects
+        // Now go through every RoutePathChunk and break it down if it intersects
         // with any region. Token type is preserved.
-        for(RouteToken token: tokens) {
-            Collection<RouteToken> resultingTokens = breakdownToken(token, regions);
-            result.addAll(resultingTokens);
+        for(RoutePathChunk chunk: chunks) {
+            Collection<RoutePathChunk> resultingChunks = breakdownChunk(chunk, regions);
+            result.addAll(resultingChunks);
         }
 
-        return result.toArray(new RouteToken[result.size()]);
+        return result.toArray(new RoutePathChunk[result.size()]);
     }
 
 
     /**
      * Parses Rails route and returns array of tokens.
      *
-     * @param route String with route path.
+     * @param routePath String with route path.
      * @return Array of RouteTokens.
      */
     @NotNull
-    public static RouteToken[] parseRoute(String route) {
-        RouteToken token;
-        ArrayList<RouteToken> tokens = new ArrayList<RouteToken>();
+    public static RoutePathChunk[] parse(String routePath) {
+        RoutePathChunk chunk;
+        ArrayList<RoutePathChunk> chunks = new ArrayList<RoutePathChunk>();
         int pos = 0;
 
-        // Try to find token
-        while((token = parseToken(route, pos)) != null) {
-            tokens.add(token);
-            pos = token.getEndPos();
+        // Try to find chunk
+        while((chunk = parseToken(routePath, pos)) != null) {
+            chunks.add(chunk);
+            pos = chunk.getEndOffset();
         }
 
-        return tokens.toArray(new RouteToken[tokens.size()]);
+        return chunks.toArray(new RoutePathChunk[chunks.size()]);
     }
 
 
@@ -105,9 +105,9 @@ public class RoutePathParser {
     }
 
 
-    private static Collection<RouteToken> breakdownToken(RouteToken token,
-                                                         @NotNull int[][] highlightedRegions) {
-        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
+    private static Collection<RoutePathChunk> breakdownChunk(RoutePathChunk chunk,
+                                                             @NotNull int[][] highlightedRegions) {
+        ArrayList<RoutePathChunk> result = new ArrayList<RoutePathChunk>();
         int lastPos = 0, partSize;
 
         // We assume that regions are sorted.
@@ -115,96 +115,96 @@ public class RoutePathParser {
             // region[0] is an offset of substring begin (inclusive)
             // region[1] is an offset of substring end (exclusive)
 
-            // Skip to the next region if current does not intersect with token
-            if (region[1] <= token.getStartPos() + lastPos || token.getEndPos() < region[0])
+            // Skip to the next region if current does not intersect with chunk
+            if (region[1] <= chunk.getBeginOffset() + lastPos || chunk.getEndOffset() < region[0])
                 continue;
 
-            int startPos = token.getStartPos() + lastPos;
+            int startPos = chunk.getBeginOffset() + lastPos;
 
-            // Get intersection of token and region
+            // Get intersection of chunk and region
             int intersectionBegin = Math.max(startPos, region[0]);
-            int intersectionEnd = Math.min(token.getEndPos(), region[1]);
+            int intersectionEnd = Math.min(chunk.getEndOffset(), region[1]);
 
-            // Now breakdown token into parts.
-            // 1st part - between token begin and intersection begin
+            // Now breakdown chunk into parts.
+            // 1st part - between chunk begin and intersection begin
             partSize = intersectionBegin - startPos;
             if (partSize > 0) {
-                result.add(new RouteToken(token.getTokenType(),
-                        token.getText().substring(lastPos, lastPos + partSize),
-                        startPos));
+                result.add(new RoutePathChunk(
+                        chunk.getText().substring(lastPos, lastPos + partSize),
+                        chunk.getType(), startPos));
             }
             lastPos += partSize;
 
             // 2nd part - intersection itself (highlighted part).
             partSize = intersectionEnd - intersectionBegin;
             if (partSize > 0) {
-                RouteToken hlToken = new RouteToken(token.getTokenType(),
-                        token.getText().substring(lastPos, lastPos + partSize),
-                        intersectionBegin);
-                hlToken.setHighlighted(true);
+                RoutePathChunk hlChunk = new RoutePathChunk(
+                        chunk.getText().substring(lastPos, lastPos + partSize),
+                        chunk.getType(), intersectionBegin);
+                hlChunk.setHighlighted(true);
 
-                result.add(hlToken);
+                result.add(hlChunk);
             }
             lastPos += partSize;
         }
 
-        // the last part - between intersection and token ends, if it's necessary
-        partSize = token.getText().length() - lastPos;
+        // the last part - between intersection and chunk ends, if it's necessary
+        partSize = chunk.getText().length() - lastPos;
         if (partSize > 0) {
-            result.add(new RouteToken(token.getTokenType(),
-                    token.getText().substring(lastPos, lastPos + partSize),
-                    token.getStartPos() + lastPos));
+            result.add(new RoutePathChunk(
+                    chunk.getText().substring(lastPos, lastPos + partSize),
+                    chunk.getType(), chunk.getBeginOffset() + lastPos));
         }
 
         return result;
     }
 
 
-    private static RouteToken parseToken(String routePart, int startPos) {
-        RouteToken token;
+    private static RoutePathChunk parseToken(String routePart, int startPos) {
+        RoutePathChunk chunk;
 
-        token = parseOptionalPart(routePart, startPos);
+        chunk = parseOptionalPart(routePart, startPos);
 
-        if (token == null)
-            token = parsePlainToken(routePart, startPos);
+        if (chunk == null)
+            chunk = parsePlainToken(routePart, startPos);
 
-        if (token == null)
-            token = parseSymbolToken(routePart, startPos);
+        if (chunk == null)
+            chunk = parseSymbolToken(routePart, startPos);
 
-        return token;
+        return chunk;
     }
 
 
-    private static RouteToken parsePlainToken(String routePart, int startPos) {
-        RouteToken token = null;
+    private static RoutePathChunk parsePlainToken(String routePart, int startPos) {
+        RoutePathChunk token = null;
 
         // Firstly try to find text
         Matcher matcher = PLAIN_URI.matcher(routePart);
         matcher.region(startPos, routePart.length());
 
         if (matcher.find())
-            token = new RouteToken(RouteToken.PLAIN, matcher.group(),
-                    matcher.start());
+            token = new RoutePathChunk(
+                    matcher.group(), RoutePathChunk.PLAIN, matcher.start());
 
         return token;
     }
 
 
-    private static RouteToken parseSymbolToken(String routePart, int startPos) {
-        RouteToken token = null;
+    private static RoutePathChunk parseSymbolToken(String routePart, int startPos) {
+        RoutePathChunk chunk = null;
 
         Matcher matcher = PARAMETER.matcher(routePart);
         matcher.region(startPos, routePart.length());
 
         if (matcher.find())
-            token = new RouteToken(RouteToken.PARAMETER, matcher.group(),
-                    matcher.start());
+            chunk = new RoutePathChunk(
+                    matcher.group(), RoutePathChunk.PARAMETER, matcher.start());
 
-        return token;
+        return chunk;
     }
 
 
-    private static RouteToken parseOptionalPart(String routePart, int startPos) {
+    private static RoutePathChunk parseOptionalPart(String routePart, int startPos) {
         if (startPos >= routePart.length() || routePart.charAt(startPos) != '(')
             return null;
 
@@ -228,8 +228,8 @@ public class RoutePathParser {
             }
         }
 
-        return new RouteToken(
-                isBalanced ? RouteToken.OPTIONAL : RouteToken.PLAIN,
-                routePart.substring(startPos, endPos), startPos);
+        return new RoutePathChunk(routePart.substring(startPos, endPos),
+                isBalanced ? RoutePathChunk.OPTIONAL : RoutePathChunk.PLAIN,
+                startPos);
     }
 }

@@ -5,8 +5,8 @@ import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
+import net.bitpot.railways.parser.route.RoutePathChunk;
 import net.bitpot.railways.parser.route.RoutePathParser;
-import net.bitpot.railways.parser.route.RouteToken;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -78,32 +78,32 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRoutePath(Route route) {
-        RouteToken[] tokens = RoutePathParser.parseAndHighlight(route.getPath(),
+        RoutePathChunk[] chunks = RoutePathParser.parseAndHighlight(route.getPath(),
                 getFilter().getPathFilter());
 
-        for(RouteToken token: tokens)
-            append(token.getText(), getTextAttributes(token));
+        for(RoutePathChunk chunk: chunks)
+            append(chunk.getText(), getTextAttributes(chunk));
 
         setToolTipText(null);
         setIcon(route.getIcon());
     }
 
 
-    private SimpleTextAttributes getTextAttributes(RouteToken token) {
+    private SimpleTextAttributes getTextAttributes(RoutePathChunk chunk) {
 
-        switch(token.getTokenType()) {
-            case RouteToken.PARAMETER:
-                return token.isHighlighted() ?
+        switch(chunk.getType()) {
+            case RoutePathChunk.PARAMETER:
+                return chunk.isHighlighted() ?
                         RailwaysColors.PARAM_TOKEN_HL_ATTR :
                         RailwaysColors.PARAM_TOKEN_ATTR;
 
-            case RouteToken.OPTIONAL:
-                return token.isHighlighted() ?
+            case RoutePathChunk.OPTIONAL:
+                return chunk.isHighlighted() ?
                         RailwaysColors.OPTIONAL_TOKEN_HL_ATTR :
                         RailwaysColors.OPTIONAL_TOKEN_ATTR;
 
             default:
-                return token.isHighlighted() ?
+                return chunk.isHighlighted() ?
                         RailwaysColors.REGULAR_HL_ATTR :
                         SimpleTextAttributes.REGULAR_ATTRIBUTES;
         }

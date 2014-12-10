@@ -10,14 +10,14 @@ import java.util.List;
  */
 public class TextChunkHighlighter {
 
-    public static RouteToken[] highlight(RouteToken[] textChunks,
+    public static RoutePathChunk[] highlight(RoutePathChunk[] textChunks,
                                                String highlightSubstr) {
 
         highlightSubstr = highlightSubstr.trim();
-        ArrayList<RouteToken> result = new ArrayList<RouteToken>();
+        ArrayList<RoutePathChunk> result = new ArrayList<RoutePathChunk>();
 
         StringBuilder sb = new StringBuilder();
-        for(RouteToken t: textChunks)
+        for(RoutePathChunk t: textChunks)
             sb.append(t.getText());
 
         // First, find all substring regions to be highlighted.
@@ -25,12 +25,12 @@ public class TextChunkHighlighter {
         if (regions == null)
             return textChunks;
 
-        // Now go through every RouteToken and break it down if it intersects
+        // Now go through every RoutePathChunk and break it down if it intersects
         // with any region. Token type is preserved.
-        for(RouteToken chunk: textChunks)
+        for(RoutePathChunk chunk: textChunks)
             highlightChunk(chunk, regions, result);
 
-        return result.toArray(new RouteToken[result.size()]);
+        return result.toArray(new RoutePathChunk[result.size()]);
     }
 
 
@@ -76,42 +76,42 @@ public class TextChunkHighlighter {
      *                           should be highlighted.
      * @param chunkList Target chunk collection, that will receive new chunks.
      */
-    private static void highlightChunk(RouteToken chunk,
+    private static void highlightChunk(RoutePathChunk chunk,
                                        List<TextRegion> highlightedRegions,
-                                       Collection<RouteToken> chunkList) {
+                                       Collection<RoutePathChunk> chunkList) {
         int newChunkSize;
         int offsRel = 0; // Offset relative to current text chunk
 
         // We assume that regions are sorted.
         for(TextRegion region: highlightedRegions) {
             // Absolute offset - offset in original string, which text chunk belongs to.
-            int offsAbs = chunk.getStartPos() + offsRel;
+            int offsAbs = chunk.getBeginOffset() + offsRel;
 
             // Skip to the next region if current does not intersect with chunk
             if (region.endOffset <= offsAbs ||
-                    chunk.getEndPos() < region.startOffset)
+                    chunk.getEndOffset() < region.startOffset)
                 continue;
 
             // Get intersection of chunk and region
             int intersectionBegin = Math.max(offsAbs, region.startOffset);
-            int intersectionEnd = Math.min(chunk.getEndPos(), region.endOffset);
+            int intersectionEnd = Math.min(chunk.getEndOffset(), region.endOffset);
 
             // Now breakdown chunk into parts.
             // 1st part - between chunk begin and intersection begin
             newChunkSize = intersectionBegin - offsAbs;
             if (newChunkSize > 0) {
-                chunkList.add(new RouteToken(chunk.getTokenType(),
+                chunkList.add(new RoutePathChunk(
                         chunk.getText().substring(offsRel, offsRel + newChunkSize),
-                        offsAbs));
+                        chunk.getType(), offsAbs));
                 offsRel += newChunkSize;
             }
 
             // 2nd part - intersection itself (highlighted part).
             newChunkSize = intersectionEnd - intersectionBegin;
             if (newChunkSize > 0) {
-                RouteToken hlToken = new RouteToken(chunk.getTokenType(),
+                RoutePathChunk hlToken = new RoutePathChunk(
                         chunk.getText().substring(offsRel, offsRel + newChunkSize),
-                        intersectionBegin);
+                        chunk.getType(), intersectionBegin);
                 hlToken.setHighlighted(true);
 
                 chunkList.add(hlToken);
@@ -119,12 +119,12 @@ public class TextChunkHighlighter {
             }
         }
 
-        // the last part - between intersection and chunk ends, if it's necessary
+        // the last part - between intersection and chunk end, if it's necessary
         newChunkSize = chunk.getText().length() - offsRel;
         if (newChunkSize > 0) {
-            chunkList.add(new RouteToken(chunk.getTokenType(),
+            chunkList.add(new RoutePathChunk(
                     chunk.getText().substring(offsRel, offsRel + newChunkSize),
-                    chunk.getStartPos() + offsRel));
+                    chunk.getType(), chunk.getBeginOffset() + offsRel));
         }
     }
 
