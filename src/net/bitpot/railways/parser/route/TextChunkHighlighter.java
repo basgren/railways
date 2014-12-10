@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Basil Gren
@@ -12,10 +13,16 @@ import java.util.LinkedList;
  */
 public class TextChunkHighlighter {
 
-    class TextRegion {
+    private static class TextRegion {
         public int startOffset;
         public int endOffset;
+
+        public TextRegion(int startOffset, int endOffset) {
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+        }
     }
+
 
     public static RouteToken[] highlight(RouteToken[] textChunks,
                                                String highlightSubstr) {
@@ -28,7 +35,7 @@ public class TextChunkHighlighter {
             sb.append(t.text);
 
         // First, find all substring regions to be highlighted.
-        int[][] regions = findSubstringRegions(sb.toString(), highlightSubstr);
+        List<TextRegion> regions = findSubstringRegions(sb.toString(), highlightSubstr);
         if (regions == null)
             return textChunks;
 
@@ -53,47 +60,45 @@ public class TextChunkHighlighter {
      * @return Array of substring regions (begin and end offsets) or null if
      *         specified substring is empty.
      */
-    private static int[][] findSubstringRegions(String s, String subStr) {
+    private static List<TextRegion> findSubstringRegions(String s, String subStr) {
         // Prevent infinite loop
         if (subStr.equals(""))
             return null;
 
-        int lastIndex = 0, regionEnd;
-        ArrayList<int[]> regions = new ArrayList<int[]>();
+        int startOffset = 0, endOffset;
+        ArrayList<TextRegion> regions = new ArrayList<TextRegion>();
 
-        while(lastIndex != -1) {
-            lastIndex = s.indexOf(subStr, lastIndex);
+        while(startOffset != -1) {
+            startOffset = s.indexOf(subStr, startOffset);
 
-            if (lastIndex != -1) {
-                regionEnd = lastIndex + subStr.length();
-                regions.add(new int[]{lastIndex, regionEnd});
-                lastIndex = regionEnd;
+            if (startOffset != -1) {
+                endOffset = startOffset + subStr.length();
+                regions.add(new TextRegion(startOffset, endOffset));
+                startOffset = endOffset;
             }
         }
 
-        return regions.toArray(new int[regions.size()][]);
+        return regions;
     }
 
 
     private static Collection<RouteToken> breakdownToken(RouteToken token,
-                                                         @NotNull int[][] highlightedRegions) {
+                                                         @NotNull List<TextRegion> highlightedRegions) {
         ArrayList<RouteToken> result = new ArrayList<RouteToken>();
         int lastPos = 0, partSize;
 
         // We assume that regions are sorted.
-        for(int[] region: highlightedRegions) {
-            // region[0] is an offset of substring begin (inclusive)
-            // region[1] is an offset of substring end (exclusive)
-
+        for(TextRegion region: highlightedRegions) {
             // Skip to the next region if current does not intersect with token
-            if (region[1] <= token.startPos + lastPos || token.endPos < region[0])
+            if (region.endOffset <= token.startPos + lastPos ||
+                    token.endPos < region.startOffset)
                 continue;
 
             int startPos = token.startPos + lastPos;
 
             // Get intersection of token and region
-            int intersectionBegin = Math.max(startPos, region[0]);
-            int intersectionEnd = Math.min(token.endPos, region[1]);
+            int intersectionBegin = Math.max(startPos, region.startOffset);
+            int intersectionEnd = Math.min(token.endPos, region.endOffset);
 
             // Now breakdown token into parts.
             // 1st part - between token begin and intersection begin
