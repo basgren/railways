@@ -45,24 +45,22 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
     }
 
 
-    // TODO: cleanup and refactor (move attribute calculation to TextChunk classes?)
     private void renderRouteAction(Route route) {
-        Icon icon;
+        RailsActionInfo action = route.getActionInfo();
+        boolean isContainerFound = action.getPsiClass() != null;
+        boolean isMethodFound = action.getPsiMethod() != null;
 
-        SimpleTextAttributes textAttrs;
+        Icon icon;
         String tooltipText = null;
 
-        RailsActionInfo action = route.getActionInfo();
-
-        List<TextChunk> chunks = RouteActionParser.parse(route.getActionText());
-
+        // Set icons and hits
         if (route.getType() == Route.MOUNTED) {
             icon = RailwaysIcons.RACK_APPLICATION;
 
-        } else if (action.getPsiMethod() != null) {
+        } else if (isMethodFound) {
             icon = action.getIcon();
 
-        } else if (action.getPsiClass() != null) {
+        } else if (isContainerFound) {
             icon = RailwaysIcons.CONTROLLER_NODE;
             tooltipText = "Cannot find action declaration";
         } else {
@@ -73,30 +71,23 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         setIcon(icon);
         setToolTipText(tooltipText);
 
+        // Now append text taking into account colors and highlighting.
+        List<TextChunk> chunks = RouteActionParser.parse(route.getActionText());
         List<TextChunk> hlChunks = TextChunkHighlighter.highlight(chunks,
                 getFilter().getPathFilter());
 
         for(TextChunk chunk: hlChunks) {
-            textAttrs = chunk.isHighlighted() ?
-                    RailwaysColors.REGULAR_HL_ATTR :
-                    SimpleTextAttributes.REGULAR_ATTRIBUTES;
+            SimpleTextAttributes textAttrs;
 
-            if (chunk.getType() == RouteActionChunk.CONTAINER) {
-                if (action.getPsiClass() == null)
-                    textAttrs = chunk.isHighlighted() ?
-                            RailwaysColors.DISABLED_ITEM_HL_ATTR :
-                            RailwaysColors.DISABLED_ITEM_ATTR;
+            if ((chunk.getType() == RouteActionChunk.CONTAINER && !isContainerFound) ||
+                    (chunk.getType() == RouteActionChunk.ACTION && !isMethodFound)) {
 
-            } else if (chunk.getType() == RouteActionChunk.ACTION) {
-                if (action.getPsiMethod() == null)
-                    textAttrs = chunk.isHighlighted() ?
-                            RailwaysColors.DISABLED_ITEM_HL_ATTR :
-                            RailwaysColors.DISABLED_ITEM_ATTR;
-                else
-                    textAttrs = chunk.isHighlighted() ?
-                            RailwaysColors.METHOD_HL_ATTR :
-                            RailwaysColors.METHOD_ATTR;
-            }
+                textAttrs = chunk.isHighlighted() ?
+                        RailwaysColors.DISABLED_ITEM_HL_ATTR :
+                        RailwaysColors.DISABLED_ITEM_ATTR;
+
+            } else
+                textAttrs = chunk.getTextAttrs();
 
             append(chunk.getText(), textAttrs);
         }
@@ -108,30 +99,9 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
                 RoutePathParser.parse(route.getPath()), getFilter().getPathFilter());
 
         for(TextChunk chunk: chunks)
-            append(chunk.getText(), getRoutePathTextAttrs(chunk));
+            append(chunk.getText(), chunk.getTextAttrs());
 
         setToolTipText(null);
         setIcon(route.getIcon());
-    }
-
-
-    private SimpleTextAttributes getRoutePathTextAttrs(TextChunk chunk) {
-
-        switch(chunk.getType()) {
-            case RoutePathChunk.PARAMETER:
-                return chunk.isHighlighted() ?
-                        RailwaysColors.PARAM_TOKEN_HL_ATTR :
-                        RailwaysColors.PARAM_TOKEN_ATTR;
-
-            case RoutePathChunk.OPTIONAL:
-                return chunk.isHighlighted() ?
-                        RailwaysColors.OPTIONAL_TOKEN_HL_ATTR :
-                        RailwaysColors.OPTIONAL_TOKEN_ATTR;
-
-            default:
-                return chunk.isHighlighted() ?
-                        RailwaysColors.REGULAR_HL_ATTR :
-                        SimpleTextAttributes.REGULAR_ATTRIBUTES;
-        }
     }
 }

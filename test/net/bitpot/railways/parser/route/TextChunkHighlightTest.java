@@ -144,7 +144,7 @@ public class TextChunkHighlightTest
 
 
     private static TextChunk createChunk(int type, String text, boolean isHighlighted) {
-        TextChunk chunk = new TextChunk(text, type, 0);
+        TextChunk chunk = new RoutePathChunk(text, type, 0);
         chunk.setHighlighted(isHighlighted);
 
         return chunk;

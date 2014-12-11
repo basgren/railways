@@ -26,7 +26,6 @@ public class RailwaysColors {
     public static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
 
     // Color of the nonexistent action that's referenced by a route.
-    //public static Color MISSING_ACTION_COLOR = JBColor.RED;
     public static Color DISABLED_ITEM_COLOR = JBColor.GRAY;
 
 
@@ -36,33 +35,17 @@ public class RailwaysColors {
     public static final SimpleTextAttributes REGULAR_HL_ATTR =
             plainTextAttr(null, HIGHLIGHT_BG_COLOR);
 
-    public static final SimpleTextAttributes PARAM_TOKEN_ATTR =
-            plainTextAttr(PARAM_TOKEN_COLOR, null);
+    public static final SimpleTextAttributes PARAM_TOKEN_ATTR = plainTextAttr(PARAM_TOKEN_COLOR, null);
+    public static final SimpleTextAttributes PARAM_TOKEN_HL_ATTR = plainTextAttr(PARAM_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
 
-    public static final SimpleTextAttributes PARAM_TOKEN_HL_ATTR =
-            plainTextAttr(PARAM_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
+    public static final SimpleTextAttributes OPTIONAL_TOKEN_ATTR = plainTextAttr(OPTIONAL_TOKEN_COLOR, null);
+    public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR = plainTextAttr(OPTIONAL_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
 
-    public static final SimpleTextAttributes OPTIONAL_TOKEN_ATTR =
-            plainTextAttr(OPTIONAL_TOKEN_COLOR, null);
+    public static final SimpleTextAttributes METHOD_ATTR = plainTextAttr(METHOD_COLOR, null);
+    public static final SimpleTextAttributes METHOD_HL_ATTR = plainTextAttr(METHOD_COLOR, HIGHLIGHT_BG_COLOR);
 
-    public static final SimpleTextAttributes OPTIONAL_TOKEN_HL_ATTR =
-            plainTextAttr(OPTIONAL_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);
-
-    //public static final SimpleTextAttributes MISSING_ACTION_ATTR =
-    //        plainTextAttr(MISSING_ACTION_COLOR, null);
-
-    public static final SimpleTextAttributes METHOD_ATTR =
-            plainTextAttr(METHOD_COLOR, null);
-
-    public static final SimpleTextAttributes METHOD_HL_ATTR =
-            plainTextAttr(METHOD_COLOR, HIGHLIGHT_BG_COLOR);
-
-
-    public static final SimpleTextAttributes DISABLED_ITEM_ATTR =
-            plainTextAttr(DISABLED_ITEM_COLOR, null);
-
-    public static final SimpleTextAttributes DISABLED_ITEM_HL_ATTR =
-            plainTextAttr(DISABLED_ITEM_COLOR, HIGHLIGHT_BG_COLOR);
+    public static final SimpleTextAttributes DISABLED_ITEM_ATTR = plainTextAttr(DISABLED_ITEM_COLOR, null);
+    public static final SimpleTextAttributes DISABLED_ITEM_HL_ATTR = plainTextAttr(DISABLED_ITEM_COLOR, HIGHLIGHT_BG_COLOR);
 
 
     private static Color schemeColor(String name) {

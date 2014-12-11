@@ -1,5 +1,7 @@
 package net.bitpot.railways.parser.route;
 
+import com.intellij.ui.SimpleTextAttributes;
+import net.bitpot.railways.gui.RailwaysColors;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,5 +16,19 @@ public class RouteActionChunk extends TextChunk {
 
     public RouteActionChunk(@NotNull String text, int chunkType, int startPos) {
         super(text, chunkType, startPos);
+    }
+
+    @Override
+    public SimpleTextAttributes getTextAttrs() {
+        SimpleTextAttributes textAttrs;
+
+        if (getType() == RouteActionChunk.ACTION)
+            textAttrs = isHighlighted() ?
+                    RailwaysColors.METHOD_HL_ATTR : RailwaysColors.METHOD_ATTR;
+        else
+            textAttrs = isHighlighted() ?
+                RailwaysColors.REGULAR_HL_ATTR : SimpleTextAttributes.REGULAR_ATTRIBUTES;
+
+        return textAttrs;
     }
 }

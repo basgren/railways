@@ -1,12 +1,13 @@
 package net.bitpot.railways.parser.route;
 
+import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Basil Gren
  *         on 11.12.2014.
  */
-public class TextChunk {
+public abstract class TextChunk {
 
     private String text;
     private int type;
@@ -46,5 +47,8 @@ public class TextChunk {
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
     }
+
+    public abstract SimpleTextAttributes getTextAttrs();
+
 
 }
