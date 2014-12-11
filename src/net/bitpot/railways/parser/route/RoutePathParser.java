@@ -3,6 +3,7 @@ package net.bitpot.railways.parser.route;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,9 +26,9 @@ public class RoutePathParser extends TextChunkHighlighter {
      * @return Array of RouteTokens.
      */
     @NotNull
-    public static RoutePathChunk[] parse(String routePath) {
+    public static List<TextChunk> parse(String routePath) {
         RoutePathChunk chunk;
-        ArrayList<RoutePathChunk> chunks = new ArrayList<RoutePathChunk>();
+        ArrayList<TextChunk> chunks = new ArrayList<TextChunk>();
         int pos = 0;
 
         // Try to find chunk
@@ -36,7 +37,7 @@ public class RoutePathParser extends TextChunkHighlighter {
             pos = chunk.getEndOffset();
         }
 
-        return chunks.toArray(new RoutePathChunk[chunks.size()]);
+        return chunks;
     }
 
 

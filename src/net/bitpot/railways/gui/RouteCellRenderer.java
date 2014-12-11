@@ -12,6 +12,7 @@ import net.bitpot.railways.parser.route.TextChunkHighlighter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * @author Basil Gren
@@ -80,7 +81,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRoutePath(Route route) {
-        TextChunk[] chunks = TextChunkHighlighter.highlight(
+        List<TextChunk> chunks = TextChunkHighlighter.highlight(
                 RoutePathParser.parse(route.getPath()), getFilter().getPathFilter());
 
         for(TextChunk chunk: chunks)

@@ -11,11 +11,11 @@ import java.util.List;
 public class TextChunkHighlighter {
 
 
-    public static TextChunk[] highlight(TextChunk[] textChunks,
+    public static List<TextChunk> highlight(List<TextChunk> textChunks,
                                         String highlightSubstr) {
 
         highlightSubstr = highlightSubstr.trim();
-        ArrayList<RoutePathChunk> result = new ArrayList<RoutePathChunk>();
+        ArrayList<TextChunk> result = new ArrayList<TextChunk>();
 
         StringBuilder sb = new StringBuilder();
         for(TextChunk t: textChunks)
@@ -31,7 +31,7 @@ public class TextChunkHighlighter {
         for(TextChunk chunk: textChunks)
             highlightChunk(chunk, regions, result);
 
-        return result.toArray(new RoutePathChunk[result.size()]);
+        return result;
     }
 
 
@@ -79,7 +79,7 @@ public class TextChunkHighlighter {
      */
     private static void highlightChunk(TextChunk chunk,
                                        List<TextRegion> highlightedRegions,
-                                       Collection<RoutePathChunk> chunkList) {
+                                       Collection<TextChunk> chunkList) {
         int newChunkSize;
         int offsRel = 0; // Offset relative to current text chunk
 

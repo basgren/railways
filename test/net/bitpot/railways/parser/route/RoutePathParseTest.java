@@ -7,8 +7,9 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test of parsing route into tokens for syntax highlighting.
@@ -83,14 +84,14 @@ public class RoutePathParseTest
 
     @Test
     public void testParseRoute() {
-        RoutePathChunk[] tokens = RoutePathParser.parse(myRouteStr);
+        List<TextChunk> tokens = RoutePathParser.parse(myRouteStr);
 
         assertEquals("Token lists have the same length",
-                expectedTokens.length, tokens.length);
+                expectedTokens.length, tokens.size());
 
-        for(int i = 0; i < tokens.length; i++) {
-            RoutePathChunk expectedToken = expectedTokens[i];
-            RoutePathChunk token = tokens[i];
+        for(int i = 0; i < tokens.size(); i++) {
+            TextChunk expectedToken = expectedTokens[i];
+            TextChunk token = tokens.get(i);
 
             assertEquals("Token types are the same",
                     expectedToken.getType(), token.getType());

@@ -3,6 +3,10 @@ package net.bitpot.railways.parser.route;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -10,35 +14,42 @@ import static org.junit.Assert.assertEquals;
  */
 public class TextChunkHighlightTest
 {
-    private TextChunk[] parseAndHighlight(String subject, String hlStr) {
+    private List<TextChunk> parseAndHighlight(String subject, String hlStr) {
         return RoutePathParser.highlight(RoutePathParser.parse(subject), hlStr);
+    }
+    
+    private List<TextChunk> createChunkList(TextChunk... chunks) {
+        ArrayList<TextChunk> result = new ArrayList<TextChunk>();
+        Collections.addAll(result, chunks);
+        
+        return result;
     }
             
     @Test
     public void testParseAndHighlight() {
-        TextChunk[] actual = parseAndHighlight("/test(.:test)", "st");
+        List<TextChunk> actual = parseAndHighlight("/test(.:test)", "st");
 
-        TextChunk[] expected = new TextChunk[] {
+        List<TextChunk> expected = createChunkList(
                 chunkPlain("/te", false),
                 chunkPlain("st", true),
                 chunkOptional("(.:te", false),
                 chunkOptional("st", true),
                 chunkOptional(")", false)
-        };
+        );
 
         assertChunkListEqual(expected, actual);
     }
 
     @Test
     public void testParseAndHighlightWhenOneTokenHasNoHighlightedText() {
-        TextChunk[] actual = parseAndHighlight("/tasks/:id", "t");
+        List<TextChunk> actual = parseAndHighlight("/tasks/:id", "t");
 
-        TextChunk[] expected = new TextChunk[] {
+        List<TextChunk> expected = createChunkList(
                 chunkPlain("/", false),
                 chunkPlain("t", true),
                 chunkPlain("asks/", false),
                 chunkParam(":id", false)
-        };
+        );
 
         assertChunkListEqual(expected, actual);
     }
@@ -46,29 +57,29 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightMultipleRegionsInOneChunk() {
-        TextChunk[] actual = parseAndHighlight("/test/test", "es");
+        List<TextChunk> actual = parseAndHighlight("/test/test", "es");
 
-        TextChunk[] expected = new TextChunk[] {
+        List<TextChunk> expected = createChunkList(
                 chunkPlain("/t", false),
                 chunkPlain("es", true),
                 chunkPlain("t/t", false),
                 chunkPlain("es", true),
                 chunkPlain("t", false)
-        };
+        );
 
         assertChunkListEqual(expected, actual);
     }
 
     @Test
     public void testParseAndHighlightSingleRegionInMultipleChunks() {
-        TextChunk[] actual = parseAndHighlight("/test/:test", "t/:te");
+        List<TextChunk> actual = parseAndHighlight("/test/:test", "t/:te");
 
-        TextChunk[] expected = new TextChunk[] {
+        List<TextChunk> expected = createChunkList(
                 chunkPlain("/tes", false),
                 chunkPlain("t/", true),
                 chunkParam(":te", true),
                 chunkParam("st", false)
-        };
+        );
 
         assertChunkListEqual(expected, actual);
     }
@@ -76,36 +87,36 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightWithEmptySubstring() {
-        TextChunk[] actual = parseAndHighlight("/test/:test", "");
+        List<TextChunk> actual = parseAndHighlight("/test/:test", "");
 
-        TextChunk[] expected = new TextChunk[] {
+        List<TextChunk> expected = createChunkList(
                 chunkPlain("/test/", false),
                 chunkParam(":test", false)
-        };
+        );
 
         assertChunkListEqual(expected, actual);
     }
 
     @Test
     public void testParseAndHighlightWithBlankSubstring() {
-        TextChunk[] actual = parseAndHighlight("/test/:test", "   ");
+        List<TextChunk> actual = parseAndHighlight("/test/:test", "   ");
 
-        TextChunk[] expected = new TextChunk[] {
+        List<TextChunk> expected = createChunkList(
                 chunkPlain("/test/", false),
                 chunkParam(":test", false)
-        };
+        );
 
         assertChunkListEqual(expected, actual);
     }
 
 
-    private void assertChunkListEqual(TextChunk[] expectedList, TextChunk[] actualList) {
+    private void assertChunkListEqual(List<TextChunk> expectedList, List<TextChunk> actualList) {
         assertEquals("Tokens count are equal",
-                expectedList.length, actualList.length);
+                expectedList.size(), actualList.size());
 
-        for(int i = 0; i < actualList.length; i++) {
-            TextChunk expected = expectedList[i];
-            TextChunk actual = actualList[i];
+        for(int i = 0; i < actualList.size(); i++) {
+            TextChunk expected = expectedList.get(i);
+            TextChunk actual = actualList.get(i);
 
             assertEquals("Token types are the same",
                     expected.getType(), actual.getType());
