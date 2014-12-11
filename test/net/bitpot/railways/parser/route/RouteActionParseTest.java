@@ -30,7 +30,7 @@ public class RouteActionParseTest {
     public static Collection<Object[]> createParseLineData() {
         return Arrays.asList(new Object[][]{
                 {"api/users#edit", new RouteActionChunk[]{
-                        chunkContainer("api/users"), chunkAction("#edit")}
+                        chunkContainer("api/users#"), chunkAction("edit")}
                 },
 
                 {"api/users", new RouteActionChunk[]{

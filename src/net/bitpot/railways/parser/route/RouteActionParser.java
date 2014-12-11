@@ -20,13 +20,13 @@ public class RouteActionParser extends TextChunkHighlighter {
         if (subject.trim().equals(""))
             return chunks;
 
-        int pos = subject.indexOf("#");
+        String[] parts = subject.split("#", 2);
 
-        if (pos >= 0) {
-            chunks.add(new RouteActionChunk(subject.substring(0, pos),
+        if (parts.length > 1) {
+            chunks.add(new RouteActionChunk(parts[0] + "#",
                     RouteActionChunk.CONTAINER, 0));
-            chunks.add(new RouteActionChunk(subject.substring(pos),
-                    RouteActionChunk.ACTION, pos));
+            chunks.add(new RouteActionChunk(parts[1],
+                    RouteActionChunk.ACTION, parts[0].length()));
 
         } else
             chunks.add(new RouteActionChunk(subject,
