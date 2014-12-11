@@ -2,6 +2,9 @@ package net.bitpot.railways.parser.route;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Simple route action parser.
  *
@@ -11,24 +14,23 @@ import org.antlr.v4.runtime.misc.NotNull;
 public class RouteActionParser extends TextChunkHighlighter {
 
     @NotNull
-    public static TextChunk[] parse(String subject) {
-        if (subject.trim().equals(""))
-            return new RouteActionChunk[] {};
+    public static List<TextChunk> parse(String subject) {
+        List<TextChunk> chunks = new ArrayList<TextChunk>();
 
-        RouteActionChunk[] chunks;
+        if (subject.trim().equals(""))
+            return chunks;
+
         int pos = subject.indexOf("#");
 
         if (pos >= 0) {
-            chunks = new RouteActionChunk[] {
-                    new RouteActionChunk(subject.substring(0, pos),
-                            RouteActionChunk.CONTAINER, 0),
-                    new RouteActionChunk(subject.substring(pos),
-                            RouteActionChunk.ACTION, pos)
-            };
+            chunks.add(new RouteActionChunk(subject.substring(0, pos),
+                    RouteActionChunk.CONTAINER, 0));
+            chunks.add(new RouteActionChunk(subject.substring(pos),
+                    RouteActionChunk.ACTION, pos));
+
         } else
-            chunks = new RouteActionChunk[] {
-                    new RouteActionChunk(subject, RouteActionChunk.CONTAINER, 0)
-            };
+            chunks.add(new RouteActionChunk(subject,
+                    RouteActionChunk.CONTAINER, 0));
 
         return chunks;
     }

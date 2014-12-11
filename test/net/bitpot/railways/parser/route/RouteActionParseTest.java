@@ -6,6 +6,7 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -52,14 +53,14 @@ public class RouteActionParseTest {
 
     @Test
     public void testParseRoute() {
-        TextChunk[] chunks = RouteActionParser.parse(myActionStr);
+        List<TextChunk> chunks = RouteActionParser.parse(myActionStr);
 
         assertEquals("Chunk lists have the same length",
-                expectedChunks.length, chunks.length);
+                expectedChunks.length, chunks.size());
 
-        for(int i = 0; i < chunks.length; i++) {
+        for(int i = 0; i < chunks.size(); i++) {
             TextChunk expectedChunk = expectedChunks[i];
-            TextChunk chunk = chunks[i];
+            TextChunk chunk = chunks.get(i);
 
             assertEquals("Chunk types are the same",
                     expectedChunk.getType(), chunk.getType());

@@ -20,7 +20,9 @@ public class RailwaysColors {
                     .getBackgroundColor();
 
     // Route token colors
+    // Scheme color names can be taken in RubyMine/lib/resources.jar!/colorSchemes directory.
     public static Color PARAM_TOKEN_COLOR = schemeColor("RUBY_SYMBOL");
+    public static Color METHOD_COLOR = schemeColor("RUBY_METHOD_NAME");
     public static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
 
     // Color of the nonexistent action that's referenced by a route.
@@ -49,8 +51,18 @@ public class RailwaysColors {
     //public static final SimpleTextAttributes MISSING_ACTION_ATTR =
     //        plainTextAttr(MISSING_ACTION_COLOR, null);
 
+    public static final SimpleTextAttributes METHOD_ATTR =
+            plainTextAttr(METHOD_COLOR, null);
+
+    public static final SimpleTextAttributes METHOD_HL_ATTR =
+            plainTextAttr(METHOD_COLOR, HIGHLIGHT_BG_COLOR);
+
+
     public static final SimpleTextAttributes DISABLED_ITEM_ATTR =
             plainTextAttr(DISABLED_ITEM_COLOR, null);
+
+    public static final SimpleTextAttributes DISABLED_ITEM_HL_ATTR =
+            plainTextAttr(DISABLED_ITEM_COLOR, HIGHLIGHT_BG_COLOR);
 
 
     private static Color schemeColor(String name) {

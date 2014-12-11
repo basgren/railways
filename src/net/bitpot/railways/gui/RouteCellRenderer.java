@@ -5,10 +5,7 @@ import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
-import net.bitpot.railways.parser.route.RoutePathChunk;
-import net.bitpot.railways.parser.route.RoutePathParser;
-import net.bitpot.railways.parser.route.TextChunk;
-import net.bitpot.railways.parser.route.TextChunkHighlighter;
+import net.bitpot.railways.parser.route.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -48,15 +45,16 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
     }
 
 
+    // TODO: cleanup and refactor (move attribute calculation to TextChunk classes?)
     private void renderRouteAction(Route route) {
         Icon icon;
 
-        // TODO: gray out method that's not found
-
-        SimpleTextAttributes textAttrs = SimpleTextAttributes.REGULAR_ATTRIBUTES;
+        SimpleTextAttributes textAttrs;
         String tooltipText = null;
 
         RailsActionInfo action = route.getActionInfo();
+
+        List<TextChunk> chunks = RouteActionParser.parse(route.getActionText());
 
         if (route.getType() == Route.MOUNTED) {
             icon = RailwaysIcons.RACK_APPLICATION;
@@ -69,14 +67,39 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
             tooltipText = "Cannot find action declaration";
         } else {
             icon = RailwaysIcons.UNKNOWN;
-            textAttrs = RailwaysColors.DISABLED_ITEM_ATTR;
             tooltipText = "Cannot find controller declaration";
         }
 
         setIcon(icon);
         setToolTipText(tooltipText);
-        appendHighlighted(route.getActionText(),
-                getFilter().getPathFilter(), textAttrs);
+
+        List<TextChunk> hlChunks = TextChunkHighlighter.highlight(chunks,
+                getFilter().getPathFilter());
+
+        for(TextChunk chunk: hlChunks) {
+            textAttrs = chunk.isHighlighted() ?
+                    RailwaysColors.REGULAR_HL_ATTR :
+                    SimpleTextAttributes.REGULAR_ATTRIBUTES;
+
+            if (chunk.getType() == RouteActionChunk.CONTAINER) {
+                if (action.getPsiClass() == null)
+                    textAttrs = chunk.isHighlighted() ?
+                            RailwaysColors.DISABLED_ITEM_HL_ATTR :
+                            RailwaysColors.DISABLED_ITEM_ATTR;
+
+            } else if (chunk.getType() == RouteActionChunk.ACTION) {
+                if (action.getPsiMethod() == null)
+                    textAttrs = chunk.isHighlighted() ?
+                            RailwaysColors.DISABLED_ITEM_HL_ATTR :
+                            RailwaysColors.DISABLED_ITEM_ATTR;
+                else
+                    textAttrs = chunk.isHighlighted() ?
+                            RailwaysColors.METHOD_HL_ATTR :
+                            RailwaysColors.METHOD_ATTR;
+            }
+
+            append(chunk.getText(), textAttrs);
+        }
     }
 
 
@@ -85,14 +108,14 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
                 RoutePathParser.parse(route.getPath()), getFilter().getPathFilter());
 
         for(TextChunk chunk: chunks)
-            append(chunk.getText(), getTextAttributes(chunk));
+            append(chunk.getText(), getRoutePathTextAttrs(chunk));
 
         setToolTipText(null);
         setIcon(route.getIcon());
     }
 
 
-    private SimpleTextAttributes getTextAttributes(TextChunk chunk) {
+    private SimpleTextAttributes getRoutePathTextAttrs(TextChunk chunk) {
 
         switch(chunk.getType()) {
             case RoutePathChunk.PARAMETER:
