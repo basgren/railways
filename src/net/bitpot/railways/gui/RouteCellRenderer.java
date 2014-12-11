@@ -7,6 +7,8 @@ import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
 import net.bitpot.railways.parser.route.RoutePathChunk;
 import net.bitpot.railways.parser.route.RoutePathParser;
+import net.bitpot.railways.parser.route.TextChunk;
+import net.bitpot.railways.parser.route.TextChunkHighlighter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -78,10 +80,10 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRoutePath(Route route) {
-        RoutePathChunk[] chunks = RoutePathParser.parseAndHighlight(route.getPath(),
-                getFilter().getPathFilter());
+        TextChunk[] chunks = TextChunkHighlighter.highlight(
+                RoutePathParser.parse(route.getPath()), getFilter().getPathFilter());
 
-        for(RoutePathChunk chunk: chunks)
+        for(TextChunk chunk: chunks)
             append(chunk.getText(), getTextAttributes(chunk));
 
         setToolTipText(null);
@@ -89,7 +91,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
     }
 
 
-    private SimpleTextAttributes getTextAttributes(RoutePathChunk chunk) {
+    private SimpleTextAttributes getTextAttributes(TextChunk chunk) {
 
         switch(chunk.getType()) {
             case RoutePathChunk.PARAMETER:

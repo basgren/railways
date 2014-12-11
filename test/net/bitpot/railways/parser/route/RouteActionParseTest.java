@@ -14,12 +14,12 @@ import static org.junit.Assert.assertEquals;
  *         on 09.12.2014.
  */
 @RunWith(Parameterized.class)
-public class RouteActionParserTest {
+public class RouteActionParseTest {
 
     private String myActionStr;
     private RouteActionChunk[] expectedChunks;
 
-    public RouteActionParserTest(String routeStr, RouteActionChunk[] chunks) {
+    public RouteActionParseTest(String routeStr, RouteActionChunk[] chunks) {
         myActionStr = routeStr;
         expectedChunks = chunks;
     }
@@ -52,14 +52,14 @@ public class RouteActionParserTest {
 
     @Test
     public void testParseRoute() {
-        RouteActionChunk[] chunks = RouteActionParser.parse(myActionStr);
+        TextChunk[] chunks = RouteActionParser.parse(myActionStr);
 
         assertEquals("Chunk lists have the same length",
                 expectedChunks.length, chunks.length);
 
         for(int i = 0; i < chunks.length; i++) {
-            RouteActionChunk expectedChunk = expectedChunks[i];
-            RouteActionChunk chunk = chunks[i];
+            TextChunk expectedChunk = expectedChunks[i];
+            TextChunk chunk = chunks[i];
 
             assertEquals("Chunk types are the same",
                     expectedChunk.getType(), chunk.getType());

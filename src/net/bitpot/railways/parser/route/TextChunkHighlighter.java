@@ -10,14 +10,15 @@ import java.util.List;
  */
 public class TextChunkHighlighter {
 
-    public static RoutePathChunk[] highlight(RoutePathChunk[] textChunks,
-                                               String highlightSubstr) {
+
+    public static TextChunk[] highlight(TextChunk[] textChunks,
+                                        String highlightSubstr) {
 
         highlightSubstr = highlightSubstr.trim();
         ArrayList<RoutePathChunk> result = new ArrayList<RoutePathChunk>();
 
         StringBuilder sb = new StringBuilder();
-        for(RoutePathChunk t: textChunks)
+        for(TextChunk t: textChunks)
             sb.append(t.getText());
 
         // First, find all substring regions to be highlighted.
@@ -27,7 +28,7 @@ public class TextChunkHighlighter {
 
         // Now go through every RoutePathChunk and break it down if it intersects
         // with any region. Token type is preserved.
-        for(RoutePathChunk chunk: textChunks)
+        for(TextChunk chunk: textChunks)
             highlightChunk(chunk, regions, result);
 
         return result.toArray(new RoutePathChunk[result.size()]);
@@ -76,7 +77,7 @@ public class TextChunkHighlighter {
      *                           should be highlighted.
      * @param chunkList Target chunk collection, that will receive new chunks.
      */
-    private static void highlightChunk(RoutePathChunk chunk,
+    private static void highlightChunk(TextChunk chunk,
                                        List<TextRegion> highlightedRegions,
                                        Collection<RoutePathChunk> chunkList) {
         int newChunkSize;

@@ -8,10 +8,10 @@ import org.antlr.v4.runtime.misc.NotNull;
  * @author Basil Gren
  *         on 21.02.14.
  */
-public class RouteActionParser {
+public class RouteActionParser extends TextChunkHighlighter {
 
     @NotNull
-    public static RouteActionChunk[] parse(String subject) {
+    public static TextChunk[] parse(String subject) {
         if (subject.trim().equals(""))
             return new RouteActionChunk[] {};
 

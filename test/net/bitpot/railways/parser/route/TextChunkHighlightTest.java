@@ -8,13 +8,17 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test of route parser.
  */
-public class RoutePathParserTest
+public class TextChunkHighlightTest
 {
+    private TextChunk[] parseAndHighlight(String subject, String hlStr) {
+        return RoutePathParser.highlight(RoutePathParser.parse(subject), hlStr);
+    }
+            
     @Test
     public void testParseAndHighlight() {
-        RoutePathChunk[] chunks = RoutePathParser.parseAndHighlight("/test(.:test)", "st");
+        TextChunk[] actual = parseAndHighlight("/test(.:test)", "st");
 
-        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
+        TextChunk[] expected = new TextChunk[] {
                 chunkPlain("/te", false),
                 chunkPlain("st", true),
                 chunkOptional("(.:te", false),
@@ -22,29 +26,29 @@ public class RoutePathParserTest
                 chunkOptional(")", false)
         };
 
-        assertChunkListEqual(expectedChunks, chunks);
+        assertChunkListEqual(expected, actual);
     }
 
     @Test
     public void testParseAndHighlightWhenOneTokenHasNoHighlightedText() {
-        RoutePathChunk[] chunks = RoutePathParser.parseAndHighlight("/tasks/:id", "t");
+        TextChunk[] actual = parseAndHighlight("/tasks/:id", "t");
 
-        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
+        TextChunk[] expected = new TextChunk[] {
                 chunkPlain("/", false),
                 chunkPlain("t", true),
                 chunkPlain("asks/", false),
                 chunkParam(":id", false)
         };
 
-        assertChunkListEqual(expectedChunks, chunks);
+        assertChunkListEqual(expected, actual);
     }
 
 
     @Test
     public void testParseAndHighlightMultipleRegionsInOneChunk() {
-        RoutePathChunk[] actual = RoutePathParser.parseAndHighlight("/test/test", "es");
+        TextChunk[] actual = parseAndHighlight("/test/test", "es");
 
-        RoutePathChunk[] expected = new RoutePathChunk[] {
+        TextChunk[] expected = new TextChunk[] {
                 chunkPlain("/t", false),
                 chunkPlain("es", true),
                 chunkPlain("t/t", false),
@@ -57,9 +61,9 @@ public class RoutePathParserTest
 
     @Test
     public void testParseAndHighlightSingleRegionInMultipleChunks() {
-        RoutePathChunk[] actual = RoutePathParser.parseAndHighlight("/test/:test", "t/:te");
+        TextChunk[] actual = parseAndHighlight("/test/:test", "t/:te");
 
-        RoutePathChunk[] expected = new RoutePathChunk[] {
+        TextChunk[] expected = new TextChunk[] {
                 chunkPlain("/tes", false),
                 chunkPlain("t/", true),
                 chunkParam(":te", true),
@@ -72,9 +76,9 @@ public class RoutePathParserTest
 
     @Test
     public void testParseAndHighlightWithEmptySubstring() {
-        RoutePathChunk[] actual = RoutePathParser.parseAndHighlight("/test/:test", "");
+        TextChunk[] actual = parseAndHighlight("/test/:test", "");
 
-        RoutePathChunk[] expected = new RoutePathChunk[] {
+        TextChunk[] expected = new TextChunk[] {
                 chunkPlain("/test/", false),
                 chunkParam(":test", false)
         };
@@ -84,52 +88,52 @@ public class RoutePathParserTest
 
     @Test
     public void testParseAndHighlightWithBlankSubstring() {
-        RoutePathChunk[] chunks = RoutePathParser.parseAndHighlight("/test/:test", "   ");
+        TextChunk[] actual = parseAndHighlight("/test/:test", "   ");
 
-        RoutePathChunk[] expectedChunks = new RoutePathChunk[] {
+        TextChunk[] expected = new TextChunk[] {
                 chunkPlain("/test/", false),
                 chunkParam(":test", false)
         };
 
-        assertChunkListEqual(expectedChunks, chunks);
+        assertChunkListEqual(expected, actual);
     }
 
 
-    private void assertChunkListEqual(RoutePathChunk[] expected, RoutePathChunk[] actual) {
+    private void assertChunkListEqual(TextChunk[] expectedList, TextChunk[] actualList) {
         assertEquals("Tokens count are equal",
-                expected.length, actual.length);
+                expectedList.length, actualList.length);
 
-        for(int i = 0; i < actual.length; i++) {
-            RoutePathChunk expectedChunk = expected[i];
-            RoutePathChunk chunk = actual[i];
+        for(int i = 0; i < actualList.length; i++) {
+            TextChunk expected = expectedList[i];
+            TextChunk actual = actualList[i];
 
             assertEquals("Token types are the same",
-                    expectedChunk.getType(), chunk.getType());
+                    expected.getType(), actual.getType());
 
             assertEquals("Token texts are the same",
-                    expectedChunk.getText(), chunk.getText());
+                    expected.getText(), actual.getText());
 
             assertEquals("Token highlight flags are the same",
-                    expectedChunk.isHighlighted(), chunk.isHighlighted());
+                    expected.isHighlighted(), actual.isHighlighted());
         }
     }
 
 
-    private static RoutePathChunk chunkPlain(String text, boolean isHighlighted) {
+    private static TextChunk chunkPlain(String text, boolean isHighlighted) {
         return createChunk(RoutePathChunk.PLAIN, text, isHighlighted);
     }
 
-    private static RoutePathChunk chunkParam(String text, boolean isHighlighted) {
+    private static TextChunk chunkParam(String text, boolean isHighlighted) {
         return createChunk(RoutePathChunk.PARAMETER, text, isHighlighted);
     }
 
-    private static RoutePathChunk chunkOptional(String text, boolean isHighlighted) {
+    private static TextChunk chunkOptional(String text, boolean isHighlighted) {
         return createChunk(RoutePathChunk.OPTIONAL, text, isHighlighted);
     }
 
 
-    private static RoutePathChunk createChunk(int type, String text, boolean isHighlighted) {
-        RoutePathChunk chunk = new RoutePathChunk(text, type, 0);
+    private static TextChunk createChunk(int type, String text, boolean isHighlighted) {
+        TextChunk chunk = new TextChunk(text, type, 0);
         chunk.setHighlighted(isHighlighted);
 
         return chunk;
