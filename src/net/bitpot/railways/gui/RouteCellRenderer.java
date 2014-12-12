@@ -72,11 +72,10 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         setToolTipText(tooltipText);
 
         // Now append text taking into account colors and highlighting.
-        List<TextChunk> chunks = RouteActionParser.parse(route.getActionText());
-        List<TextChunk> hlChunks = TextChunkHighlighter.highlight(chunks,
-                getFilter().getPathFilter());
+        List<TextChunk> chunks = TextChunkHighlighter.highlight(
+                route.getActionChunks(), getFilter().getPathFilter());
 
-        for(TextChunk chunk: hlChunks) {
+        for(TextChunk chunk: chunks) {
             SimpleTextAttributes textAttrs;
 
             if ((chunk.getType() == RouteActionChunk.CONTAINER && !isContainerFound) ||
@@ -96,7 +95,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
     private void renderRoutePath(Route route) {
         List<TextChunk> chunks = TextChunkHighlighter.highlight(
-                RoutePathParser.parse(route.getPath()), getFilter().getPathFilter());
+                route.getPathChunks(), getFilter().getPathFilter());
 
         for(TextChunk chunk: chunks)
             append(chunk.getText(), chunk.getTextAttrs());

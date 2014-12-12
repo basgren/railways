@@ -6,6 +6,9 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.parser.route.RouteActionParser;
+import net.bitpot.railways.parser.route.RoutePathParser;
+import net.bitpot.railways.parser.route.TextChunk;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +16,7 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  *
@@ -33,6 +37,11 @@ public class Route implements NavigationItem {
     private String routeName = "";
     private String controller = "";
     private String action = "";
+
+    // pathChunks and action chunks should be cleared when path or action are changed
+    private List<TextChunk> pathChunks = null;
+    private List<TextChunk> actionChunks = null;
+
 
     @Nullable
     private RailsEngine myParentEngine = null;
@@ -56,9 +65,9 @@ public class Route implements NavigationItem {
         this(module);
 
         setRequestMethod(requestMethod);
-        setPath(path);
+        this.path = path;
+        this.action = action;
         setController(controller);
-        setAction(action);
         setRouteName(name);
     }
 
@@ -244,8 +253,19 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setPath(String path) {
-        this.path = path;
+    public List<TextChunk> getPathChunks() {
+        if (pathChunks == null)
+            pathChunks = RoutePathParser.parse(getPath());
+
+        return pathChunks;
+    }
+
+
+    public List<TextChunk> getActionChunks() {
+        if (actionChunks == null)
+            actionChunks = RouteActionParser.parse(getActionText());
+
+        return actionChunks;
     }
 
 
@@ -264,11 +284,6 @@ public class Route implements NavigationItem {
 
     public void setController(String value) {
         controller = value;
-    }
-
-
-    public void setAction(String value) {
-        action = value;
     }
 
 
