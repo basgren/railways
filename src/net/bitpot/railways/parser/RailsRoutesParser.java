@@ -254,10 +254,9 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             for (String requestMethodName : requestMethods) {
                 Route route = new Route(myModule,
                         RequestMethod.get(requestMethodName), routePath,
-                        routeController, routeAction, routeName);
+                        routeController, routeAction, routeName, currentEngine);
 
-                route.setParentEngine(currentEngine);
-
+                // TODO: it seems that this line skips routes with 'redirect(...)' in action field.
                 if (route.isValid())
                     result.add(route);
             }

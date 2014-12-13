@@ -19,16 +19,14 @@ import javax.swing.*;
 import java.util.List;
 
 /**
- *
+ * Route class stores all information about parsed route.
  */
 public class Route implements NavigationItem {
-    // Route types
-    public final static int DEFAULT = 0;
-    public final static int REDIRECT = 1; // Route redirects, so it's hard to determine where it will be routed
-    // as rake routes does not show this info.
-    public final static int MOUNTED = 2; // Mounted rack application.
+    // Route types:
+    public final static int DEFAULT = 0;  // General route
+    public final static int REDIRECT = 1; // Redirect
+    public final static int MOUNTED = 2; // Mounted rack application
 
-    // TODO: move module reference to parent list.
     private Module module = null;
 
 
@@ -38,11 +36,6 @@ public class Route implements NavigationItem {
     private String controller = "";
     private String action = "";
 
-    // pathChunks and action chunks should be cleared when path or action are changed
-    private List<TextChunk> pathChunks = null;
-    private List<TextChunk> actionChunks = null;
-
-
     @Nullable
     private RailsEngine myParentEngine = null;
 
@@ -50,25 +43,28 @@ public class Route implements NavigationItem {
     @NotNull
     private RailsActionInfo actionInfo = new RailsActionInfo();
 
+    // Cached path and action text chunks.
+    private List<TextChunk> pathChunks = null;
+    private List<TextChunk> actionChunks = null;
 
-    public Route() {
-        this(null);
-    }
-
-
-    public Route(@Nullable Module module) {
-        this.module = module;
-    }
 
     public Route(@Nullable Module module, RequestMethod requestMethod, String path,
                  String controller, String action, String name) {
-        this(module);
+        this(module, requestMethod, path, controller, action, name, null);
+    }
+
+
+    public Route(@Nullable Module module, RequestMethod requestMethod, String path,
+                 String controller, String action, String name,
+                 @Nullable RailsEngine parentEngine) {
+        this.module = module;
 
         setRequestMethod(requestMethod);
         this.path = path;
         this.action = action;
         setController(controller);
         setRouteName(name);
+        myParentEngine = parentEngine;
     }
 
 
@@ -310,10 +306,6 @@ public class Route implements NavigationItem {
         actionInfo.update(app, controller, action);
     }
 
-
-    public void setParentEngine(RailsEngine engine) {
-        myParentEngine = engine;
-    }
 
     @Nullable
     public RailsEngine getParentEngine() {
