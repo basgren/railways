@@ -1,9 +1,8 @@
-package net.bitpot.railways.rails;
+package net.bitpot.railways.parser;
 
 
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.routes.RequestMethod;
-import net.bitpot.railways.parser.RailsRoutesParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
  * Parametrized test for testing line parsing from `rake routes` output.
  */
 @RunWith(Parameterized.class)
-public class RakeRoutesParseLineTest
+public class RailsRoutesParseLineTest
 {
     RailsRoutesParser parser = null;
 
@@ -30,9 +29,9 @@ public class RakeRoutesParseLineTest
     private RequestMethod rType;
 
 
-    public RakeRoutesParseLineTest(String line, int routeType, String name,
-                                   RequestMethod rType, String path, String controller,
-                                   String action) {
+    public RailsRoutesParseLineTest(String line, int routeType, String name,
+                                    RequestMethod rType, String path, String controller,
+                                    String action) {
         this.line = line;
         this.routeType = routeType;
         this.name = name;

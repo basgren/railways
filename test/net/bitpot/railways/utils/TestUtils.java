@@ -1,4 +1,4 @@
-package net.bitpot.railways.rails;
+package net.bitpot.railways.utils;
 
 import net.bitpot.railways.models.Route;
 

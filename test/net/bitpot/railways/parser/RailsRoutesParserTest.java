@@ -1,11 +1,11 @@
-package net.bitpot.railways.rails;
+package net.bitpot.railways.parser;
 
 
 import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.routes.RequestMethod;
-import net.bitpot.railways.parser.RailsRoutesParser;
+import net.bitpot.railways.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for RailsRoutesParser.
  */
-public class RakeRoutesParserTest
+public class RailsRoutesParserTest
 {
     RailsRoutesParser parser = null;
 
