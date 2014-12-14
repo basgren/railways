@@ -261,9 +261,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                         RequestMethod.get(requestMethodName), routePath,
                         routeController, routeAction, routeName, currentEngine);
 
-                // TODO: it seems that this line skips routes with 'redirect(...)' in action field.
-                //if (route.isValid())
-                    result.add(route);
+                result.add(route);
             }
 
             return result;

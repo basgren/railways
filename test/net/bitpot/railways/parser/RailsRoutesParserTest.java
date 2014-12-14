@@ -193,6 +193,31 @@ public class RailsRoutesParserTest
     }
 
 
+    @Test
+    public void testParsingRedirectToConstant() {
+        String line = "  redirect_301 GET    /redirect_301(.:format)   redirect(301, /books)";
+
+        List<Route> routes = parser.parseLine(line);
+        Route actual = routes.get(0);
+
+        assertEquals(Route.REDIRECT, actual.getType());
+        assertEquals("/books", actual.getRedirectURL());
+    }
+
+
+    @Test
+    public void testParsingProcRedirect() {
+        String line = " redirect_proc GET    /redirect_proc(.:format)  redirect(301)";
+
+        List<Route> routes = parser.parseLine(line);
+        Route actual = routes.get(0);
+
+        assertEquals(Route.REDIRECT, actual.getType());
+        assertEquals("", actual.getRedirectURL());
+    }
+
+
+
     private String readFile( String file ) throws IOException {
         BufferedReader reader = new BufferedReader( new FileReader (file));
         StringBuilder  stringBuilder = new StringBuilder();

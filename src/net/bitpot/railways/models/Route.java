@@ -46,6 +46,7 @@ public class Route implements NavigationItem {
     // Cached path and action text chunks.
     private List<TextChunk> pathChunks = null;
     private List<TextChunk> actionChunks = null;
+    private String redirectURL;
 
 
     public Route(@Nullable Module module, RequestMethod requestMethod, String path,
@@ -316,5 +317,9 @@ public class Route implements NavigationItem {
     @NotNull
     public RailsActionInfo getActionInfo() {
         return actionInfo;
+    }
+
+    public String getRedirectURL() {
+        return redirectURL;
     }
 }
