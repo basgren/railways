@@ -54,6 +54,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         String tooltipText = null;
 
         // Set icons and hits
+        // TODO: move to Route children
         if (route.getType() == Route.MOUNTED) {
             icon = RailwaysIcons.RACK_APPLICATION;
 

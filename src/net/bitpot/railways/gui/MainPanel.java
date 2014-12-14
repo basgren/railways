@@ -365,7 +365,7 @@ public class MainPanel {
 
             switch (route.getType()) {
                 case Route.MOUNTED:
-                    actionLbl.setText(String.format("%s (mounted)", route.getControllerMethodName()));
+                    actionLbl.setText(String.format("%s (mounted)", route.getActionTitle()));
                     break;
 
                 case Route.REDIRECT:
@@ -373,7 +373,7 @@ public class MainPanel {
                     break;
 
                 default:
-                    String actionText = route.getControllerMethodName();
+                    String actionText = route.getActionTitle();
 
                     if (route.canNavigate()) {
                         RailsActionInfo action = route.getActionInfo();

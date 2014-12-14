@@ -3,6 +3,8 @@ package net.bitpot.railways.models.routes;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.utils.RailwaysPsiUtils;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 /**
  * @author Basil Gren
@@ -22,4 +24,27 @@ public class SimpleRoute extends Route {
         this.actionName = actionName;
     }
 
+
+    @Override
+    public String getShortActionTitle() {
+        if (!controllerName.isEmpty())
+            return String.format("%s#%s", controllerName, actionName);
+
+        return actionName;
+    }
+
+
+    @Override
+    public String getActionTitle() {
+        String ctrlClassName;
+
+        RClass ctrlClass = getActionInfo().getPsiClass();
+        if (ctrlClass != null)
+            ctrlClassName = ctrlClass.getQualifiedName();
+        else
+            ctrlClassName = RailwaysPsiUtils.getControllerClassNameByShortName(controllerName);
+
+
+        return String.format("%s#%s", ctrlClassName, actionName);
+    }
 }

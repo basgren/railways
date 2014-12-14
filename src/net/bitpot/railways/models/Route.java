@@ -9,11 +9,9 @@ import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.parser.route.RouteActionParser;
 import net.bitpot.railways.parser.route.RoutePathParser;
 import net.bitpot.railways.parser.route.TextChunk;
-import net.bitpot.railways.utils.RailwaysPsiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 import javax.swing.*;
 import java.util.List;
@@ -46,7 +44,6 @@ public class Route implements NavigationItem {
     // Cached path and action text chunks.
     private List<TextChunk> pathChunks = null;
     private List<TextChunk> actionChunks = null;
-    private RailsEngine parentEngine;
 
 
     public Route(@Nullable Module module, RequestMethod requestMethod, String path,
@@ -55,9 +52,7 @@ public class Route implements NavigationItem {
 
         this.requestMethod = requestMethod;
         this.path = path;
-        setController(controller);
         setRouteName(name);
-        myParentEngine = parentEngine;
     }
 
 
@@ -96,48 +91,23 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Returns fully-qualified controller method name as it's written in ruby,
-     * ex. 'UsersController#index'.
-     * If route is mounted, returns only the name of the controller.
+     * Returns displayable text for route action in short format. Short format
+     * is used in routes table.
      *
-     * @return Fully qualified method name.
+     * @return Displayable text for route action, ex. "users#create"
      */
-    public String getControllerMethodName() {
-        int routeType = getType();
-
-        if (controller.isEmpty() || routeType == REDIRECT)
-            return "";
-
-        if (routeType == MOUNTED)
-            return controller;
-
-        String ctrlName;
-        RClass ctrlClass = getActionInfo().getPsiClass();
-        if (ctrlClass != null)
-            ctrlName = ctrlClass.getQualifiedName();
-        else
-            ctrlName = RailwaysPsiUtils.getControllerClassNameByShortName(controller);
-
-
-        return String.format("%s#%s", ctrlName, action);
+    public String getShortActionTitle() {
+        return getActionTitle();
     }
 
 
     /**
-     * Returns displayable text for route action. If route leads to mounted
-     * Rack application, it will return base class.
+     * Returns displayable text for route action.
      *
-     * @return Displayable text for route action, ex. "users#create"
+     * @return Displayable text for route action, ex. "UsersController#create"
      */
-    public String getActionText() {
-        switch (getType()) {
-            case MOUNTED:
-                return controller;
-            case REDIRECT:
-                return "[redirect]";
-            default:
-                return String.format("%s#%s", controller, action);
-        }
+    public String getActionTitle() {
+        return "";
     }
 
 
@@ -183,7 +153,7 @@ public class Route implements NavigationItem {
             @Nullable
             @Override
             public String getLocationString() {
-                return getActionText();
+                return getShortActionTitle();
             }
 
 
@@ -242,7 +212,7 @@ public class Route implements NavigationItem {
 
     public List<TextChunk> getActionChunks() {
         if (actionChunks == null)
-            actionChunks = RouteActionParser.parse(getActionText());
+            actionChunks = RouteActionParser.parse(getShortActionTitle());
 
         return actionChunks;
     }
@@ -258,21 +228,6 @@ public class Route implements NavigationItem {
 
     public void setRouteName(String name) {
         this.routeName = name;
-    }
-
-
-    public void setController(String value) {
-        controller = value;
-    }
-
-
-    public String getController() {
-        return controller;
-    }
-
-
-    public String getAction() {
-        return action;
     }
 
 
@@ -303,6 +258,6 @@ public class Route implements NavigationItem {
 
 
     public void setParentEngine(RailsEngine parentEngine) {
-        this.parentEngine = parentEngine;
+        myParentEngine = parentEngine;
     }
 }

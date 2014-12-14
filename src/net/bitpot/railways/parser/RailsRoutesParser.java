@@ -145,9 +145,9 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             return;
 
         Route route = routeList.get(0);
-        if (route.getType() == Route.MOUNTED) {
+        if (route instanceof EngineRoute) {
             mountedEngines.add(new RailsEngine(
-                    route.getControllerMethodName(),
+                    route.getActionTitle(),
                     route.getPath(),
                     route.getRouteName()));
         }
@@ -198,7 +198,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     private int findEngineRouteIndex(String engineName) {
         for(int i = 0; i < routes.size(); i++)
-            if (routes.get(i).getController().equals(engineName))
+            if (routes.get(i).getActionTitle().equals(engineName))
                 return i;
 
         return -1;
@@ -222,7 +222,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             String routePath = getGroup(groups, 3);
             String conditions = getGroup(groups, 4);
             String[] actionInfo = conditions.split("#", 2);
-            String engineClass = null;
+            String engineClass = "";
 
             // Process new format of output: 'controller#action'
             if (actionInfo.length == 2) {
@@ -243,7 +243,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
                 // Else just set action to provided text.
                 if (routeAction.isEmpty() && routeController.isEmpty() &&
-                        engineClass == null)
+                        engineClass.isEmpty())
                     routeAction = conditions;
             }
 
@@ -264,12 +264,12 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             for (String requestMethodName : requestMethods) {
                 Route route;
 
-                if (engineClass != null) {
+                if (!engineClass.isEmpty()) {
                     route = new EngineRoute(myModule,
                             RequestMethod.get(requestMethodName), routePath,
                             routeName, engineClass);
                 } else if ((routeController.equals(":controller") &&
-                        routeAction != null && routeAction.equals(":action"))) {
+                        routeAction.equals(":action"))) {
 
                     route = new RedirectRoute(myModule,
                             RequestMethod.get(requestMethodName), routePath,

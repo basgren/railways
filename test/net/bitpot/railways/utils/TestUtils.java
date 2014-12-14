@@ -23,11 +23,8 @@ public class TestUtils {
         assertEquals("Route paths are equal",
                 expected.getPath(), actual.getPath());
 
-        assertEquals("Route controllers are equal",
-                expected.getController(), actual.getController());
-
-        assertEquals("Route actions are equal",
-                expected.getAction(), actual.getAction());
+        assertEquals("Route actions titles are equal",
+                expected.getActionTitle(), actual.getActionTitle());
     }
 
 }

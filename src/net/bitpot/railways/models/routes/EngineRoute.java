@@ -18,4 +18,10 @@ public class EngineRoute extends Route {
 
         this.engineClass = engineClass;
     }
+
+
+    @Override
+    public String getActionTitle() {
+        return engineClass;
+    }
 }

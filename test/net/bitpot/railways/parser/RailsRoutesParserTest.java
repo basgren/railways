@@ -5,6 +5,7 @@ import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.models.routes.RedirectRoute;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.utils.TestUtils;
 import org.junit.Before;
@@ -94,7 +95,7 @@ public class RailsRoutesParserTest
         List<Route> routeList = parser.parseLine(rails3routeConstraints);
         Route route = routeList.get(0);
 
-        assertEquals(route.getAction(), "show");
+        assertEquals(route.getShortActionTitle(), "users#show");
     }
 
 
@@ -138,7 +139,7 @@ public class RailsRoutesParserTest
         parser.parseFile("test/data/engine_routes_parsing.data.txt");
 
         List<RailsEngine> enginesList = parser.getMountedEngines();
-        assertEquals(enginesList.size(), 2);
+        assertEquals(2, enginesList.size());
 
         RailsEngine engine = enginesList.get(0);
         assertEquals("RailsAdmin::Engine", engine.getRubyClassName());
@@ -156,25 +157,25 @@ public class RailsRoutesParserTest
 
         // Engine routes should follow parent engine route which mounts them
         Route route = routes.get(0);
-        assertEquals("RailsAdmin::Engine", route.getActionText());
+        assertEquals("RailsAdmin::Engine", route.getShortActionTitle());
 
         route = routes.get(1);
-        assertEquals("rails_admin/main#dashboard", route.getActionText());
+        assertEquals("rails_admin/main#dashboard", route.getShortActionTitle());
         assertEquals("/admin", route.getPath());
 
         route = routes.get(2);
-        assertEquals("rails_admin/main#index", route.getActionText());
+        assertEquals("rails_admin/main#index", route.getShortActionTitle());
         assertEquals("/admin/:model_name(.:format)", route.getPath());
 
         route = routes.get(3);
-        assertEquals("RailsSettingsUi::Engine", route.getActionText());
+        assertEquals("RailsSettingsUi::Engine", route.getShortActionTitle());
 
         route = routes.get(4);
-        assertEquals("rails_settings_ui/settings#index", route.getActionText());
+        assertEquals("rails_settings_ui/settings#index", route.getShortActionTitle());
         assertEquals("/settings", route.getPath());
 
         route = routes.get(5);
-        assertEquals("rails_settings_ui/settings#update_all", route.getActionText());
+        assertEquals("rails_settings_ui/settings#update_all", route.getShortActionTitle());
         assertEquals("/settings/update_all(.:format)", route.getPath());
     }
 
@@ -187,7 +188,7 @@ public class RailsRoutesParserTest
         Route route = routes.get(1);
 
         assertEquals("RailsAdmin::MainController#dashboard",
-                route.getControllerMethodName());
+                route.getActionTitle());
 
         assertEquals("rails_admin.dashboard",
                 route.getRouteName());
@@ -202,7 +203,7 @@ public class RailsRoutesParserTest
 
         assertEquals(Route.REDIRECT, actual.getType());
         // TODO: fix test when RedirectRoute is implemented.
-        assertEquals("/books", actual.getActionText());
+        assertEquals("/books", actual.getShortActionTitle());
     }
 
 
@@ -213,9 +214,9 @@ public class RailsRoutesParserTest
         List<Route> routes = parser.parseLine(line);
         Route actual = routes.get(0);
 
-        assertEquals(Route.REDIRECT, actual.getType());
+        assertEquals(RedirectRoute.class, actual.getClass());
         // TODO: fix test when RedirectRoute is implemented.
-        assertEquals("", actual.getActionText());
+        assertEquals("", actual.getShortActionTitle());
     }
 
 

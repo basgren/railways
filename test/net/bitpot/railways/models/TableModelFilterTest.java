@@ -1,10 +1,11 @@
 package net.bitpot.railways.models;
 
 import net.bitpot.railways.parser.RailsRoutesParser;
-import java.io.FileInputStream;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.FileInputStream;
+
 import static org.junit.Assert.assertEquals;
 
 
@@ -45,7 +46,7 @@ public class TableModelFilterTest
         RoutesFilter filter = model.getFilter();
         filter.setPathFilter("#search");
 
-        assertEquals(model.getRowCount(), 2);
+        assertEquals(2, model.getRowCount());
     }
 
 
@@ -55,6 +56,6 @@ public class TableModelFilterTest
         RoutesFilter filter = model.getFilter();
         filter.setPathFilter("SEarcH");
 
-        assertEquals(model.getRowCount(), 2);
+        assertEquals(2, model.getRowCount());
     }
 }
