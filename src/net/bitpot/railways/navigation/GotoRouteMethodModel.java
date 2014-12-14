@@ -4,7 +4,7 @@ import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

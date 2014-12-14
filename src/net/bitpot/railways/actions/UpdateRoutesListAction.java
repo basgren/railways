@@ -33,7 +33,7 @@ public class UpdateRoutesListAction extends AnAction {
         if (rm.isUpdating())
             rm.cancelRoutesUpdate();
         else {
-            // Save all documents to make sure that routes will be collected using actual files.
+            // Save all documents to make sure that requestMethods will be collected using actual files.
             FileDocumentManager.getInstance().saveAllDocuments();
 
             if (rm.updateRouteList()) {

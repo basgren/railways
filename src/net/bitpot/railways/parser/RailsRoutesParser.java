@@ -5,7 +5,10 @@ import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.models.routes.EngineRoute;
+import net.bitpot.railways.models.routes.RedirectRoute;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -219,6 +222,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             String routePath = getGroup(groups, 3);
             String conditions = getGroup(groups, 4);
             String[] actionInfo = conditions.split("#", 2);
+            String engineClass = null;
 
             // Process new format of output: 'controller#action'
             if (actionInfo.length == 2) {
@@ -235,10 +239,11 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
                 // Check reference to mounted engine.
                 if (routeController.isEmpty() && routeAction.isEmpty())
-                    routeController = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
+                    engineClass = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
 
                 // Else just set action to provided text.
-                if (routeAction.isEmpty() && routeController.isEmpty())
+                if (routeAction.isEmpty() && routeController.isEmpty() &&
+                        engineClass == null)
                     routeAction = conditions;
             }
 
@@ -257,9 +262,25 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
 
             for (String requestMethodName : requestMethods) {
-                Route route = new Route(myModule,
-                        RequestMethod.get(requestMethodName), routePath,
-                        routeController, routeAction, routeName, currentEngine);
+                Route route;
+
+                if (engineClass != null) {
+                    route = new EngineRoute(myModule,
+                            RequestMethod.get(requestMethodName), routePath,
+                            routeName, engineClass);
+                } else if ((routeController.equals(":controller") &&
+                        routeAction != null && routeAction.equals(":action"))) {
+
+                    route = new RedirectRoute(myModule,
+                            RequestMethod.get(requestMethodName), routePath,
+                            routeName, "redirectPath");
+                } else {
+                    route = new SimpleRoute(myModule,
+                            RequestMethod.get(requestMethodName), routePath,
+                            routeName, routeController, routeAction);
+                }
+
+                route.setParentEngine(currentEngine);
 
                 result.add(route);
             }

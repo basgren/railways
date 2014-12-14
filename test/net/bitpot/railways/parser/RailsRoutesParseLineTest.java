@@ -2,7 +2,10 @@ package net.bitpot.railways.parser;
 
 
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.models.routes.EngineRoute;
+import net.bitpot.railways.models.routes.RedirectRoute;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,15 +28,15 @@ public class RailsRoutesParseLineTest
     RailsRoutesParser parser = null;
 
     private String line, name, path, controller, action;
-    private int routeType;
+    private Class routeClass;
     private RequestMethod rType;
 
 
-    public RailsRoutesParseLineTest(String line, int routeType, String name,
+    public RailsRoutesParseLineTest(String line, Class routeClass, String name,
                                     RequestMethod rType, String path, String controller,
                                     String action) {
         this.line = line;
-        this.routeType = routeType;
+        this.routeClass = routeClass;
         this.name = name;
         this.rType = rType;
         this.path = path;
@@ -52,82 +55,82 @@ public class RailsRoutesParseLineTest
     public static Collection<Object[]> createParseLineData() {
         return Arrays.asList(new Object[][] {
             {"          photo_album_photos POST   /photo_albums/:photo_album_id/photos(.:format)           {:action=>\"create\", :controller=>\"photos\"}",
-                    Route.DEFAULT, "photo_album_photos", RequestMethod.POST,
+                    SimpleRoute.class, "photo_album_photos", RequestMethod.POST,
                     "/photo_albums/:photo_album_id/photos(.:format)", "photos", "create"},
 
             {"             new_photo_album GET    /photo_albums/new(.:format)                              {:action=>\"new\", :controller=>\"photo_albums\"}",
-                    Route.DEFAULT, "new_photo_album", RequestMethod.GET,
+                    SimpleRoute.class, "new_photo_album", RequestMethod.GET,
                     "/photo_albums/new(.:format)", "photo_albums", "new"},
 
             {"            edit_photo_album GET    /photo_albums/:id/edit(.:format)                         {:action=>\"edit\", :controller=>\"photo_albums\"}",
-                    Route.DEFAULT, "edit_photo_album", RequestMethod.GET,
+                    SimpleRoute.class, "edit_photo_album", RequestMethod.GET,
                     "/photo_albums/:id/edit(.:format)", "photo_albums", "edit"},
 
             {"                 photo_album GET    /photo_albums/:id(.:format)                              {:action=>\"show\", :controller=>\"photo_albums\"}",
-                    Route.DEFAULT, "photo_album", RequestMethod.GET,
+                    SimpleRoute.class, "photo_album", RequestMethod.GET,
                     "/photo_albums/:id(.:format)", "photo_albums", "show"},
 
             {"                             PUT    /photo_albums/:id(.:format)                              {:action=>\"update\", :controller=>\"photo_albums\"}",
-                    Route.DEFAULT, "", RequestMethod.PUT,
+                    SimpleRoute.class, "", RequestMethod.PUT,
                     "/photo_albums/:id(.:format)", "photo_albums", "update"},
 
             {"                             DELETE /photo_albums/:id(.:format)                              {:action=>\"destroy\", :controller=>\"photo_albums\"}",
-                    Route.DEFAULT, "", RequestMethod.DELETE,
+                    SimpleRoute.class, "", RequestMethod.DELETE,
                     "/photo_albums/:id(.:format)", "photo_albums", "destroy"},
 
             // New rails format
             {"                 photo_album GET    /photo_albums/:id(.:format)                              photo_albums#show",
-                    Route.DEFAULT, "photo_album", RequestMethod.GET,
+                    SimpleRoute.class, "photo_album", RequestMethod.GET,
                     "/photo_albums/:id(.:format)", "photo_albums", "show"},
 
             {"                             PUT    /photo_albums/:id(.:format)                              photo_albums#update",
-                    Route.DEFAULT, "", RequestMethod.PUT,
+                    SimpleRoute.class, "", RequestMethod.PUT,
                     "/photo_albums/:id(.:format)", "photo_albums", "update"},
 
             {"                             DELETE /photo_albums/:id(.:format)                              photo_albums#destroy",
-                    Route.DEFAULT, "", RequestMethod.DELETE,
+                    SimpleRoute.class, "", RequestMethod.DELETE,
                     "/photo_albums/:id(.:format)", "photo_albums", "destroy"},
 
             // Test mounting rack-application
             // No action means that it's Rack application
             {"    test_server        /test                     {:to=>TestServer}",
-                    Route.MOUNTED, "test_server", RequestMethod.ANY,
+                    EngineRoute.class, "test_server", RequestMethod.ANY,
                     "/test", "TestServer", ""
             },
 
             // Mounted rack application with namespace
             // No action means that it's Rack application
             {"    test_server2        /test                     Test::Server",
-                    Route.MOUNTED, "test_server2", RequestMethod.ANY,
+                    EngineRoute.class, "test_server2", RequestMethod.ANY,
                     "/test", "Test::Server", ""
             },
 
             // Test parsing routes with additional requirements (constraints etc.) (Old format)
             {"mozilla_users        /mozilla_users(.:format)  {:user_agent=>/(Mozilla.*(compatible|Windows|Macintosh|Linux|iPad)|Site 24 X 7).*/, :controller=>\"users\", :action=>\"index\"}",
-                    Route.DEFAULT, "mozilla_users", RequestMethod.ANY,
+                    SimpleRoute.class, "mozilla_users", RequestMethod.ANY,
                     "/mozilla_users(.:format)", "users", "index"
             },
 
             // Test parsing routes with additional requirements (constraints etc.) (New format)
             {"mozilla_users        /mozilla_users(.:format)  users#index {:user_agent=>/(Mozilla.*(compatible|Windows|Macintosh|Linux|iPad)|Site 24 X 7).*/}",
-                    Route.DEFAULT, "mozilla_users", RequestMethod.ANY,
+                    SimpleRoute.class, "mozilla_users", RequestMethod.ANY,
                     "/mozilla_users(.:format)", "users", "index"
             },
 
             // Test parsing of redirecting route
             {"    redirect        /redirect(.:format)                    :controller#:action",
-                    Route.REDIRECT, "redirect", RequestMethod.ANY,
+                    RedirectRoute.class, "redirect", RequestMethod.ANY,
                     "/redirect(.:format)", ":controller", ":action"},
 
             // Test parsing of Rails 4 PATCH method
             {"          PATCH  /users/:id(.:format)      users#update",
-                    Route.DEFAULT, "", RequestMethod.PATCH,
+                    SimpleRoute.class, "", RequestMethod.PATCH,
                     "/users/:id(.:format)", "users", "update"},
 
             // Parser should successfully parse custom action text - it's better
             // that route is added with unknown action string than ignored.
             {"    redirect_301 GET    /redirect_301(.:format)   unknown format in action field",
-                    Route.DEFAULT, "redirect_301", RequestMethod.GET,
+                    SimpleRoute.class, "redirect_301", RequestMethod.GET,
                     "/redirect_301(.:format)", "", "unknown format in action field"},
 
         });
@@ -144,7 +147,7 @@ public class RailsRoutesParseLineTest
         assertNotNull(r);
 
         assertEquals(name, r.getRouteName());
-        assertEquals(routeType, r.getType());
+        assertEquals(routeClass, r.getClass());
         assertEquals(rType, r.getRequestMethod());
         assertEquals(path, r.getPath());
         assertEquals(controller, r.getController());

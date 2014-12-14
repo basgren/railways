@@ -11,7 +11,7 @@ import com.intellij.psi.PsiDocumentManager;
 import net.bitpot.railways.navigation.ChooseByRouteNameFilter;
 import net.bitpot.railways.navigation.GotoRouteFilterConfiguration;
 import net.bitpot.railways.navigation.GotoRouteMethodModel;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;

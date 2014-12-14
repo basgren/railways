@@ -1,4 +1,4 @@
-package net.bitpot.railways.models.routes;
+package net.bitpot.railways.models.requestMethods;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

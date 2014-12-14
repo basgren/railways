@@ -5,7 +5,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.gui.RailwaysIcons;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.parser.route.RouteActionParser;
 import net.bitpot.railways.parser.route.RoutePathParser;
 import net.bitpot.railways.parser.route.TextChunk;
@@ -46,23 +46,15 @@ public class Route implements NavigationItem {
     // Cached path and action text chunks.
     private List<TextChunk> pathChunks = null;
     private List<TextChunk> actionChunks = null;
-    private String redirectURL;
+    private RailsEngine parentEngine;
 
 
     public Route(@Nullable Module module, RequestMethod requestMethod, String path,
-                 String controller, String action, String name) {
-        this(module, requestMethod, path, controller, action, name, null);
-    }
-
-
-    public Route(@Nullable Module module, RequestMethod requestMethod, String path,
-                 String controller, String action, String name,
-                 @Nullable RailsEngine parentEngine) {
+                 String name) {
         this.module = module;
 
-        setRequestMethod(requestMethod);
+        this.requestMethod = requestMethod;
         this.path = path;
-        this.action = action;
         setController(controller);
         setRouteName(name);
         myParentEngine = parentEngine;
@@ -78,18 +70,8 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setRequestMethod(RequestMethod requestMethod) {
-        this.requestMethod = requestMethod;
-    }
-
-
     public RequestMethod getRequestMethod() {
         return requestMethod;
-    }
-
-
-    public boolean isValid() {
-        return !path.isEmpty() && !controller.isEmpty();
     }
 
 
@@ -319,7 +301,8 @@ public class Route implements NavigationItem {
         return actionInfo;
     }
 
-    public String getRedirectURL() {
-        return redirectURL;
+
+    public void setParentEngine(RailsEngine parentEngine) {
+        this.parentEngine = parentEngine;
     }
 }

@@ -4,7 +4,8 @@ package net.bitpot.railways.parser;
 import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -116,16 +117,16 @@ public class RailsRoutesParserTest
 
 
         // Test first route
-        Route expected = new Route(null, RequestMethod.GET,
-                "/test(.:format)", "clients", "show", "test");
+        Route expected = new SimpleRoute(null, RequestMethod.GET,
+                "/test(.:format)", "test", "clients", "show");
         Route actual = routes.get(0);
 
         TestUtils.assertRouteEquals(expected, actual);
 
 
         // Test second route
-        expected = new Route(null, RequestMethod.POST,
-                "/test(.:format)", "clients", "show", "test");
+        expected = new SimpleRoute(null, RequestMethod.POST,
+                "/test(.:format)", "test", "clients", "show");
         actual = routes.get(1);
 
         TestUtils.assertRouteEquals(expected, actual);
@@ -195,13 +196,13 @@ public class RailsRoutesParserTest
 
     @Test
     public void testParsingRedirectToConstant() {
-        String line = "  redirect_301 GET    /redirect_301(.:format)   redirect(301, /books)";
-
-        List<Route> routes = parser.parseLine(line);
+        List<Route> routes = parser.parseLine(
+                "  redirect_301 GET    /redirect_301(.:format)   redirect(301, /books)");
         Route actual = routes.get(0);
 
         assertEquals(Route.REDIRECT, actual.getType());
-        assertEquals("/books", actual.getRedirectURL());
+        // TODO: fix test when RedirectRoute is implemented.
+        assertEquals("/books", actual.getActionText());
     }
 
 
@@ -213,7 +214,8 @@ public class RailsRoutesParserTest
         Route actual = routes.get(0);
 
         assertEquals(Route.REDIRECT, actual.getType());
-        assertEquals("", actual.getRedirectURL());
+        // TODO: fix test when RedirectRoute is implemented.
+        assertEquals("", actual.getActionText());
     }
 
 
