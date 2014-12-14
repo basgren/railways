@@ -122,7 +122,14 @@ public class RailsRoutesParseLineTest
             // Test parsing of Rails 4 PATCH method
             {"          PATCH  /users/:id(.:format)      users#update",
                     Route.DEFAULT, "", RequestMethod.PATCH,
-                    "/users/:id(.:format)", "users", "update"}
+                    "/users/:id(.:format)", "users", "update"},
+
+            // Parser should successfully parse custom action text - it's better
+            // that route is added with unknown action string than ignored.
+            {"    redirect_301 GET    /redirect_301(.:format)   unknown format in action field",
+                    Route.DEFAULT, "redirect_301", RequestMethod.GET,
+                    "/redirect_301(.:format)", "", "unknown format in action field"},
+
         });
     }
 
@@ -136,11 +143,11 @@ public class RailsRoutesParseLineTest
         assertEquals(1, routeList.size());
         assertNotNull(r);
 
-        assertEquals(r.getRouteName(), name);
-        assertEquals(r.getType(), routeType);
-        assertEquals(r.getRequestMethod(), rType);
-        assertEquals(r.getPath(), path);
-        assertEquals(r.getController(), controller);
-        assertEquals(r.getAction(), action);
+        assertEquals(name, r.getRouteName());
+        assertEquals(routeType, r.getType());
+        assertEquals(rType, r.getRequestMethod());
+        assertEquals(path, r.getPath());
+        assertEquals(controller, r.getController());
+        assertEquals(action, r.getAction());
     }
 }
