@@ -11,16 +11,15 @@ import static org.junit.Assert.assertEquals;
  * @author Basil Gren
  *         on 16.12.2014.
  */
-public class RedirectRouteTest {
+public class SimpleRouteTest {
 
     @Test
     public void testSimpleRedirectRoute()
     {
-        Route route = new RedirectRoute(null, RequestMethod.GET, "/test",
-                "redirect", "/test_redirect");
+        Route route = new SimpleRoute(null, RequestMethod.GET, "/test",
+                "clients", "clients", "index");
 
-        assertEquals(RailwaysIcons.REDIRECT_NODE, route.getActionIcon());
-        assertEquals("redirect to /test_redirect", route.getActionTitle());
+        assertEquals(RailwaysIcons.ROUTE_ACTION_NODE, route.getActionIcon());
     }
 
 }

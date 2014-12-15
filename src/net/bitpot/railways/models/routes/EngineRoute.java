@@ -1,8 +1,11 @@
 package net.bitpot.railways.models.routes;
 
 import com.intellij.openapi.module.Module;
+import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
+
+import javax.swing.*;
 
 /**
  * @author Basil Gren
@@ -23,5 +26,11 @@ public class EngineRoute extends Route {
     @Override
     public String getActionTitle() {
         return engineClass;
+    }
+
+
+    @Override
+    public Icon getActionIcon() {
+        return RailwaysIcons.RACK_APPLICATION;
     }
 }

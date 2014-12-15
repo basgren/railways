@@ -1,10 +1,13 @@
 package net.bitpot.railways.models.routes;
 
 import com.intellij.openapi.module.Module;
+import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
+
+import javax.swing.*;
 
 /**
  * @author Basil Gren
@@ -44,7 +47,12 @@ public class SimpleRoute extends Route {
         else
             ctrlClassName = RailwaysPsiUtils.getControllerClassNameByShortName(controllerName);
 
-
         return String.format("%s#%s", ctrlClassName, actionName);
+    }
+
+
+    @Override
+    public Icon getActionIcon() {
+        return RailwaysIcons.ROUTE_ACTION_NODE;
     }
 }
