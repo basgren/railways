@@ -2,6 +2,7 @@ package net.bitpot.railways.models.routes;
 
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
@@ -53,6 +54,15 @@ public class SimpleRoute extends Route {
 
     @Override
     public Icon getActionIcon() {
-        return RailwaysIcons.ROUTE_ACTION_NODE;
+        RailsActionInfo action = getActionInfo();
+        boolean isContainerFound = action.getPsiClass() != null;
+        boolean isMethodFound = action.getPsiMethod() != null;
+
+        if (isMethodFound)
+            return action.getIcon();
+        else if (isContainerFound)
+            return RailwaysIcons.CONTROLLER_NODE;
+
+        return RailwaysIcons.UNKNOWN;
     }
 }

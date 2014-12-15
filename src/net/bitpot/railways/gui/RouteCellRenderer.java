@@ -5,6 +5,7 @@ import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.route.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,26 +51,16 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         boolean isContainerFound = action.getPsiClass() != null;
         boolean isMethodFound = action.getPsiMethod() != null;
 
-        Icon icon;
         String tooltipText = null;
 
-        // Set icons and hits
-        // TODO: move to Route children
-        if (route.getType() == Route.MOUNTED) {
-            icon = RailwaysIcons.RACK_APPLICATION;
-
-        } else if (isMethodFound) {
-            icon = action.getIcon();
-
-        } else if (isContainerFound) {
-            icon = RailwaysIcons.CONTROLLER_NODE;
-            tooltipText = "Cannot find action declaration";
-        } else {
-            icon = RailwaysIcons.UNKNOWN;
-            tooltipText = "Cannot find controller declaration";
+        // Set icons and hints
+        if (route instanceof SimpleRoute && !isMethodFound) {
+            tooltipText = isContainerFound ?
+                "Cannot find action declaration" :
+                "Cannot find controller declaration";
         }
 
-        setIcon(icon);
+        setIcon(route.getActionIcon());
         setToolTipText(tooltipText);
 
         // Now append text taking into account colors and highlighting.

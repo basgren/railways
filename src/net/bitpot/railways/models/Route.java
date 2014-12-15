@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Route class stores all information about parsed route.
  */
-public abstract class Route implements NavigationItem {
+public class Route implements NavigationItem {
     // Route types:
     public final static int DEFAULT = 0;  // General route
     public final static int REDIRECT = 1; // Redirect
@@ -38,6 +38,7 @@ public abstract class Route implements NavigationItem {
     private RailsEngine myParentEngine = null;
 
 
+    // TODO: move action info to SimpleRoute
     @NotNull
     private RailsActionInfo actionInfo = new RailsActionInfo();
 
@@ -262,5 +263,7 @@ public abstract class Route implements NavigationItem {
     }
 
 
-    public abstract Icon getActionIcon();
+    public Icon getActionIcon() {
+        return RailwaysIcons.UNKNOWN;
+    }
 }
