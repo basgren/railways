@@ -29,6 +29,7 @@ public class RailwaysIcons {
     public static final Icon ROUTE_ACTION_NODE = RubyIcons.Rails.ProjectView.Action_method;
     public static final Icon ERROR_NODE = AllIcons.General.Error;
     public static final Icon UNKNOWN = pluginIcon("unknown.png");
+    public static final Icon REDIRECT_NODE = pluginIcon("redirect.png");
 
     public static final Icon UPDATE = IconLoader.getIcon("/actions/sync.png");
     public static final Icon SUSPEND = IconLoader.getIcon("/actions/suspend.png");
