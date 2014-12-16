@@ -93,6 +93,6 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
             append(chunk.getText(), chunk.getTextAttrs());
 
         setToolTipText(null);
-        setIcon(route.getIcon());
+        setIcon(route.getRequestMethod().getIcon());
     }
 }

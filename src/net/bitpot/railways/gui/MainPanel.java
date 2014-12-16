@@ -358,7 +358,7 @@ public class MainPanel {
         } else {
             routeLbl.setText(route.getPath());
             methodLbl.setText(route.getRequestMethod().getName());
-            methodLbl.setIcon(route.getIcon());
+            methodLbl.setIcon(route.getRequestMethod().getIcon());
 
             actionLbl.setIcon(null);
             actionLbl.setToolTipText(null);

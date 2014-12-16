@@ -66,6 +66,7 @@ public class Route implements NavigationItem {
     }
 
 
+    @NotNull
     public RequestMethod getRequestMethod() {
         return requestMethod;
     }
@@ -113,20 +114,6 @@ public class Route implements NavigationItem {
 
 
     /**
-     * Returns rack icon if the route is for mounted rack-application, otherwise returns icon for
-     * corresponding request method.
-     *
-     * @return Route icon.
-     */
-    public Icon getIcon() {
-        if (getType() == MOUNTED)
-            return RailwaysIcons.RACK_APPLICATION;
-
-        return getRequestMethod().getIcon();
-    }
-
-
-    /**
      * Returns displayable name for navigation list.
      *
      * @return Display name of current route.
@@ -161,7 +148,7 @@ public class Route implements NavigationItem {
             @Nullable
             @Override
             public Icon getIcon(boolean unused) {
-                return route.getIcon();
+                return route.getRequestMethod().getIcon();
             }
         };
     }
@@ -251,15 +238,14 @@ public class Route implements NavigationItem {
         return myParentEngine;
     }
 
+    public void setParentEngine(RailsEngine parentEngine) {
+        myParentEngine = parentEngine;
+    }
+
 
     @NotNull
     public RailsActionInfo getActionInfo() {
         return actionInfo;
-    }
-
-
-    public void setParentEngine(RailsEngine parentEngine) {
-        myParentEngine = parentEngine;
     }
 
 
