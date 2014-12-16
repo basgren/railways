@@ -65,4 +65,22 @@ public class SimpleRoute extends Route {
 
         return RailwaysIcons.UNKNOWN;
     }
+
+
+    @Override
+    public void navigate(boolean requestFocus) {
+        getActionInfo().update(getModule(), controllerName, actionName);
+
+        if (getActionInfo().getPsiMethod() != null)
+            getActionInfo().getPsiMethod().navigate(requestFocus);
+
+        else if (getActionInfo().getPsiClass() != null)
+            getActionInfo().getPsiClass().navigate(requestFocus);
+    }
+
+    @Override
+    public boolean canNavigate() {
+        return getActionInfo().getPsiMethod() != null ||
+                getActionInfo().getPsiClass() != null;
+    }
 }

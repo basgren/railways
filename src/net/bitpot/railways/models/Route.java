@@ -156,26 +156,13 @@ public class Route implements NavigationItem {
 
     @Override
     public void navigate(boolean requestFocus) {
-        int routeType = getType();
-
-        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
-            return;
-
-        actionInfo.update(module, controller, action);
-
-        if (actionInfo.getPsiMethod() != null)
-            actionInfo.getPsiMethod().navigate(requestFocus);
-        else if (actionInfo.getPsiClass() != null)
-            actionInfo.getPsiClass().navigate(requestFocus);
+        // This method should be overridden in subclasses that support navigation.
     }
-
-
 
 
     @Override
     public boolean canNavigate() {
-        return actionInfo.getPsiMethod() != null ||
-                actionInfo.getPsiClass() != null;
+        return false;
     }
 
 
