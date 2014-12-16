@@ -35,6 +35,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?\\}\\s*$)");
+    private static final Pattern REDIRECT_PATTERN = Pattern.compile("redirect\\(\\d+(?:,\\s*(.+?))?\\)");
 
     private static final String EXCEPTION_REGEX = "(?s)rake aborted!\\s*(.+?)Tasks:";
 
@@ -217,12 +218,13 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         Matcher groups = LINE_PATTERN.matcher(line.trim());
 
         if (groups.matches()) {
-            String routeController, routeAction;
+            String routeController = "", routeAction = "";
             String routeName = getGroup(groups, 1);
             String routePath = getGroup(groups, 3);
             String conditions = getGroup(groups, 4);
             String[] actionInfo = conditions.split("#", 2);
             String engineClass = "";
+            String redirectPath = null; // null - when it's not redirect
 
             // Process new format of output: 'controller#action'
             if (actionInfo.length == 2) {
@@ -232,19 +234,25 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                 // "index {:user_agent => /something/}"
                 routeAction = extractRouteRequirements(actionInfo[1]);
             } else {
-                // Older format - all route requirements are specified in ruby hash:
-                // {:controller => 'users', :action => 'index'}
-                routeController = captureGroup(CONTROLLER_PATTERN, conditions);
-                routeAction = captureGroup(ACTION_PATTERN, conditions);
 
-                // Check reference to mounted engine.
-                if (routeController.isEmpty() && routeAction.isEmpty())
-                    engineClass = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
+                Matcher redirectMatcher = REDIRECT_PATTERN.matcher(conditions);
+                if (redirectMatcher.matches())
+                    redirectPath = getGroup(redirectMatcher, 1);
+                else {
+                    // Older format - all route requirements are specified in ruby hash:
+                    // {:controller => 'users', :action => 'index'}
+                    routeController = captureGroup(CONTROLLER_PATTERN, conditions);
+                    routeAction = captureGroup(ACTION_PATTERN, conditions);
 
-                // Else just set action to provided text.
-                if (routeAction.isEmpty() && routeController.isEmpty() &&
-                        engineClass.isEmpty())
-                    routeAction = conditions;
+                    // Check reference to mounted engine.
+                    if (routeController.isEmpty() && routeAction.isEmpty())
+                        engineClass = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
+
+                    // Else just set action to provided text.
+                    if (routeAction.isEmpty() && routeController.isEmpty() &&
+                            engineClass.isEmpty())
+                        routeAction = conditions;
+                }
             }
 
 
@@ -268,12 +276,14 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                     route = new EngineRoute(myModule,
                             RequestMethod.get(requestMethodName), routePath,
                             routeName, engineClass);
-                } else if ((routeController.equals(":controller") &&
-                        routeAction.equals(":action"))) {
 
+                } else if (redirectPath != null ||
+                        (routeController.equals(":controller") &&
+                        routeAction.equals(":action"))) {
                     route = new RedirectRoute(myModule,
                             RequestMethod.get(requestMethodName), routePath,
-                            routeName, "redirectPath");
+                            routeName, redirectPath);
+
                 } else {
                     route = new SimpleRoute(myModule,
                             RequestMethod.get(requestMethodName), routePath,

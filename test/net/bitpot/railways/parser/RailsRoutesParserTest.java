@@ -215,8 +215,8 @@ public class RailsRoutesParserTest
         Route actual = routes.get(0);
 
         assertEquals(RedirectRoute.class, actual.getClass());
-        // TODO: fix test when RedirectRoute is implemented.
-        assertEquals("", actual.getShortActionTitle());
+        assertEquals("[redirect]", actual.getShortActionTitle());
+        assertEquals("[runtime defined redirect]", actual.getActionTitle());
     }
 
 
