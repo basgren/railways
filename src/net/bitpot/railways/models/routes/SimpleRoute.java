@@ -6,6 +6,8 @@ import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 import javax.swing.*;
@@ -18,6 +20,10 @@ public class SimpleRoute extends Route {
 
     private String controllerName;
     private String actionName;
+
+    @NotNull
+    private RailsActionInfo actionInfo = new RailsActionInfo();
+
 
     public SimpleRoute(Module myModule, RequestMethod requestMethod,
                        String routePath, String routeName,
@@ -55,15 +61,19 @@ public class SimpleRoute extends Route {
     @Override
     public Icon getActionIcon() {
         RailsActionInfo action = getActionInfo();
-        boolean isContainerFound = action.getPsiClass() != null;
-        boolean isMethodFound = action.getPsiMethod() != null;
 
-        if (isMethodFound)
+        if (action.getPsiMethod() != null)
             return action.getIcon();
-        else if (isContainerFound)
+        else if (action.getPsiClass() != null)
             return RailwaysIcons.CONTROLLER_NODE;
 
         return RailwaysIcons.UNKNOWN;
+    }
+
+
+    @NotNull
+    public RailsActionInfo getActionInfo() {
+        return actionInfo;
     }
 
 
@@ -82,5 +92,16 @@ public class SimpleRoute extends Route {
     public boolean canNavigate() {
         return getActionInfo().getPsiMethod() != null ||
                 getActionInfo().getPsiClass() != null;
+    }
+
+
+    /**
+     * Checks route action status and sets isActionDeclarationFound flag.
+     *
+     * @param app Rails application which will be checked for controller action.
+     */
+    @Override
+    public void updateActionStatus(RailsApp app) {
+        getActionInfo().update(app, controllerName, actionName);
     }
 }

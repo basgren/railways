@@ -20,27 +20,15 @@ import java.util.List;
  * Route class stores all information about parsed route.
  */
 public class Route implements NavigationItem {
-    // Route types:
-    public final static int DEFAULT = 0;  // General route
-    public final static int REDIRECT = 1; // Redirect
-    public final static int MOUNTED = 2; // Mounted rack application
 
     private Module module = null;
-
 
     private RequestMethod requestMethod = RequestMethod.ANY;
     private String path = "";
     private String routeName = "";
-    private String controller = "";
-    private String action = "";
 
     @Nullable
     private RailsEngine myParentEngine = null;
-
-
-    // TODO: move action info to SimpleRoute
-    @NotNull
-    private RailsActionInfo actionInfo = new RailsActionInfo();
 
     // Cached path and action text chunks.
     private List<TextChunk> pathChunks = null;
@@ -53,7 +41,7 @@ public class Route implements NavigationItem {
 
         this.requestMethod = requestMethod;
         this.path = path;
-        setRouteName(name);
+        this.routeName = name;
     }
 
 
@@ -69,26 +57,6 @@ public class Route implements NavigationItem {
     @NotNull
     public RequestMethod getRequestMethod() {
         return requestMethod;
-    }
-
-
-    /**
-     * Returns route type. There are 3 types of routes:
-     *   1. DEFAULT - general route to some controller method
-     *   2. MOUNTED - route mounted to some Rack application
-     *   3. REDIRECT - route is a redirect to different route
-     *
-     * @return Route type
-     */
-    public int getType() {
-        if (!controller.isEmpty() && action.isEmpty())
-            return MOUNTED;
-
-        if (controller.equals(":controller") &&
-                action != null && action.equals(":action"))
-            return REDIRECT;
-
-        return DEFAULT;
     }
 
 
@@ -201,22 +169,13 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setRouteName(String name) {
-        this.routeName = name;
-    }
-
-
     /**
      * Checks route action status and sets isActionDeclarationFound flag.
      *
      * @param app Rails application which will be checked for controller action.
      */
     public void updateActionStatus(RailsApp app) {
-        int routeType = getType();
-        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
-            return;
-
-        actionInfo.update(app, controller, action);
+        // Should be overridden in subclasses if an update is required.
     }
 
 
@@ -227,12 +186,6 @@ public class Route implements NavigationItem {
 
     public void setParentEngine(RailsEngine parentEngine) {
         myParentEngine = parentEngine;
-    }
-
-
-    @NotNull
-    public RailsActionInfo getActionInfo() {
-        return actionInfo;
     }
 
 

@@ -47,17 +47,17 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRouteAction(Route route) {
-        RailsActionInfo action = route.getActionInfo();
-        boolean isContainerFound = action.getPsiClass() != null;
-        boolean isMethodFound = action.getPsiMethod() != null;
-
         String tooltipText = null;
+        RailsActionInfo action = null;
 
         // Set icons and hints
-        if (route instanceof SimpleRoute && !isMethodFound) {
-            tooltipText = isContainerFound ?
-                "Cannot find action declaration" :
-                "Cannot find controller declaration";
+        if (route instanceof SimpleRoute) {
+            action = ((SimpleRoute)route).getActionInfo();
+
+            if (action.getPsiMethod() == null)
+                tooltipText = action.getPsiClass() != null ?
+                        "Cannot find action declaration" :
+                        "Cannot find controller declaration";
         }
 
         setIcon(route.getActionIcon());
@@ -70,13 +70,15 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         for(TextChunk chunk: chunks) {
             SimpleTextAttributes textAttrs;
 
-            if ((chunk.getType() == RouteActionChunk.CONTAINER && !isContainerFound) ||
-                    (chunk.getType() == RouteActionChunk.ACTION && !isMethodFound)) {
+            if (action != null &&
+                    ((chunk.getType() == RouteActionChunk.CONTAINER &&
+                    action.getPsiClass() == null) ||
+                    (chunk.getType() == RouteActionChunk.ACTION &&
+                            action.getPsiMethod() == null))) {
 
                 textAttrs = chunk.isHighlighted() ?
                         RailwaysColors.DISABLED_ITEM_HL_ATTR :
                         RailwaysColors.DISABLED_ITEM_ATTR;
-
             } else
                 textAttrs = chunk.getTextAttrs();
 

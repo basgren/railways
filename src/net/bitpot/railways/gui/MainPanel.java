@@ -13,6 +13,7 @@ import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
@@ -357,44 +358,31 @@ public class MainPanel {
             nameLbl.setText(NO_INFO);
         } else {
             routeLbl.setText(route.getPath());
+            nameLbl.setText(route.getRouteName());
+
             methodLbl.setText(route.getRequestMethod().getName());
             methodLbl.setIcon(route.getRequestMethod().getIcon());
 
-            actionLbl.setIcon(null);
+            actionLbl.setIcon(route.getActionIcon());
             actionLbl.setToolTipText(null);
 
-            switch (route.getType()) {
-                case Route.MOUNTED:
-                    actionLbl.setText(String.format("%s (mounted)", route.getActionTitle()));
-                    break;
+            if (route.canNavigate())
+                actionLbl.setHyperlinkText(route.getActionTitle());
+            else
+                actionLbl.setText(route.getActionTitle());
 
-                case Route.REDIRECT:
-                    actionLbl.setText("[redirect]");
-                    break;
+            if (route instanceof SimpleRoute) {
+                RailsActionInfo action = ((SimpleRoute)route).getActionInfo();
 
-                default:
-                    String actionText = route.getActionTitle();
+                if (action.getPsiMethod() != null)
+                    actionLbl.setToolTipText("Go to action declaration");
 
-                    if (route.canNavigate()) {
-                        RailsActionInfo action = route.getActionInfo();
-                        if (action.getPsiMethod() != null) {
-                            actionLbl.setIcon(action.getIcon());
-                            actionLbl.setToolTipText("Go to action declaration");
+                else if (action.getPsiClass() != null)
+                    actionLbl.setToolTipText("Go to controller declaration");
 
-                        } else if (action.getPsiClass() != null) {
-                            actionLbl.setIcon(RailwaysIcons.CONTROLLER_NODE);
-                            actionLbl.setToolTipText("Go to controller declaration");
-                        }
-
-                        actionLbl.setHyperlinkText(actionText);
-                    } else {
-                        actionLbl.setText(actionText);
-                        actionLbl.setIcon(RailwaysIcons.UNKNOWN);
-                        actionLbl.setToolTipText("Cannot find controller declaration");
-                    }
+                else
+                    actionLbl.setToolTipText("Cannot find controller declaration");
             }
-
-            nameLbl.setText(route.getRouteName());
         }
 
         routeInfoPanel.revalidate();

@@ -15,7 +15,7 @@ public class TestUtils {
                 expected.getRouteName(), actual.getRouteName());
 
         assertEquals("Route types are equal",
-                expected.getType(), actual.getType());
+                expected.getClass(), actual.getClass());
 
         assertEquals("Request methods are equal",
                 expected.getRequestMethod(), actual.getRequestMethod());

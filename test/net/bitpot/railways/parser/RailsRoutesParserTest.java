@@ -201,7 +201,7 @@ public class RailsRoutesParserTest
                 "  redirect_301 GET    /redirect_301(.:format)   redirect(301, /books)");
         Route actual = routes.get(0);
 
-        assertEquals(Route.REDIRECT, actual.getType());
+        assertEquals(RedirectRoute.class, actual.getClass());
         // TODO: fix test when RedirectRoute is implemented.
         assertEquals("/books", actual.getShortActionTitle());
     }
