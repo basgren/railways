@@ -277,9 +277,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                             RequestMethod.get(requestMethodName), routePath,
                             routeName, engineClass);
 
-                } else if (redirectPath != null ||
-                        (routeController.equals(":controller") &&
-                        routeAction.equals(":action"))) {
+                } else if (redirectPath != null) {
                     route = new RedirectRoute(myModule,
                             RequestMethod.get(requestMethodName), routePath,
                             routeName, redirectPath);
