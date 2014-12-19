@@ -54,7 +54,8 @@ public class RailwaysUtils {
      * @return Output of 'rake routes'.
      */
     @Nullable
-    public static ProcessOutput queryRakeRoutes(Module module, String routesTaskName) {
+    public static ProcessOutput queryRakeRoutes(Module module,
+                                                String routesTaskName, String railsEnv) {
         // Get root path of Rails application from module.
         RailsApp app = RailsApp.fromModule(module);
         if ((app == null) || (app.getRailsApplicationRoot() == null))
@@ -75,11 +76,13 @@ public class RailwaysUtils {
         }
 
         try {
+            railsEnv = (railsEnv == null) ? "" : "RAILS_ENV=" + railsEnv;
+
             // Will work on IntelliJ platform since 122.633 build (RubyMine 5)
             return GemsRunner.runGemsExecutableScript(sdk, module,
                     "rake", "rake",
                     moduleContentRoot, new ExecutionModes.SameThreadMode(),
-                    routesTaskName, "--trace");
+                    routesTaskName, "--trace", railsEnv);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -76,6 +76,9 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     public static class State {
         // Name of rake task which retrieves routes.
         public String routesTaskName = "routes";
+
+        // Environment which is used to run rake task.
+        public String environment = null;
     }
 
 
@@ -264,7 +267,8 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
             routesUpdateIndicator = indicator;
 
             output = RailwaysUtils.queryRakeRoutes(getModule(),
-                    myModuleSettings.routesTaskName);
+                    myModuleSettings.routesTaskName,
+                    myModuleSettings.environment);
 
             if (output == null)
                 setState(UPDATED);
