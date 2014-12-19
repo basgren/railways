@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
@@ -68,6 +69,7 @@ public class MainPanel {
     private JPanel actionsPanel;
     private JBScrollPane routesScrollPane;
     private JPanel mainRoutePanel;
+    private JBLabel environmentLbl;
 
 
     private CardLayout cardLayout;
@@ -165,8 +167,10 @@ public class MainPanel {
      *
      * @param message Message to show.
      */
-    private void showMessagePanel(String message) {
+    private void showMessagePanel(String message, @Nullable String envName) {
         infoLbl.setText(message);
+        environmentLbl.setText("Environment: " + (envName == null ? "Default" : envName));
+        environmentLbl.setVisible(true);
         infoLink.setVisible(false);
         routesHidden = true;
         updateCounterLabel();
@@ -200,6 +204,7 @@ public class MainPanel {
 
 
         infoLink.setVisible(true);
+        environmentLbl.setVisible(false);
         routesCounterLbl.setVisible(false);
         routesHidden = true;
         updateCounterLabel();
@@ -404,7 +409,8 @@ public class MainPanel {
 
     public void showLoadingMessage() {
         RoutesManager.State settings = myDataSource.getRoutesManager().getState();
-        showMessagePanel("Running `rake " + settings.routesTaskName + "`...");
+        showMessagePanel("Running `rake " + settings.routesTaskName + "`...",
+                settings.environment);
     }
 
 
