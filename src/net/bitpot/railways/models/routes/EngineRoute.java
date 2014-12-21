@@ -24,7 +24,7 @@ public class EngineRoute extends Route {
 
 
     @Override
-    public String getActionTitle() {
+    public String getQualifiedActionTitle() {
         return engineClass;
     }
 

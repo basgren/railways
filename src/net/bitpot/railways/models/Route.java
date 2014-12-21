@@ -66,17 +66,17 @@ public class Route implements NavigationItem {
      *
      * @return Displayable text for route action, ex. "users#create"
      */
-    public String getShortActionTitle() {
-        return getActionTitle();
+    public String getActionTitle() {
+        return getQualifiedActionTitle();
     }
 
 
     /**
-     * Returns displayable text for route action.
+     * Returns qualified name for route action.
      *
      * @return Displayable text for route action, ex. "UsersController#create"
      */
-    public String getActionTitle() {
+    public String getQualifiedActionTitle() {
         return "";
     }
 
@@ -109,7 +109,7 @@ public class Route implements NavigationItem {
             @Nullable
             @Override
             public String getLocationString() {
-                return getShortActionTitle();
+                return getActionTitle();
             }
 
 
@@ -155,7 +155,7 @@ public class Route implements NavigationItem {
 
     public List<TextChunk> getActionChunks() {
         if (actionChunks == null)
-            actionChunks = RouteActionParser.parse(getShortActionTitle());
+            actionChunks = RouteActionParser.parse(getActionTitle());
 
         return actionChunks;
     }

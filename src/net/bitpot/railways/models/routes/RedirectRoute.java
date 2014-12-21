@@ -33,7 +33,7 @@ public class RedirectRoute extends Route {
      * @return Displayable text for route action, ex. "users#create"
      */
     @Override
-    public String getShortActionTitle() {
+    public String getActionTitle() {
         return redirectPath.isEmpty() ? "[redirect]" : redirectPath;
     }
 
@@ -44,7 +44,7 @@ public class RedirectRoute extends Route {
      * @return Displayable text for route action, ex. "UsersController#create"
      */
     @Override
-    public String getActionTitle() {
+    public String getQualifiedActionTitle() {
         return redirectPath.isEmpty() ?
                 "[runtime defined redirect]" :
                 "redirect to " + redirectPath;

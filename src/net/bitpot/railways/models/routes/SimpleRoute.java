@@ -36,7 +36,7 @@ public class SimpleRoute extends Route {
 
 
     @Override
-    public String getShortActionTitle() {
+    public String getActionTitle() {
         if (!controllerName.isEmpty())
             return String.format("%s#%s", controllerName, actionName);
 
@@ -45,11 +45,11 @@ public class SimpleRoute extends Route {
 
 
     @Override
-    public String getActionTitle() {
+    public String getQualifiedActionTitle() {
         // Return unqualified action title in case controller is specified as
         // parameter (ex. :controller#:action)
         if (controllerName.contains(":"))
-            return getShortActionTitle();
+            return getActionTitle();
 
         String ctrlClassName;
 

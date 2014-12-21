@@ -372,9 +372,9 @@ public class MainPanel {
             actionLbl.setToolTipText(null);
 
             if (route.canNavigate())
-                actionLbl.setHyperlinkText(route.getActionTitle());
+                actionLbl.setHyperlinkText(route.getQualifiedActionTitle());
             else
-                actionLbl.setText(route.getActionTitle());
+                actionLbl.setText(route.getQualifiedActionTitle());
 
             if (route instanceof SimpleRoute) {
                 RailsActionInfo action = ((SimpleRoute)route).getActionInfo();

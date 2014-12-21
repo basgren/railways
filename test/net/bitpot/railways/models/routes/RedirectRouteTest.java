@@ -20,8 +20,8 @@ public class RedirectRouteTest {
                 "redirect", "/test_redirect");
 
         assertEquals(RailwaysIcons.REDIRECT_NODE, route.getActionIcon());
-        assertEquals("redirect to /test_redirect", route.getActionTitle());
-        assertEquals("/test_redirect", route.getShortActionTitle());
+        assertEquals("redirect to /test_redirect", route.getQualifiedActionTitle());
+        assertEquals("/test_redirect", route.getActionTitle());
     }
 
 
@@ -32,8 +32,8 @@ public class RedirectRouteTest {
                 "redirect", null);
 
         assertEquals(RailwaysIcons.REDIRECT_NODE, route.getActionIcon());
-        assertEquals("[redirect]", route.getShortActionTitle());
-        assertEquals("[runtime defined redirect]", route.getActionTitle());
+        assertEquals("[redirect]", route.getActionTitle());
+        assertEquals("[runtime defined redirect]", route.getQualifiedActionTitle());
     }
 
 }

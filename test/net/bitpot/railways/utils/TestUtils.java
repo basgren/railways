@@ -24,7 +24,7 @@ public class TestUtils {
                 expected.getPath(), actual.getPath());
 
         assertEquals("Route actions titles are equal",
-                expected.getActionTitle(), actual.getActionTitle());
+                expected.getQualifiedActionTitle(), actual.getQualifiedActionTitle());
     }
 
 }

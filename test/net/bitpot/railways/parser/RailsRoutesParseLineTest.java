@@ -156,6 +156,6 @@ public class RailsRoutesParseLineTest
         assertEquals(rType, r.getRequestMethod());
         assertEquals(path, r.getPath());
         //assertEquals(controller, r.getController());
-        assertEquals(actionTitle, r.getShortActionTitle());
+        assertEquals(actionTitle, r.getActionTitle());
     }
 }

@@ -148,7 +148,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         Route route = routeList.get(0);
         if (route instanceof EngineRoute) {
             mountedEngines.add(new RailsEngine(
-                    route.getActionTitle(),
+                    route.getQualifiedActionTitle(),
                     route.getPath(),
                     route.getRouteName()));
         }
@@ -199,7 +199,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     private int findEngineRouteIndex(String engineName) {
         for(int i = 0; i < routes.size(); i++)
-            if (routes.get(i).getActionTitle().equals(engineName))
+            if (routes.get(i).getQualifiedActionTitle().equals(engineName))
                 return i;
 
         return -1;

@@ -77,7 +77,7 @@ public class RoutesFilter {
      */
     private boolean matchesFilter(Route route) {
         return route.getPath().toLowerCase().contains(pathFilter) ||
-                route.getShortActionTitle().toLowerCase().contains(pathFilter) ||
+                route.getActionTitle().toLowerCase().contains(pathFilter) ||
                 route.getRouteName().toLowerCase().contains(pathFilter);
     }
 
