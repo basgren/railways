@@ -46,6 +46,11 @@ public class SimpleRoute extends Route {
 
     @Override
     public String getActionTitle() {
+        // Return unqualified action title in case controller is specified as
+        // parameter (ex. :controller#:action)
+        if (controllerName.contains(":"))
+            return getShortActionTitle();
+
         String ctrlClassName;
 
         RClass ctrlClass = getActionInfo().getPsiClass();
