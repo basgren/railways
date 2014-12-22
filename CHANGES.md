@@ -1,6 +1,14 @@
 Railways - Change Notes
 =======================
 
+### 0.8.1 (2014-12-22)
+
+* Highlight route action in list depending on its availability.
+* Add setting to specify Rails environment for which routes are collected.
+* Parse redirect routes.
+* Fix parsing - routes with unknown action format weren't added to list.
+
+
 ### 0.8.0 (2014-12-06)
 
 * Add settings dialog to customize rake task that retrieves routes.
