@@ -13,8 +13,8 @@ import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.models.RouteTableModel;
-import net.bitpot.railways.parser.RouteTreeBuilder;
 import net.bitpot.railways.parser.RailsRoutesParser;
+import net.bitpot.railways.parser.RouteTreeBuilder;
 import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
@@ -135,18 +135,14 @@ public class MainPanel {
 
 
     /**
-     * Initializes Railways toolbar with actions defined in plugin.xml.
+     * Called by IntelliJ form builder upon MainForm creation.
      */
-    private void initToolbar() {
-        ActionManager am = ActionManager.getInstance();
+    private void createUIComponents() {
+        // Create custom table
+        routesTable = new RoutesTable();
 
-        // The toolbar is registered in plugin.xml
-        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
-
-        // Create railways toolbar.
-        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
-        toolbar.setTargetComponent(actionsPanel);
-        actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
+        // Create tree manually to get is with empty model.
+        routesTree = new Tree(new DefaultTreeModel(null));
     }
 
 
@@ -209,18 +205,6 @@ public class MainPanel {
         }
 
         ((CardLayout)routeViews.getLayout()).show(routeViews, panelID);
-    }
-
-
-    /**
-     * Called by IntelliJ form builder upon MainForm creation.
-     */
-    private void createUIComponents() {
-        // Create custom table
-        routesTable = new RoutesTable();
-
-        // Create tree manually to get is with empty model.
-        routesTree = new Tree(new DefaultTreeModel(null));
     }
 
 
@@ -298,6 +282,23 @@ public class MainPanel {
     private void updateCounterLabel() {
         routesCounterLbl.setText(String.format("%d/%d",
                 myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
+    }
+
+
+    /**
+     * Initializes Railways toolbar with actions defined in plugin.xml.
+     */
+    private void initToolbar() {
+        ActionManager am = ActionManager.getInstance();
+
+        // The toolbar is registered in plugin.xml
+        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
+
+        // Create railways toolbar.
+        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+
+        toolbar.setTargetComponent(actionsPanel);
+        actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
     }
 
 

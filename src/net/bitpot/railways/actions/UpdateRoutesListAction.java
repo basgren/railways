@@ -23,7 +23,7 @@ public class UpdateRoutesListAction extends AnAction {
 
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         if (project == null) return;
 
@@ -50,31 +50,20 @@ public class UpdateRoutesListAction extends AnAction {
     }
 
 
-    private static void updatePresentation(@NotNull Project project, Presentation pres) {
+    private static void updatePresentation(@NotNull Project project,
+                                           Presentation presentation) {
         RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
         if (rm == null) return;
 
-        RailwaysActionFields fields =
-                RoutesView.getInstance(project).getRailwaysActionsFields();
-
-        boolean previousState = fields.previousRoutesUpdatingState;
-        boolean newState = rm.isUpdating();
-
-        // Update only when state is changed.
-        if (previousState == newState)
-            return;
-
-        if (newState) {
-            pres.setIcon(RailwaysIcons.SUSPEND);
-            pres.setText("Cancel routes list update");
-            pres.setDescription("Stops updating the list of routes");
+        if (rm.isUpdating()) {
+            presentation.setIcon(RailwaysIcons.SUSPEND);
+            presentation.setText("Cancel routes list update");
+            presentation.setDescription("Stops updating the list of routes");
         } else {
-            pres.setIcon(RailwaysIcons.UPDATE);
-            pres.setText("Update routes list");
-            pres.setDescription("Update the list of routes");
+            presentation.setIcon(RailwaysIcons.UPDATE);
+            presentation.setText("Update routes list");
+            presentation.setDescription("Update the list of routes");
         }
-
-        fields.previousRoutesUpdatingState = newState;
     }
 
 

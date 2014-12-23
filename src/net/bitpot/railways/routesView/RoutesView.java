@@ -14,7 +14,6 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.UIUtil;
-import net.bitpot.railways.actions.RailwaysActionFields;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.gui.ViewConstants;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
@@ -25,17 +24,18 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 @State(
-        name = "RoutesView",
-        storages = {
-                @Storage(id="other", file = StoragePathMacros.WORKSPACE_FILE)
-        }
+    name="RoutesToolWindow",
+    storages= {
+        @Storage(file = StoragePathMacros.WORKSPACE_FILE)
+    }
 )
 
 /**
  * Implements tool window logic. Synchronizes the number of tool window panes
  * with the number of opened Rails modules in the project.
  */
-public class RoutesView implements Disposable, PersistentStateComponent<RoutesView.State> {
+public class RoutesView implements PersistentStateComponent<RoutesView.State>,
+        Disposable {
 
     public static RoutesView getInstance(Project project) {
         return ServiceManager.getService(project, RoutesView.class);
@@ -49,22 +49,25 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<RoutesViewPane>();
     private RoutesViewPane currentPane = null;
 
-    // Hmmm... I don't remember why I needed this... Some glitches with action state update?
-    private RailwaysActionFields railwaysActionsFields = new RailwaysActionFields();
-
     private State myState = new State();
+
+
+    public RoutesView(Project project) {
+        myProject = project;
+        mainPanel = new MainPanel(project);
+    }
 
 
     // State class should be accessible from outer packages, so it should be
     // declared as public static.
     public static class State {
         public int viewMode = ViewConstants.VIEW_MODE_TABLE;
+        public int selectedTabId;
     }
-
 
     @Nullable
     @Override
-    public State getState() {
+    public RoutesView.State getState() {
         return myState;
     }
 
@@ -74,12 +77,6 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
         myState = state;
 
         mainPanel.setRoutesViewMode(myState.viewMode);
-    }
-
-
-    public RoutesView(Project project) {
-        myProject = project;
-        mainPanel = new MainPanel(project);
     }
 
 
@@ -115,7 +112,7 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
                     return;
 
                 // Find selected pane by content.
-                for(RoutesViewPane p: myPanes)
+                for (RoutesViewPane p : myPanes)
                     if (p.getContent() == event.getContent()) {
                         setCurrentPane(p);
                         return;
@@ -222,32 +219,6 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
 
 
     /**
-     * Returns an object with information used internally by plugin actions.
-     *
-     * @return Object with info
-     */
-    public RailwaysActionFields getRailwaysActionsFields() {
-        return railwaysActionsFields;
-    }
-
-
-    private class MyRoutesManagerListener implements RoutesManagerListener {
-        @Override
-        public void stateChanged(final RoutesManager routesManager) {
-            // Railways can invoke this event from another thread
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-                public void run() {
-                    // Synchronize with routesManager only if it belongs to
-                    // currently selected pane.
-                    if (routesManager == getCurrentRoutesManager())
-                        syncPanelWithRoutesManager(routesManager);
-                }
-            });
-        }
-    }
-
-
-    /**
      * Updates appearance of MainPanel according to the state of RoutesManager.
      *
      * @param routesManager Routes manager which state will be used for
@@ -269,4 +240,19 @@ public class RoutesView implements Disposable, PersistentStateComponent<RoutesVi
         }
     }
 
+
+    private class MyRoutesManagerListener implements RoutesManagerListener {
+        @Override
+        public void stateChanged(final RoutesManager routesManager) {
+            // Railways can invoke this event from another thread
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+                public void run() {
+                    // Synchronize with routesManager only if it belongs to
+                    // currently selected pane.
+                    if (routesManager == getCurrentRoutesManager())
+                        syncPanelWithRoutesManager(routesManager);
+                }
+            });
+        }
+    }
 }
