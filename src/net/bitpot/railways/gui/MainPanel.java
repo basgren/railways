@@ -5,14 +5,18 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
+import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.parser.RouteTreeBuilder;
 import net.bitpot.railways.routesView.RoutesManager;
@@ -25,6 +29,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -67,7 +73,7 @@ public class MainPanel {
     private JLabel routesCounterLbl;
 
 
-    private JPanel routeInfoPnl;
+    private JPanel routeInfoPanel;
     private HyperlinkLabel actionLbl;
     private JLabel nameLbl;
     private JLabel methodLbl;
@@ -81,6 +87,7 @@ public class MainPanel {
     private JTree routesTree;
     private JPanel routesTablePanel;
     private JPanel routeViews;
+    private JBLabel environmentLbl;
 
 
     private Project project;
@@ -95,6 +102,9 @@ public class MainPanel {
 
     private int infoLinkAction;
     private int currentPanel;
+
+    private JBSplitter mySplitter;
+
 
     public MainPanel(Project project) {
         this.project = project;
@@ -119,7 +129,7 @@ public class MainPanel {
                 new RouteCellRenderer(myTableModel.getFilter()));
 
         routesTable.setDefaultRenderer(Object.class,
-                new RouteTableCellRenderer(myTableModel.getFilter()));
+                new FilterHighlightRenderer(myTableModel.getFilter()));
 
         routesTable.setRowHeight(20);
 
@@ -130,8 +140,40 @@ public class MainPanel {
 
         // Update route info panel
         showRouteInfo(null);
+
+        initSplitter();
         showPanel(PANEL_ROUTES);
     }
+
+
+    /**
+     * Initializes splitter that divides routes table and info panel.
+     * We do this manually as there were difficulties with UI designer and
+     * the splitter.
+     */
+    private void initSplitter() {
+        // Remove required components from main panel
+        routesPanel.remove(routeInfoPanel);
+        routesPanel.remove(routeViews);
+
+        mySplitter = new JBSplitter(true, 0.8f);
+
+        mySplitter.setHonorComponentsMinimumSize(true);
+        mySplitter.setAndLoadSplitterProportionKey("Railways.SplitterProportion");
+        mySplitter.setOpaque(false);
+        mySplitter.setShowDividerControls(false);
+        mySplitter.setShowDividerIcon(false);
+
+        mySplitter.setFirstComponent(routeViews);
+        mySplitter.setSecondComponent(routeInfoPanel);
+
+        routesPanel.add(mySplitter, BorderLayout.CENTER);
+    }
+
+    public void setOrientation(boolean isVertical) {
+        mySplitter.setOrientation(isVertical);
+    }
+
 
 
     /**
@@ -159,6 +201,7 @@ public class MainPanel {
         }
 
         infoLink.setVisible(panel == PANEL_ERROR);
+        environmentLbl.setVisible(panel == PANEL_MESSAGE);
         setControlsEnabled(panel == PANEL_ROUTES);
 
         ((CardLayout)centerPanel.getLayout()).show(centerPanel, panelName);
@@ -185,6 +228,14 @@ public class MainPanel {
                 infoLinkAction = LINK_SHOW_STACKTRACE;
                 infoLink.setIcon(null);
         }
+
+        infoLink.setVisible(true);
+        environmentLbl.setVisible(false);
+        routesCounterLbl.setVisible(false);
+
+        updateCounterLabel();
+        setControlsEnabled(false);
+        environmentLbl.setVisible(false);
     }
 
 
@@ -223,15 +274,19 @@ public class MainPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-
                     JTable target = (JTable) e.getSource();
-                    int viewRow = target.rowAtPoint(e.getPoint());
-                    if (viewRow < 0)
-                        return;
+                    navigateToViewRow(target.rowAtPoint(e.getPoint()));
+                }
+            }
+        });
 
-                    int row = target.convertRowIndexToModel(viewRow);
-                    Route route = myTableModel.getRoute(row);
-                    route.navigate(false);
+
+        routesTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JTable target = (JTable) e.getSource();
+                    navigateToViewRow(target.getSelectedRow());
                 }
             }
         });
@@ -266,6 +321,19 @@ public class MainPanel {
                     currentRoute.navigate(false);
             }
         });
+    }
+
+
+    /**
+     * Navigates to a route in specified viewRow, if row exists.
+     * @param viewRow Row index which contains route to navigate to.
+     */
+    private void navigateToViewRow(int viewRow) {
+        if (viewRow < 0)
+            return;
+
+        int row = routesTable.convertRowIndexToModel(viewRow);
+        myTableModel.getRoute(row).navigate(false);
     }
 
 
@@ -321,34 +389,41 @@ public class MainPanel {
             methodLbl.setText(NO_INFO);
             methodLbl.setIcon(null);
 
-            actionLbl.setHyperlinkText("Test");
             actionLbl.setText(NO_INFO);
+            actionLbl.setIcon(null);
 
             nameLbl.setText(NO_INFO);
         } else {
             routeLbl.setText(route.getPath());
-            methodLbl.setText(route.getRequestMethod().getName());
-            methodLbl.setIcon(route.getIcon());
-
-            switch (route.getType()) {
-                case Route.MOUNTED:
-                    actionLbl.setText(String.format("%s (mounted)", route.getControllerMethodName()));
-                    break;
-
-                case Route.REDIRECT:
-                    actionLbl.setText("[redirect]");
-                    break;
-
-                default:
-                    actionLbl.setHyperlinkText(route.getControllerMethodName());
-            }
-
-
             nameLbl.setText(route.getRouteName());
+
+            methodLbl.setText(route.getRequestMethod().getName());
+            methodLbl.setIcon(route.getRequestMethod().getIcon());
+
+            actionLbl.setIcon(route.getActionIcon());
+            actionLbl.setToolTipText(null);
+
+            if (route.canNavigate())
+                actionLbl.setHyperlinkText(route.getQualifiedActionTitle());
+            else
+                actionLbl.setText(route.getQualifiedActionTitle());
+
+            if (route instanceof SimpleRoute) {
+                RailsActionInfo action = ((SimpleRoute)route).getActionInfo();
+
+                if (action.getPsiMethod() != null)
+                    actionLbl.setToolTipText("Go to action declaration");
+
+                else if (action.getPsiClass() != null)
+                    actionLbl.setToolTipText("Go to controller declaration");
+
+                else
+                    actionLbl.setToolTipText("Cannot find controller declaration");
+            }
         }
 
-        routeInfoPnl.revalidate();
-        routeInfoPnl.repaint();
+        routeInfoPanel.revalidate();
+        routeInfoPanel.repaint();
     }
 
 
@@ -370,15 +445,21 @@ public class MainPanel {
 
     public void showLoadingMessage() {
         RoutesManager.State settings = myDataSource.getRoutesManager().getState();
-        showMessagePanel("Running `rake " + settings.routesTaskName + "`...");
+        showMessagePanel("Running `rake " + settings.routesTaskName + "`...",
+                settings.environment);
     }
+
 
     /**
      * Hides panel with routes list and shows panel with information message.
      *
      * @param message Message to show.
      */
-    private void showMessagePanel(String message) {
+    private void showMessagePanel(String message, @Nullable String envName) {
+        environmentLbl.setText("Environment: " +
+                (envName == null ? "Default" : envName));
+        environmentLbl.setVisible(true);
+
         infoLbl.setText(message);
         showPanel(PANEL_MESSAGE);
     }
@@ -406,6 +487,12 @@ public class MainPanel {
         RouteList routes =
                 (dataSource != null) ? dataSource.getRoutesManager().getRouteList() : null;
         myTableModel.setRoutes(routes);
+    }
+
+
+    public void refresh() {
+        // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
+        myTableModel.fireTableRowsUpdated(0, myTableModel.getRowCount() - 1);
     }
 
 

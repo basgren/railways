@@ -1,16 +1,17 @@
 Railways
 ========
 
-Railways is a plugin for RubyMine that provides convenient way to navigate
-between route actions.
+Railways is a plugin for RubyMine and IntelliJ IDEA Ultimate (with Ruby plugin)
+that provides convenient way to navigate between route actions.
 
 Features:
 
-* Separate Routes panel with list of all routes of Ruby On Rails project
-* Route filter for quick filtering by route path, controller/action or route name
-* "Goto route action" popup available by pressing **Ctrl + Shift + G** in
-  Ruby On Rails projects
+* Displays routes of Ruby On Rails application/engine in a separate "Routes" panel
+* Adds quick navigation to action implementation from routes panel or
+  "Goto route action" popup available in code editor by pressing **Ctrl + Shift + G**
+* Provides quick routes filtering by route path, controller/action or route name
 
+Current release is tested on RubyMine 7.0, RubyMine 6.3, IntelliJ IDEA 14.0.
 
 ## Development Environment
 
@@ -22,9 +23,9 @@ Features:
    It's highly recommended to use JDK 1.6 to make plugin compatible with wider
    range of systems.
 
-4. Set up IntelliJ plugin SDK. You should have RubyMine 6 installed.
+4. Set up IntelliJ plugin SDK. You should have RubyMine 7 installed.
    Go to File > Project Structure > SDKs > Add new IntelliJ IDEA Plugin SDK,
-   name it "RubyMine 6 SDK" and select path to your RubyMine 6 installation.
+   name it "RubyMine 7 SDK" and select path to your RubyMine 7 installation.
    When you are asked to select JDK, specify JDK from previous step.
 
 5. Select a project SDK for your project using "File > Project Structure >

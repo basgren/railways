@@ -2,9 +2,13 @@ package net.bitpot.railways.parser;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.models.routes.EngineRoute;
+import net.bitpot.railways.models.routes.RedirectRoute;
+import net.bitpot.railways.models.routes.SimpleRoute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,24 +31,33 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     public static final int ERROR_RAKE_TASK_NOT_FOUND = -2;
 
 
-    private static final Pattern LINE_PATTERN = Pattern.compile("^\\s*([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+(\\S+?)\\s+(.+?)$");
+    private static final Pattern LINE_PATTERN = Pattern.compile("^([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+(\\S+?)\\s+(.+?)$");
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?\\}\\s*$)");
-    private static final Pattern REQUIREMENT_PATTERN = Pattern.compile(":([a-zA-Z0-9_]\\w*)\\s*=>\\s*(.+?)[,]");
+    private static final Pattern REDIRECT_PATTERN = Pattern.compile("redirect\\(\\d+(?:,\\s*(.+?))?\\)");
 
     private static final String EXCEPTION_REGEX = "(?s)rake aborted!\\s*(.+?)Tasks:";
 
     // Will capture both {:to => Test::Server} and Test::Server.
     private static final Pattern RACK_CONTROLLER_PATTERN = Pattern.compile("([A-Z_][A-Za-z0-9_:/]+)");
 
-    public static final Pattern HEADER_LINE = Pattern.compile("^\\s*Prefix\\s+Verb");
+    private static final Pattern HEADER_LINE = Pattern.compile("^\\s*Prefix\\s+Verb");
+    private static final Pattern ENGINE_ROUTES_HEADER_LINE = Pattern.compile("^Routes for ([a-zA-Z0-9:_]+):");
 
     private String stacktrace;
 
     //private final Project project;
     private Module myModule;
     private int errorCode;
+
+    private List<RailsEngine> mountedEngines;
+    private RouteList routes;
+
+    private int insertPos;
+
+    @Nullable
+    private RailsEngine currentEngine;
 
 
     public RailsRoutesParser() {
@@ -54,11 +67,12 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     public RailsRoutesParser(@Nullable Module module) {
         myModule = module;
+        clear();
         clearErrors();
     }
 
 
-    public void clearErrors() {
+    private void clearErrors() {
         stacktrace = "";
         errorCode = NO_ERRORS;
     }
@@ -74,7 +88,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     @Override
     public RouteList parse(InputStream stream) {
         try {
-            RouteList routes = new RouteList();
+            clear();
 
             DataInputStream ds = new DataInputStream(stream);
             BufferedReader br = new BufferedReader(new InputStreamReader(ds));
@@ -84,12 +98,16 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             //Read File Line By Line
             while ((strLine = br.readLine()) != null) {
-                if (isInvalidRouteLine(strLine))
+                if (parseSpecialLine(strLine))
                     continue;
 
                 routeList = parseLine(strLine);
-                if (routeList != null)
-                    routes.addAll(routeList);
+                if (routeList != null) {
+                    addRoutes(routeList);
+
+                    addRakeEngineIfPresent(routeList);
+                }
+
             }
 
             return routes;
@@ -101,15 +119,90 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     }
 
 
+    private void addRoutes(List<Route> routeList) {
+        if (insertPos < 0)
+            routes.addAll(routeList);
+        else {
+            routes.addAll(insertPos, routeList);
+            insertPos += routeList.size();
+        }
+    }
+
+
+    private void clear() {
+        routes = new RouteList();
+        insertPos = -1;
+        currentEngine = null;
+        mountedEngines = new ArrayList<RailsEngine>();
+    }
+
+
     /**
-     * Tests if the line is invalid, i.e. route cannot be parsed.
+     * Adds rake engine to the list of parsed engines.
+     * @param routeList Route list parsed from a line.
+     */
+    private void addRakeEngineIfPresent(@NotNull List<Route> routeList) {
+        if (routeList.size() != 1)
+            return;
+
+        Route route = routeList.get(0);
+        if (route instanceof EngineRoute) {
+            mountedEngines.add(new RailsEngine(
+                    route.getQualifiedActionTitle(),
+                    route.getPath(),
+                    route.getRouteName()));
+        }
+    }
+
+
+    /**
+     * Parses special lines, such as Header, or line with information about
+     * routes engine. Returns true if it matches special line pattern and was
+     * successfully parsed, false otherwise.
      *
      * @param line Line from rake routes.
-     * @return false if line is correct.
+     * @return true if line is a special line and was parsed successfully.
      */
-    public boolean isInvalidRouteLine(String line) {
+    public boolean parseSpecialLine(String line) {
         Matcher matcher = HEADER_LINE.matcher(line);
-        return matcher.find();
+        if (matcher.find())
+            return true;
+
+        matcher = ENGINE_ROUTES_HEADER_LINE.matcher(line);
+        if (matcher.find()) {
+            // All following routes belong to parsed route engine. We should
+            // find engine mount route and add them after it.
+            String engineName = getGroup(matcher, 1);
+            int index = findEngineRouteIndex(engineName);
+
+            if (index >= 0) {
+                insertPos = index + 1;
+                currentEngine = findEngine(engineName);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @Nullable
+    private RailsEngine findEngine(String engineName) {
+        for(RailsEngine engine: mountedEngines)
+            if (engine.getRubyClassName().equals(engineName))
+                return engine;
+
+        return null;
+    }
+
+
+    private int findEngineRouteIndex(String engineName) {
+        for(int i = 0; i < routes.size(); i++)
+            if (routes.get(i).getQualifiedActionTitle().equals(engineName))
+                return i;
+
+        return -1;
     }
 
 
@@ -122,14 +215,16 @@ public class RailsRoutesParser extends AbstractRoutesParser {
      */
     public List<Route> parseLine(String line) {
         // 1. Break line into 3 groups - [name]+[verb], path, conditions(action, controller)
-        Matcher groups = LINE_PATTERN.matcher(line);
+        Matcher groups = LINE_PATTERN.matcher(line.trim());
 
         if (groups.matches()) {
-            String routeController, routeAction;
+            String routeController = "", routeAction = "";
             String routeName = getGroup(groups, 1);
             String routePath = getGroup(groups, 3);
             String conditions = getGroup(groups, 4);
             String[] actionInfo = conditions.split("#", 2);
+            String engineClass = "";
+            String redirectPath = null; // null - when it's not redirect
 
             // Process new format of output: 'controller#action'
             if (actionInfo.length == 2) {
@@ -139,13 +234,25 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                 // "index {:user_agent => /something/}"
                 routeAction = extractRouteRequirements(actionInfo[1]);
             } else {
-                // Older format - all route requirements are specified in ruby hash:
-                // {:controller => 'users', :action => 'index'}
-                routeController = captureGroup(CONTROLLER_PATTERN, conditions);
-                routeAction = captureGroup(ACTION_PATTERN, conditions);
 
-                if (routeController.isEmpty())
-                    routeController = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
+                Matcher redirectMatcher = REDIRECT_PATTERN.matcher(conditions);
+                if (redirectMatcher.matches())
+                    redirectPath = getGroup(redirectMatcher, 1);
+                else {
+                    // Older format - all route requirements are specified in ruby hash:
+                    // {:controller => 'users', :action => 'index'}
+                    routeController = captureGroup(CONTROLLER_PATTERN, conditions);
+                    routeAction = captureGroup(ACTION_PATTERN, conditions);
+
+                    // Check reference to mounted engine.
+                    if (routeController.isEmpty() && routeAction.isEmpty())
+                        engineClass = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
+
+                    // Else just set action to provided text.
+                    if (routeAction.isEmpty() && routeController.isEmpty() &&
+                            engineClass.isEmpty())
+                        routeAction = conditions;
+                }
             }
 
 
@@ -153,13 +260,37 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             String[] requestMethods = getGroup(groups, 2).split("\\|");
             List<Route> result = new ArrayList<Route>();
 
-            for (String requestMethodName : requestMethods) {
-                Route route = new Route(myModule,
-                        RequestMethod.get(requestMethodName), routePath,
-                        routeController, routeAction, routeName);
+            // Also fix path if this route belongs to some engine
+            if (currentEngine != null) {
+                if (routePath.equals("/"))
+                    routePath = currentEngine.getRootPath();
+                else
+                    routePath = currentEngine.getRootPath() + routePath;
+            }
 
-                if (route.isValid())
-                    result.add(route);
+
+            for (String requestMethodName : requestMethods) {
+                Route route;
+
+                if (!engineClass.isEmpty()) {
+                    route = new EngineRoute(myModule,
+                            RequestMethod.get(requestMethodName), routePath,
+                            routeName, engineClass);
+
+                } else if (redirectPath != null) {
+                    route = new RedirectRoute(myModule,
+                            RequestMethod.get(requestMethodName), routePath,
+                            routeName, redirectPath);
+
+                } else {
+                    route = new SimpleRoute(myModule,
+                            RequestMethod.get(requestMethodName), routePath,
+                            routeName, routeController, routeAction);
+                }
+
+                route.setParentEngine(currentEngine);
+
+                result.add(route);
             }
 
             return result;
@@ -241,5 +372,10 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
     public int getErrorCode() {
         return errorCode;
+    }
+
+
+    public List<RailsEngine> getMountedEngines() {
+        return mountedEngines;
     }
 }

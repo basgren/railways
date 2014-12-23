@@ -2,42 +2,58 @@
     <name>Railways for IDEA</name>
     <category>Navigation</category>
     <description><![CDATA[
-    This is a separate release of RubyMine Railways plugin that is compatible
-    only with IntelliJ IDEA Ultimate with Ruby plugin installed.<br/>
-
     Railways plugin makes navigation between Ruby On Rails route actions much
     quicker.<br/>
 
+    This is a separate release of RubyMine Railways plugin that is compatible
+    only with IntelliJ IDEA Ultimate with Ruby plugin installed.<br/>
+
     Features:
     <ul>
-        <li>
-            Separate Routes panel with list of all routes of Ruby On Rails
-            project
-        </li>
-        <li>
-            Route filter for quick filtering by route path, controller, action
-            or route name
-        </li>
-        <li>
-            "Go to route action" popup available by pressing
-            <strong>Ctrl+Shift+G</strong> in Ruby On Rails projects
-        </li>
+        <li>Displays routes of Ruby On Rails application/engine in a separate "Routes" panel</li>
+        <li>Adds quick navigation to action implementation from "Routes" panel or
+            "Go to route action" popup available in code editor (invoked by **Ctrl + Shift + G**)</li>
+        <li>Provides quick routes filtering by route path, controller/action or route name</li>
     </ul>
+
     <br/>
 
     Please feel free to report a bug or a suggestion on
     <a href="https://github.com/basgren/railways">GitHub plugin page</a>.
     ]]></description>
 
-    <version>0.7.1</version>
+    <version>0.8.1</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.1</b><br/>
+        <ul>
+            <li>Highlight route action in list depending on its availability.</li>
+            <li>Add setting to specify Rails environment for which routes are collected.</li>
+            <li>Parse redirect routes.</li>
+            <li>Fix parsing - routes with unknown action format weren't added to list.</li>
+        </ul></p>
+
+        <p><b>0.8.0</b><br/>
+        <ul>
+            <li>Add settings dialog to customize rake task that retrieves routes.</li>
+            <li>Live update route action status and icon (it's disabled in Power Save mode).</li>
+            <li>Implement navigation to route action implementation from engines, parent controllers and included modules.</li>
+            <li>Navigate to selected route action when Enter is pressed in routes list.</li>
+            <li>Navigate to controller class when route action cannot be found.</li>
+            <li>Fix displaying of engine routes and order.</li>
+            <li>Add hotkey for routes list refresh.</li>
+            <li>Change Routes tool window orientation depending on panel where it's docked to.</li>
+            <li>Persist selected module in Routes tool window between IDE restarts.</li>
+            <li>Minor fixes and UI improvements</li>
+        </ul></p>
+
         <p><b>0.7.1</b><br/>
         <ul>
             <li>Fix plugin crash when IDE is run using Java 1.6</li>
-        </ul>
+        </ul></p>
 
         <p><b>0.7.0</b><br/>
         <ul>
@@ -48,15 +64,14 @@
             <li>Minor UI enhancements.</li>
             <li>Plugin now released in two versions - for RubyMine and
                 IntelliJ IDEA due to issues with dependencies.</li>
-        </ul>
+        </ul></p>
 
 
         <p><b>0.6.1</b><br/>
         <ul>
             <li>Plugin now compatible with RubyMine 6.0</li>
             <li>Added support for PATCH method (Rails 4)</li>
-        </ul>
-        </p>
+        </ul></p>
 
 
         <p>
@@ -67,7 +82,7 @@
     </change-notes>
 
 
-    <idea-version since-build="122.633"/>
+    <idea-version since-build="134.231"/>
 
 
     <depends>com.intellij.modules.ultimate</depends>
@@ -106,12 +121,20 @@
 
         <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
                         serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
+
+        <moduleService  serviceInterface="net.bitpot.railways.routesView.RoutesManager"
+                        serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
     </extensions>
 
 
     <actions>
-        <action id="railways.UpdateRoutesList" class="net.bitpot.railways.actions.UpdateRoutesListAction" text="Update routes list"
-                description="Update the list of routes" icon="/actions/sync.png"/>
+        <action id="railways.UpdateRoutesList"
+                class="net.bitpot.railways.actions.UpdateRoutesListAction"
+                text="Update routes list"
+                description="Update the list of routes"
+                icon="/actions/sync.png">
+            <keyboard-shortcut first-keystroke="shift control BACK_SLASH" keymap="$default" />
+        </action>
 
 
         <action id="Railways.gotoRouteAction" class="net.bitpot.railways.actions.GotoRouteMethodAction"
@@ -121,8 +144,15 @@
         </action>
 
 
+        <action id="Railways.settingsAction" class="net.bitpot.railways.actions.SettingsAction"
+                text="Settings"
+                description="Open Railways settings dialog."
+                icon="AllIcons.Actions.Properties" />
+
+
         <group id="railways.MainToolbar">
             <reference ref="railways.UpdateRoutesList"/>
+            <reference ref="Railways.settingsAction"/>
         </group>
 
 

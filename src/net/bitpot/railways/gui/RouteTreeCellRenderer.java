@@ -33,12 +33,12 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
                 return;
 
             append(node.getTitle());
-            String text = route.getActionText();
+            String text = route.getActionTitle();
 
             if (text != null)
                 append(" (" + text + ")", RailwaysColors.CONTROLLER_METHOD_ATTR);
 
-            setIcon(route.getIcon());
+            setIcon(route.getRequestMethod().getIcon());
         } else {
             setIcon(RailwaysIcons.ROUTE_PARENT);
             append(node.getTitle());

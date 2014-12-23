@@ -1,22 +1,33 @@
 package net.bitpot.railways.routesView;
 
+import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.*;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
+import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
+import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
+import com.intellij.util.Alarm;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.gui.ViewConstants;
+import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
@@ -48,6 +59,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<RoutesViewPane>();
     private RoutesViewPane currentPane = null;
+    private ToolWindow myToolWindow;
 
     private State myState = new State();
 
@@ -55,6 +67,11 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     public RoutesView(Project project) {
         myProject = project;
         mainPanel = new MainPanel(project);
+
+        // Subscribe on files changes to update Routes list regularly.
+        // We connect to project bus, as module bus don't work with this topic
+        MessageBusConnection conn = project.getMessageBus().connect();
+        conn.subscribe(PsiModificationTracker.TOPIC, new PSIModificationListener());
     }
 
 
@@ -86,6 +103,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
      * @param toolWindow Tool window to initialize.
      */
     public synchronized void initToolWindow(final ToolWindow toolWindow) {
+        myToolWindow = toolWindow;
         myContentManager = toolWindow.getContentManager();
 
         if (!ApplicationManager.getApplication().isUnitTestMode()) {
@@ -105,27 +123,83 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
             public void selectionChanged(ContentManagerEvent event) {
                 // When user selects a module from tool window combo,
                 // selectionChanges is called twice:
-                // 1. With 'remove' event -  for previously selected item,
-                // 2. With 'add' event - for newly selected item.
-                if (event.getOperation() != ContentManagerEvent.ContentOperation.add
-                        || event.getContent() == null)
-                    return;
-
-                // Find selected pane by content.
-                for (RoutesViewPane p : myPanes)
-                    if (p.getContent() == event.getContent()) {
-                        setCurrentPane(p);
-                        return;
-                    }
+                // 1. With 'remove' operation -  for previously selected item,
+                // 2. With 'add' operation - for newly selected item.
+                if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
+                    viewSelectionChanged();
+                    refreshRoutes();
+                }
             }
         });
+
+
+        Content savedContent = myContentManager.getContent(myState.selectedTabId);
+        if (savedContent != null)
+            myContentManager.setSelectedContent(savedContent);
+
+
+        ToolWindowManagerEx toolManager = ToolWindowManagerEx.getInstanceEx(myProject);
+        toolManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+
+            /**
+             * This method is called when ToolWindow changes its state, i.e.
+             * expanded/collapsed, docked to another panel, etc.
+             */
+            @Override
+            public void stateChanged() {
+                // We have to check if our tool window is still registered, as
+                // otherwise it will raise an exception when project is closed.
+                if (ToolWindowManagerEx.getInstanceEx(myProject).getToolWindow("Routes") == null)
+                    return;
+
+                updateToolWindowOrientation(toolWindow);
+
+                refreshRoutes();
+            }
+        });
+
+        updateToolWindowOrientation(toolWindow);
     }
 
 
+    private void updateToolWindowOrientation(ToolWindow toolWindow) {
+        if (toolWindow.isDisposed())
+            return;
+
+        ToolWindowAnchor anchor = toolWindow.getAnchor();
+        boolean isVertical = (anchor == ToolWindowAnchor.LEFT ||
+                anchor == ToolWindowAnchor.RIGHT);
+
+        mainPanel.setOrientation(isVertical);
+    }
+
+
+    private void viewSelectionChanged() {
+        Content content = myContentManager.getSelectedContent();
+        if (content == null) return;
+
+        // Find selected pane by content.
+        RoutesViewPane pane = null;
+        int index = 0;
+        for(RoutesViewPane p: myPanes) {
+            if (p.getContent() == content) {
+                pane = p;
+                myState.selectedTabId = index;
+                break;
+            }
+
+            index++;
+        }
+
+        setCurrentPane(pane);
+    }
+
+    
     public int getViewMode() {
         return myState.viewMode;
     }
 
+    
     public void setViewMode(int viewMode) {
         if (viewMode == getViewMode())
             return;
@@ -133,8 +207,8 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         mainPanel.setRoutesViewMode(viewMode);
         myState.viewMode = viewMode;
     }
-
-
+    
+    
     @Override
     public void dispose() {
         // Do nothing now
@@ -239,6 +313,36 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 break;
         }
     }
+
+
+    private void refreshRoutes() {
+        RouteList routes = currentPane.getRoutesManager().getRouteList();
+        if (routes.size() == 0)
+            return;
+
+        RailwaysUtils.updateActionsStatus(currentPane.getModule(), routes);
+        mainPanel.refresh();
+    }
+
+
+    private class PSIModificationListener implements PsiModificationTracker.Listener {
+        final Alarm alarm = new Alarm();
+
+        @Override
+        public void modificationCountChanged() {
+            if (PowerSaveMode.isEnabled() || !myToolWindow.isVisible())
+                return;
+
+            alarm.cancelAllRequests();
+            alarm.addRequest(new Runnable() {
+                @Override
+                public void run() {
+                    refreshRoutes();
+                }
+            }, 300, ModalityState.NON_MODAL);
+        }
+    }
+
 
 
     private class MyRoutesManagerListener implements RoutesManagerListener {

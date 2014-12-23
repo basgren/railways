@@ -6,10 +6,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.TextFieldWithAutoCompletion;
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider;
-import icons.RubyIcons;
 import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.plugins.ruby.rails.RailsUtil;
 import org.jetbrains.plugins.ruby.tasks.rake.RakeTaskModuleCache;
 import org.jetbrains.plugins.ruby.tasks.rake.task.RakeTask;
 
@@ -26,6 +26,7 @@ public class RailwaysSettingsForm {
     // Autocomplete field is inherited from LanguageTextField, but doesn't have
     // default constructor, so we'd better use parent class LanguageTextField.
     private LanguageTextField routesTaskEdit;
+    private JComboBox environmentCombo;
 
     private final Module myModule;
 
@@ -41,7 +42,7 @@ public class RailwaysSettingsForm {
                     @Nullable
                     @Override
                     protected Icon getIcon(@NotNull RakeTask rakeTask) {
-                        return RubyIcons.Rake.Rake_runConfiguration;
+                        return RailwaysIcons.RAKE;
                     }
 
                     @NotNull
@@ -97,6 +98,8 @@ public class RailwaysSettingsForm {
         RoutesManager.State settings = getSettings();
 
         routesTaskEdit.setText(settings.routesTaskName);
+
+        initRailsEnvsComboBox(settings.environment, environmentCombo, myModule);
     }
 
 
@@ -107,6 +110,20 @@ public class RailwaysSettingsForm {
         RoutesManager.State settings = getSettings();
 
         settings.routesTaskName = routesTaskEdit.getText();
+        settings.environment = environmentCombo.getSelectedIndex() == 0 ? null :
+                (String)(environmentCombo.getSelectedItem());
+    }
+
+
+    private void initRailsEnvsComboBox(@Nullable String value,
+                                       @NotNull JComboBox combo,
+                                       @Nullable Module module) {
+        String[] envs = RailsUtil.getAllEnvironments(module);
+        Object[] objects = new Object[envs.length + 1];
+        objects[0] = "Default";
+        System.arraycopy(envs, 0, objects, 1, envs.length);
+        combo.setModel(new DefaultComboBoxModel(objects));
+        combo.setSelectedItem(value == null ? "Default" : value);
     }
 
 

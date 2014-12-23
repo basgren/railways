@@ -9,10 +9,13 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import net.bitpot.railways.gui.ErrorInfoDlg;
+import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +54,8 @@ public class RailwaysUtils {
      * @return Output of 'rake routes'.
      */
     @Nullable
-    public static ProcessOutput queryRakeRoutes(Module module, String routesTaskName) {
+    public static ProcessOutput queryRakeRoutes(Module module,
+                                                String routesTaskName, String railsEnv) {
         // Get root path of Rails application from module.
         RailsApp app = RailsApp.fromModule(module);
         if ((app == null) || (app.getRailsApplicationRoot() == null))
@@ -72,11 +76,13 @@ public class RailwaysUtils {
         }
 
         try {
+            railsEnv = (railsEnv == null) ? "" : "RAILS_ENV=" + railsEnv;
+
             // Will work on IntelliJ platform since 122.633 build (RubyMine 5)
             return GemsRunner.runGemsExecutableScript(sdk, module,
                     "rake", "rake",
                     moduleContentRoot, new ExecutionModes.SameThreadMode(),
-                    routesTaskName, "--trace");
+                    routesTaskName, "--trace", railsEnv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,7 +99,7 @@ public class RailwaysUtils {
      */
     public static void showErrorInfo(@NotNull RoutesManager routesManager) {
         ErrorInfoDlg.showError("Error information:",
-                routesManager.getParseErrorStacktrace());
+                routesManager.getParseErrorStackTrace());
     }
 
 
@@ -126,4 +132,17 @@ public class RailwaysUtils {
                 ActionPlaces.UNKNOWN, act.getTemplatePresentation(),
                 ActionManager.getInstance(), 0));
     }
+
+
+    public static void updateActionsStatus(Module module, RouteList routeList) {
+        RailsApp app = RailsApp.fromModule(module);
+        if ((app == null) || (DumbService.isDumb(module.getProject())))
+            return;
+
+        // TODO: investigate multiple calls of this method when switching focus from code to tool window without any changes.
+
+        for (Route route: routeList)
+            route.updateActionStatus(app);
+    }
+
 }

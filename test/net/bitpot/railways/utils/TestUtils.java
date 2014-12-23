@@ -1,4 +1,4 @@
-package net.bitpot.railways.rails;
+package net.bitpot.railways.utils;
 
 import net.bitpot.railways.models.Route;
 
@@ -15,7 +15,7 @@ public class TestUtils {
                 expected.getRouteName(), actual.getRouteName());
 
         assertEquals("Route types are equal",
-                expected.getType(), actual.getType());
+                expected.getClass(), actual.getClass());
 
         assertEquals("Request methods are equal",
                 expected.getRequestMethod(), actual.getRequestMethod());
@@ -23,11 +23,8 @@ public class TestUtils {
         assertEquals("Route paths are equal",
                 expected.getPath(), actual.getPath());
 
-        assertEquals("Route controllers are equal",
-                expected.getController(), actual.getController());
-
-        assertEquals("Route actions are equal",
-                expected.getAction(), actual.getAction());
+        assertEquals("Route actions titles are equal",
+                expected.getQualifiedActionTitle(), actual.getQualifiedActionTitle());
     }
 
 }

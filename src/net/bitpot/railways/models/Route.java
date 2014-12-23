@@ -4,54 +4,44 @@ package net.bitpot.railways.models;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.text.StringUtil;
 import net.bitpot.railways.gui.RailwaysIcons;
-import net.bitpot.railways.models.routes.RequestMethod;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
+import net.bitpot.railways.parser.route.RouteActionParser;
+import net.bitpot.railways.parser.route.RoutePathParser;
+import net.bitpot.railways.parser.route.TextChunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-import org.jetbrains.plugins.ruby.rails.model.RailsController;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
- *
+ * Route class stores all information about parsed route.
  */
 public class Route implements NavigationItem {
-    // Route types
-    public final static int DEFAULT = 0;
-    public final static int REDIRECT = 1; // Route redirects, so it's hard to determine where it will be routed
-    // as rake routes does not show this info.
-    public final static int MOUNTED = 2; // Mounted rack application.
 
     private Module module = null;
-
 
     private RequestMethod requestMethod = RequestMethod.ANY;
     private String path = "";
     private String routeName = "";
-    private String controller = "";
-    private String action = "";
 
+    @Nullable
+    private RailsEngine myParentEngine = null;
 
-    public Route() {
-        this(null);
-    }
+    // Cached path and action text chunks.
+    private List<TextChunk> pathChunks = null;
+    private List<TextChunk> actionChunks = null;
 
-
-    public Route(@Nullable Module module) {
-        this.module = module;
-    }
 
     public Route(@Nullable Module module, RequestMethod requestMethod, String path,
-                 String controller, String action, String name) {
-        this(module);
+                 String name) {
+        this.module = module;
 
-        setRequestMethod(requestMethod);
-        setPath(path);
-        setController(controller);
-        setAction(action);
-        setRouteName(name);
+        this.requestMethod = requestMethod;
+        this.path = path;
+        this.routeName = name;
     }
 
 
@@ -64,105 +54,30 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setRequestMethod(RequestMethod requestMethod) {
-        this.requestMethod = requestMethod;
-    }
-
-
+    @NotNull
     public RequestMethod getRequestMethod() {
         return requestMethod;
     }
 
 
-    public boolean isValid() {
-        return !path.isEmpty() && !controller.isEmpty();
+    /**
+     * Returns displayable text for route action in short format. Short format
+     * is used in routes table.
+     *
+     * @return Displayable text for route action, ex. "users#create"
+     */
+    public String getActionTitle() {
+        return getQualifiedActionTitle();
     }
 
 
     /**
-     * Returns route type. There are 3 types of routes:
-     *   1. DEFAULT - general route to some controller method
-     *   2. MOUNTED - route mounted to some Rack application
-     *   3. REDIRECT - route is a redirect to different route
+     * Returns qualified name for route action.
      *
-     * @return Route type
+     * @return Displayable text for route action, ex. "UsersController#create"
      */
-    public int getType() {
-        if (!controller.isEmpty() && action.isEmpty())
-            return MOUNTED;
-
-        if (controller != null && controller.equals(":controller") &&
-                action != null && action.equals(":action"))
-            return REDIRECT;
-
-        return DEFAULT;
-    }
-
-
-    /**
-     * Returns fully-qualified controller method name as it's writte in ruby, ex. 'UsersController#index'.
-     * If route is mounted, returns only the name of the controller.
-     *
-     * @return Fully qualified method name.
-     */
-    public String getControllerMethodName() {
-        int routeType = getType();
-
-        if (controller.isEmpty() || routeType == REDIRECT)
-            return "";
-
-        if (routeType == MOUNTED)
-            return controller;
-
-        return String.format("%sController#%s", toCamelCase(controller, false), action);
-    }
-
-
-    /**
-     * Returns displayable text for route action. If route leads to mounted Rack application, it will return base class.
-     *
-     * @return Displayable text for route action, ex. users#create
-     */
-    public String getActionText() {
-        switch (getType()) {
-            case MOUNTED:
-                return controller;
-            case REDIRECT:
-                return "[redirect]";
-            default:
-                return String.format("%s#%s", controller, action);
-        }
-    }
-
-
-    /**
-     * Converts string to camel case.
-     *
-     * @param value              String to convert
-     * @param startWithLowerCase Set to true if first letter should remain lower-case.
-     * @return String in CamelCase
-     */
-    private static String toCamelCase(String value, boolean startWithLowerCase) {
-        String[] strings = value.toLowerCase().split("_");
-        for (int i = startWithLowerCase ? 1 : 0; i < strings.length; i++) {
-            strings[i] = StringUtil.capitalize(strings[i]);
-        }
-
-        return StringUtil.join(strings);
-    }
-
-
-    /**
-     * Returns rack icon if the route is for mounted rack-application, otherwise returns icon for
-     * corresponding request method.
-     *
-     * @return Route icon.
-     */
-    public Icon getIcon() {
-        if (getType() == MOUNTED)
-            return RailwaysIcons.RACK_APPLICATION;
-
-        return getRequestMethod().getIcon();
+    public String getQualifiedActionTitle() {
+        return "";
     }
 
 
@@ -194,14 +109,14 @@ public class Route implements NavigationItem {
             @Nullable
             @Override
             public String getLocationString() {
-                return getActionText();
+                return getActionTitle();
             }
 
 
             @Nullable
             @Override
             public Icon getIcon(boolean unused) {
-                return route.getIcon();
+                return route.getRequestMethod().getIcon();
             }
         };
     }
@@ -209,36 +124,19 @@ public class Route implements NavigationItem {
 
     @Override
     public void navigate(boolean requestFocus) {
-        int routeType = getType();
-
-        if (routeType == Route.REDIRECT || routeType == Route.MOUNTED)
-            return;
-
-        RailsApp app = RailsApp.fromModule(module);
-        if ((app == null) || controller.isEmpty())
-            return;
-
-        RailsController ctrl = app.findController(controller);
-        if (ctrl == null)
-            return;
-
-        if (!action.isEmpty()) {
-            RMethod method = ctrl.getAction(action);
-            if (method != null)
-                method.navigate(requestFocus);
-        }
+        // This method should be overridden in subclasses that support navigation.
     }
 
 
     @Override
     public boolean canNavigate() {
-        return true;
+        return false;
     }
 
 
     @Override
     public boolean canNavigateToSource() {
-        return true;
+        return canNavigate();
     }
 
 
@@ -247,37 +145,51 @@ public class Route implements NavigationItem {
     }
 
 
-    public void setPath(String path) {
-        this.path = path;
+    public List<TextChunk> getPathChunks() {
+        if (pathChunks == null)
+            pathChunks = RoutePathParser.parse(getPath());
+
+        return pathChunks;
+    }
+
+
+    public List<TextChunk> getActionChunks() {
+        if (actionChunks == null)
+            actionChunks = RouteActionParser.parse(getActionTitle());
+
+        return actionChunks;
     }
 
 
     public String getRouteName() {
+        if (getParentEngine() != null)
+            return getParentEngine().getNamespace() + "." + routeName;
+
         return routeName;
     }
 
 
-    public void setRouteName(String name) {
-        this.routeName = name;
+    /**
+     * Checks route action status and sets isActionDeclarationFound flag.
+     *
+     * @param app Rails application which will be checked for controller action.
+     */
+    public void updateActionStatus(RailsApp app) {
+        // Should be overridden in subclasses if an update is required.
     }
 
 
-    public void setController(String value) {
-        controller = value;
+    @Nullable
+    public RailsEngine getParentEngine() {
+        return myParentEngine;
+    }
+
+    public void setParentEngine(RailsEngine parentEngine) {
+        myParentEngine = parentEngine;
     }
 
 
-    public void setAction(String value) {
-        action = value;
-    }
-
-
-    public String getController() {
-        return controller;
-    }
-
-
-    public String getAction() {
-        return action;
+    public Icon getActionIcon() {
+        return RailwaysIcons.UNKNOWN;
     }
 }

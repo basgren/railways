@@ -1,4 +1,4 @@
-package net.bitpot.railways.models.routes;
+package net.bitpot.railways.models.requestMethods;
 
 import net.bitpot.railways.gui.RailwaysIcons;
 import org.jetbrains.annotations.NotNull;
@@ -8,16 +8,16 @@ import javax.swing.*;
 /**
  * @author Basil Gren
  */
-public class PostRequestMethod extends RequestMethod {
+public class PatchRequestMethod extends RequestMethod {
     @Override
     public Icon getIcon() {
-        return RailwaysIcons.HTTP_METHOD_POST;
+        return RailwaysIcons.HTTP_METHOD_PUT;
     }
 
 
     @NotNull
     @Override
     public String getName() {
-        return "POST";
+        return "PATCH";
     }
 }

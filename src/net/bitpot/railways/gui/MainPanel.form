@@ -73,19 +73,21 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="2dde" binding="routeInfoPnl" layout-manager="FormLayout">
-                    <rowspec value="center:m:grow"/>
+                  <grid id="2dde" binding="routeInfoPanel" layout-manager="FormLayout">
+                    <rowspec value="center:p:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
-                    <rowspec value="center:m:grow"/>
+                    <rowspec value="center:p:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
-                    <rowspec value="center:m:grow"/>
+                    <rowspec value="center:p:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
-                    <rowspec value="center:m:grow"/>
+                    <rowspec value="center:p:noGrow"/>
                     <colspec value="center:p:noGrow"/>
                     <colspec value="left:4dlu:noGrow"/>
                     <colspec value="fill:d:grow"/>
                     <constraints border-constraint="South"/>
-                    <properties/>
+                    <properties>
+                      <preferredSize width="300" height="120"/>
+                    </properties>
                     <border type="empty">
                       <size top="4" left="4" bottom="4" right="4"/>
                     </border>
@@ -234,6 +236,8 @@
                 <rowspec value="top:4dlu:noGrow"/>
                 <rowspec value="center:max(d;4px):noGrow"/>
                 <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:max(d;4px):noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
                 <rowspec value="center:d:grow"/>
                 <colspec value="fill:d:grow"/>
                 <constraints>
@@ -249,12 +253,13 @@
                     </constraints>
                     <properties>
                       <horizontalAlignment value="0"/>
+                      <horizontalTextPosition value="0"/>
                       <text value="Failed to load routes"/>
                     </properties>
                   </component>
                   <vspacer id="ee0f3">
                     <constraints>
-                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <forms defaultalign-vert="false"/>
                     </constraints>
                   </vspacer>
@@ -266,10 +271,21 @@
                   </vspacer>
                   <component id="ed362" class="com.intellij.ui.HyperlinkLabel" binding="infoLink">
                     <constraints>
-                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                       <forms defaultalign-horz="false"/>
                     </constraints>
                     <properties/>
+                  </component>
+                  <component id="e0877" class="com.intellij.ui.components.JBLabel" binding="environmentLbl">
+                    <constraints>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <horizontalAlignment value="0"/>
+                      <horizontalTextPosition value="0"/>
+                      <text value=" Environment:"/>
+                    </properties>
                   </component>
                 </children>
               </grid>

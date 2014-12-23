@@ -76,6 +76,9 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     public static class State {
         // Name of rake task which retrieves routes.
         public String routesTaskName = "routes";
+
+        // Environment which is used to run rake task.
+        public String environment = null;
     }
 
 
@@ -214,11 +217,11 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
 
     /**
-     * Returns ruby exception stacktrace from output of executed rake-task.
+     * Returns ruby exception stack trace from output of executed rake-task.
      *
-     * @return Error stacktrace.
+     * @return Error stack trace.
      */
-    public String getParseErrorStacktrace() {
+    public String getParseErrorStackTrace() {
         return parser.getErrorStacktrace();
     }
 
@@ -264,7 +267,8 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
             routesUpdateIndicator = indicator;
 
             output = RailwaysUtils.queryRakeRoutes(getModule(),
-                    myModuleSettings.routesTaskName);
+                    myModuleSettings.routesTaskName,
+                    myModuleSettings.environment);
 
             if (output == null)
                 setState(UPDATED);
@@ -303,6 +307,8 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
      */
     private void parseRakeRoutesOutput(String stdOut, @Nullable String stdErr) {
         routeList = parser.parse(stdOut, stdErr);
+
+        RailwaysUtils.updateActionsStatus(getModule(), routeList);
 
         // After routes parsing we can have several situations:
         // 1. parser contains routes and isErrorReported = false. Everything is OK.

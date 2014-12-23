@@ -1,6 +1,28 @@
 Railways - Change Notes
 =======================
 
+### 0.8.1 (2014-12-22)
+
+* Highlight route action in list depending on its availability.
+* Add setting to specify Rails environment for which routes are collected.
+* Parse redirect routes.
+* Fix parsing - routes with unknown action format weren't added to list.
+
+
+### 0.8.0 (2014-12-06)
+
+* Add settings dialog to customize rake task that retrieves routes.
+* Live update route action status and icon (it's disabled in Power Save mode).
+* Implement navigation to route action implementation from engines, parent controllers and included modules.
+* Navigate to selected route action when Enter is pressed in routes list.
+* Navigate to controller class when route action cannot be found.
+* Fix displaying of engine routes.
+* Add hotkey for routes list refresh.
+* Change Routes tool window orientation depending on panel where it's docked to.
+* Persist selected module in Routes tool window between IDE restarts.
+* Minor fixes and UI improvements
+
+
 ### 0.7.1 (2014-03-16)
 
 * Fix plugin crash when IDE is run using Java 1.6

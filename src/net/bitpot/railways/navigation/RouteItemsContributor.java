@@ -60,7 +60,8 @@ public class RouteItemsContributor implements ChooseByNameContributor {
      */
     @NotNull
     @Override
-    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
+    public NavigationItem[] getItemsByName(String name, String pattern,
+                                           Project project, boolean includeNonProjectItems) {
         RouteList routes = myRoutesManager.getRouteList();
 
         return routes.getRoutesByName(name);
