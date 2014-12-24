@@ -146,6 +146,88 @@ public class MainPanel {
     }
 
 
+    private void initHandlers() {
+        // When filter field text is changed, routes table will be refiltered.
+        pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(DocumentEvent e) {
+                myTableModel.getFilter().setPathFilter(pathFilterField.getText());
+            }
+        });
+
+        // Register mouse handler to handle double-clicks.
+        // Double clicking a row will navigate to the action of selected route.
+        routesTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    JTable target = (JTable) e.getSource();
+                    navigateToRouteInRow(target.rowAtPoint(e.getPoint()));
+                }
+            }
+        });
+
+
+        routesTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JTable target = (JTable) e.getSource();
+                    navigateToRouteInRow(target.getSelectedRow());
+                }
+            }
+        });
+
+        // Bind handler that
+        routesTable.getSelectionModel().addListSelectionListener(
+                new RouteSelectionListener(routesTable));
+
+        infoLink.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+                if (rm == null)
+                    return;
+
+                switch (infoLinkAction) {
+                    case LINK_OPEN_SETTINGS:
+                        RailwaysUtils.invokeAction("Railways.settingsAction", project);
+                        break;
+
+                    default:
+                        RailwaysUtils.showErrorInfo(rm);
+                }
+
+            }
+        });
+
+        actionLbl.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (currentRoute != null)
+                    currentRoute.navigate(false);
+            }
+        });
+    }
+
+
+    /**
+     * Initializes Railways toolbar with actions defined in plugin.xml.
+     */
+    private void initToolbar() {
+        ActionManager am = ActionManager.getInstance();
+
+        // The toolbar is registered in plugin.xml
+        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
+
+        // Create railways toolbar.
+        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+
+        toolbar.setTargetComponent(actionsPanel);
+        actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
+    }
+
+
     /**
      * Initializes splitter that divides routes table and info panel.
      * We do this manually as there were difficulties with UI designer and
@@ -259,80 +341,18 @@ public class MainPanel {
     }
 
 
-    private void initHandlers() {
-        // When filter field text is changed, routes table will be refiltered.
-        pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
-            @Override
-            protected void textChanged(DocumentEvent e) {
-                myTableModel.getFilter().setPathFilter(pathFilterField.getText());
-            }
-        });
 
-        // Register mouse handler to handle double-clicks.
-        // Double clicking a row will navigate to the action of selected route.
-        routesTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    JTable target = (JTable) e.getSource();
-                    navigateToViewRow(target.rowAtPoint(e.getPoint()));
-                }
-            }
-        });
-
-
-        routesTable.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    JTable target = (JTable) e.getSource();
-                    navigateToViewRow(target.getSelectedRow());
-                }
-            }
-        });
-
-        // Bind handler that
-        routesTable.getSelectionModel().addListSelectionListener(
-                new RouteSelectionListener(routesTable));
-
-        infoLink.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
-                if (rm == null)
-                    return;
-
-                switch (infoLinkAction) {
-                    case LINK_OPEN_SETTINGS:
-                        RailwaysUtils.invokeAction("Railways.settingsAction", project);
-                        break;
-
-                    default:
-                        RailwaysUtils.showErrorInfo(rm);
-                }
-
-            }
-        });
-
-        actionLbl.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (currentRoute != null)
-                    currentRoute.navigate(false);
-            }
-        });
-    }
 
 
     /**
-     * Navigates to a route in specified viewRow, if row exists.
-     * @param viewRow Row index which contains route to navigate to.
+     * Navigates to a route in specified rowIndex, if row exists.
+     * @param rowIndex Row index in table view which contains route to navigate to.
      */
-    private void navigateToViewRow(int viewRow) {
-        if (viewRow < 0)
+    private void navigateToRouteInRow(int rowIndex) {
+        if (rowIndex < 0)
             return;
 
-        int row = routesTable.convertRowIndexToModel(viewRow);
+        int row = routesTable.convertRowIndexToModel(rowIndex);
         myTableModel.getRoute(row).navigate(false);
     }
 
@@ -350,23 +370,6 @@ public class MainPanel {
     private void updateCounterLabel() {
         routesCounterLbl.setText(String.format("%d/%d",
                 myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
-    }
-
-
-    /**
-     * Initializes Railways toolbar with actions defined in plugin.xml.
-     */
-    private void initToolbar() {
-        ActionManager am = ActionManager.getInstance();
-
-        // The toolbar is registered in plugin.xml
-        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
-
-        // Create railways toolbar.
-        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
-
-        toolbar.setTargetComponent(actionsPanel);
-        actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
     }
 
 
