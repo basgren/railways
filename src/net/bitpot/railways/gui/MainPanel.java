@@ -11,11 +11,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.models.RailsActionInfo;
-import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.RouteNode;
-import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.models.*;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.parser.RouteTreeBuilder;
@@ -28,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -180,7 +177,33 @@ public class MainPanel {
 
         // Bind handler that
         routesTable.getSelectionModel().addListSelectionListener(
-                new RouteSelectionListener(routesTable));
+                new RouteSelectionListener(routesTable)
+        );
+
+        routesTree.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    Tree target = (Tree) e.getSource();
+                    navigateToRouteNode((RouteNode) target.getLastSelectedPathComponent());
+                }
+            }
+        });
+
+
+        // Register mouse handler to handle double-clicks.
+        // Double clicking a row will navigate to the action of selected route.
+        routesTree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    Tree target = (Tree) e.getSource();
+                    TreePath path = target.getClosestPathForLocation(e.getX(), e.getY());
+                    navigateToRouteNode((RouteNode) path.getLastPathComponent());
+                }
+            }
+        });
+
 
         infoLink.addHyperlinkListener(new HyperlinkListener() {
             @Override
@@ -341,9 +364,6 @@ public class MainPanel {
     }
 
 
-
-
-
     /**
      * Navigates to a route in specified rowIndex, if row exists.
      * @param rowIndex Row index in table view which contains route to navigate to.
@@ -354,6 +374,14 @@ public class MainPanel {
 
         int row = routesTable.convertRowIndexToModel(rowIndex);
         myTableModel.getRoute(row).navigate(false);
+    }
+
+
+    private void navigateToRouteNode(RouteNode node) {
+        if ((node == null) || (!node.isLeaf()))
+            return;
+
+        node.getRoute().navigate(false);
     }
 
 
