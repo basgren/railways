@@ -23,6 +23,7 @@ import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
 import net.bitpot.railways.utils.RailwaysUtils;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -39,22 +40,17 @@ import java.awt.event.MouseEvent;
  */
 public class MainPanel {
 
-    private static final String CARD_TABLE_PANEL = "tablePanel";
-    private static final String CARD_TREE_PANEL = "treePanel";
-
-
-    private final static int PANEL_ROUTES = 0;
-    private final static int PANEL_MESSAGE = 1;
-    private final static int PANEL_ERROR = 2;
-
-
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(MainPanel.class.getName());
 
     // Names of cards for main panel that contains several pages.
     // Names should be the same as specified in GUI designer for appropriate panels.
-    private final static String ROUTES_CARD_NAME = "routesCard"; // Main page with routes table.
-    private final static String INFO_CARD_NAME = "infoCard"; // Panel with message/error information.
+    // Main page with routes table.
+    private final static String ROUTES_PANEL_NAME = "routesCard";
+
+    // Panel with message/error information.
+    private final static String INFO_PANEL_NAME = "infoCard";
+
 
     private final static String NO_INFO = "-";
 
@@ -101,7 +97,7 @@ public class MainPanel {
     private Route currentRoute;
 
     private int infoLinkAction;
-    private int currentPanel;
+    private String currentPanel;
 
     private JBSplitter mySplitter;
 
@@ -142,7 +138,7 @@ public class MainPanel {
         showRouteInfo(null);
 
         initSplitter();
-        showPanel(PANEL_ROUTES);
+        showPanel(ROUTES_PANEL_NAME);
     }
 
 
@@ -270,25 +266,17 @@ public class MainPanel {
     }
 
 
-    private void showPanel(int panel) {
-        if (currentPanel == panel)
+    private void showPanel(@NotNull String panelName) {
+        if (panelName.equals(currentPanel))
             return;
 
-        String panelName;
-
-        switch (panel) {
-            case PANEL_MESSAGE: panelName = INFO_CARD_NAME; break;
-            case PANEL_ERROR:   panelName = INFO_CARD_NAME; break;
-            default:            panelName = ROUTES_CARD_NAME; break;
-        }
-
-        infoLink.setVisible(panel == PANEL_ERROR);
-        environmentLbl.setVisible(panel == PANEL_MESSAGE);
-        setControlsEnabled(panel == PANEL_ROUTES);
+        infoLink.setVisible(panelName.equals(INFO_PANEL_NAME));
+        environmentLbl.setVisible(panelName.equals(INFO_PANEL_NAME));
+        setControlsEnabled(panelName.equals(ROUTES_PANEL_NAME));
 
         ((CardLayout)centerPanel.getLayout()).show(centerPanel, panelName);
 
-        currentPanel = panel;
+        currentPanel = panelName;
     }
 
     
@@ -328,14 +316,8 @@ public class MainPanel {
      * @param viewMode View mode.
      */
     public void setRoutesViewMode(int viewMode) {
-        String panelID;
-        switch (viewMode) {
-            case ViewConstants.VIEW_MODE_TREE:
-                panelID = CARD_TREE_PANEL;
-                break;
-            default:
-                panelID = CARD_TABLE_PANEL;
-        }
+        String panelID = (viewMode == ViewConstants.VIEW_MODE_TREE) ?
+            "treePanel" : "tablePanel";
 
         ((CardLayout)routeViews.getLayout()).show(routeViews, panelID);
     }
@@ -440,7 +422,7 @@ public class MainPanel {
         RouteNode root = RouteTreeBuilder.buildTree(routeList);
         routesTree.setModel(new DefaultTreeModel(root));
 
-        showPanel(PANEL_ROUTES);
+        showPanel(ROUTES_PANEL_NAME);
 
         UpdateRoutesListAction.updateIcon(project);
     }
@@ -464,13 +446,13 @@ public class MainPanel {
         environmentLbl.setVisible(true);
 
         infoLbl.setText(message);
-        showPanel(PANEL_MESSAGE);
+        showPanel(INFO_PANEL_NAME);
     }
 
 
     public void showRoutesUpdateError(int parserError) {
         updateErrorPanel(parserError);
-        showPanel(PANEL_ERROR);
+        showPanel(INFO_PANEL_NAME);
     
         UpdateRoutesListAction.updateIcon(project);
     }
