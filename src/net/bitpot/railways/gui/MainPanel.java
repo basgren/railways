@@ -9,7 +9,6 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
-import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.*;
 import net.bitpot.railways.models.routes.SimpleRoute;
@@ -25,12 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  *
@@ -114,9 +108,6 @@ public class MainPanel {
             }
         });
 
-        // Init routes tree
-        routesTree.setCellRenderer(new RouteTreeCellRenderer());
-
         updateCounterLabel();
 
         // Update route info panel
@@ -154,31 +145,6 @@ public class MainPanel {
                         RailwaysUtils.showErrorInfo(rm);
                 }
 
-            }
-        });
-
-
-        routesTree.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    Tree target = (Tree) e.getSource();
-                    navigateToRouteNode((RouteNode) target.getLastSelectedPathComponent());
-                }
-            }
-        });
-
-
-        // Register mouse handler to handle double-clicks.
-        // Double clicking a row will navigate to the action of selected route.
-        routesTree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    Tree target = (Tree) e.getSource();
-                    TreePath path = target.getClosestPathForLocation(e.getX(), e.getY());
-                    navigateToRouteNode((RouteNode) path.getLastPathComponent());
-                }
             }
         });
 
@@ -247,7 +213,7 @@ public class MainPanel {
         routesTable = new RoutesTable(getRouteTableModel(), this);
 
         // Create tree manually to get is with empty model.
-        routesTree = new Tree(new DefaultTreeModel(null));
+        routesTree = new RoutesTree(new DefaultTreeModel(null));
     }
 
 
@@ -313,15 +279,6 @@ public class MainPanel {
                 "treePanel" : "tablePanel";
 
         ((CardLayout) routeViews.getLayout()).show(routeViews, panelID);
-    }
-
-
-
-    private void navigateToRouteNode(RouteNode node) {
-        if ((node == null) || (!node.isLeaf()))
-            return;
-
-        node.getRoute().navigate(false);
     }
 
 
