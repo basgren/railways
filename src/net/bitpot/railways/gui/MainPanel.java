@@ -110,24 +110,12 @@ public class MainPanel {
         // Init handlers after everything is initialized
         initHandlers();
 
-        myTableModel = new RouteTableModel();
-        routesTable.setModel(myTableModel);
-
-        myTableModel.addTableModelListener(new TableModelListener() {
+        getRouteTableModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
                 updateCounterLabel();
             }
         });
-
-        // Init routes table
-        routesTable.setDefaultRenderer(Route.class,
-                new RouteCellRenderer(myTableModel.getFilter()));
-
-        routesTable.setDefaultRenderer(Object.class,
-                new FilterHighlightRenderer(myTableModel.getFilter()));
-
-        routesTable.setRowHeight(20);
 
         // Init routes tree
         routesTree.setCellRenderer(new RouteTreeCellRenderer());
@@ -147,36 +135,11 @@ public class MainPanel {
         pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent e) {
-                myTableModel.getFilter().setPathFilter(pathFilterField.getText());
+                getRouteTableModel().getFilter().
+                        setPathFilter(pathFilterField.getText());
             }
         });
 
-        // Register mouse handler to handle double-clicks.
-        // Double clicking a row will navigate to the action of selected route.
-        routesTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    JTable target = (JTable) e.getSource();
-                    navigateToRouteInRow(target.rowAtPoint(e.getPoint()));
-                }
-            }
-        });
-
-
-        routesTable.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    JTable target = (JTable) e.getSource();
-                    navigateToRouteInRow(target.getSelectedRow());
-                }
-            }
-        });
-
-        // Bind handler that
-        routesTable.getSelectionModel().addListSelectionListener(
-                new RouteSelectionListener(routesTable));
 
         infoLink.addHyperlinkListener(new HyperlinkListener() {
             @Override
@@ -259,10 +222,18 @@ public class MainPanel {
      */
     private void createUIComponents() {
         // Create custom table
-        routesTable = new RoutesTable();
+        routesTable = new RoutesTable(getRouteTableModel(), this);
 
         // Create tree manually to get is with empty model.
         routesTree = new Tree(new DefaultTreeModel(null));
+    }
+
+
+    public RouteTableModel getRouteTableModel() {
+        if (myTableModel == null)
+            myTableModel = new RouteTableModel();
+
+        return myTableModel;
     }
 
 
@@ -323,22 +294,6 @@ public class MainPanel {
     }
 
 
-
-
-
-    /**
-     * Navigates to a route in specified rowIndex, if row exists.
-     * @param rowIndex Row index in table view which contains route to navigate to.
-     */
-    private void navigateToRouteInRow(int rowIndex) {
-        if (rowIndex < 0)
-            return;
-
-        int row = routesTable.convertRowIndexToModel(rowIndex);
-        myTableModel.getRoute(row).navigate(false);
-    }
-
-
     private void setControlsEnabled(boolean value) {
         pathFilterField.setEnabled(value);
         routesCounterLbl.setVisible(value);
@@ -351,7 +306,8 @@ public class MainPanel {
      */
     private void updateCounterLabel() {
         routesCounterLbl.setText(String.format("%d/%d",
-                myTableModel.getRowCount(), myTableModel.getTotalRoutesCount()));
+                getRouteTableModel().getRowCount(),
+                getRouteTableModel().getTotalRoutesCount()));
     }
 
 
@@ -366,7 +322,7 @@ public class MainPanel {
      * @param route Route which info should be showed or nil if info should be
      *              hidden.
      */
-    private void showRouteInfo(@Nullable Route route) {
+    public void showRouteInfo(@Nullable Route route) {
         currentRoute = route;
 
         if (route == null) {
@@ -416,7 +372,7 @@ public class MainPanel {
     //         Railways event handlers
 
     public void setUpdatedRoutes(RouteList routeList) {
-        myTableModel.setRoutes(routeList);
+        getRouteTableModel().setRoutes(routeList);
 
         // Update tree view
         RouteNode root = RouteTreeBuilder.buildTree(routeList);
@@ -471,39 +427,13 @@ public class MainPanel {
 
         RouteList routes =
                 (dataSource != null) ? dataSource.getRoutesManager().getRouteList() : null;
-        myTableModel.setRoutes(routes);
+        getRouteTableModel().setRoutes(routes);
     }
 
 
     public void refresh() {
         // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
-        myTableModel.fireTableRowsUpdated(0, myTableModel.getRowCount() - 1);
-    }
-
-
-    private class RouteSelectionListener implements ListSelectionListener {
-        private JTable table;
-
-
-        public RouteSelectionListener(JTable table) {
-            this.table = table;
-        }
-
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            if (e.getValueIsAdjusting())
-                return;
-
-            RouteTableModel model = (RouteTableModel) table.getModel();
-
-            int id = table.convertRowIndexToModel(table.getSelectedRow());
-            Route route = null;
-
-            if (id >= 0)
-                route = model.getRoute(id);
-
-            showRouteInfo(route);
-        }
+        getRouteTableModel().fireTableRowsUpdated(0,
+                getRouteTableModel().getRowCount() - 1);
     }
 }

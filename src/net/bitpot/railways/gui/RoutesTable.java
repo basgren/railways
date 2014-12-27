@@ -11,8 +11,14 @@ import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 
@@ -29,15 +35,73 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
     private static Logger log = Logger.getInstance(RoutesTable.class.getName());
 
 
+    private MainPanel parentPanel;
+
+
     /**
      * Constructs a default <code>JTable</code> that is initialized with a default
      * data model, a default column model, and a default selection
      * model.
      */
-    public RoutesTable() {
+    public RoutesTable(@NotNull RouteTableModel tableModel,
+                       @NotNull MainPanel parentPanel) {
         super();
 
+        setModel(tableModel);
+        this.parentPanel = parentPanel;
+
+        // Init routes table
+        setDefaultRenderer(Route.class,
+                new RouteCellRenderer(tableModel.getFilter()));
+
+        setDefaultRenderer(Object.class,
+                new FilterHighlightRenderer(tableModel.getFilter()));
+
+        setRowHeight(20);
+
+        // ---=== Event handlers ===---
+
         addMouseListener(new MyPopupHandler());
+
+
+        getSelectionModel().addListSelectionListener(
+                new RouteSelectionListener(this));
+
+        // Register mouse handler to handle double-clicks.
+        // Double clicking a row will navigate to the action of selected route.
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    JTable target = (JTable) e.getSource();
+                    navigateToRouteInRow(target.rowAtPoint(e.getPoint()));
+                }
+            }
+        });
+
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JTable target = (JTable) e.getSource();
+                    navigateToRouteInRow(target.getSelectedRow());
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Navigates to a route in specified rowIndex, if row exists.
+     * @param rowIndex Row index in table view which contains route to navigate to.
+     */
+    private void navigateToRouteInRow(int rowIndex) {
+        if (rowIndex < 0)
+            return;
+
+        int row = convertRowIndexToModel(rowIndex);
+        parentPanel.getRouteTableModel().getRoute(row).navigate(false);
     }
 
 
@@ -89,6 +153,30 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
     @Override
     public boolean isCopyVisible(@NotNull DataContext dataContext) {
         return true;
+    }
+
+
+    private class RouteSelectionListener implements ListSelectionListener {
+        private JTable table;
+
+
+        public RouteSelectionListener(JTable table) {
+            this.table = table;
+        }
+
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (e.getValueIsAdjusting())
+                return;
+
+            int id = table.convertRowIndexToModel(table.getSelectedRow());
+            if (id < 0)
+                return;
+
+            Route route = ((RouteTableModel) table.getModel()).getRoute(id);
+            parentPanel.showRouteInfo(route);
+        }
     }
 
 

@@ -138,7 +138,7 @@
                           <forms/>
                         </constraints>
                         <properties>
-                          <minimumSize width="4" height="17"/>
+                          <minimumSize width="4" height="19"/>
                         </properties>
                       </component>
                       <component id="79496" class="javax.swing.JLabel" binding="routeLbl">
@@ -193,6 +193,7 @@
                               <component id="67092" class="com.intellij.ui.table.JBTable" binding="routesTable" custom-create="true">
                                 <constraints/>
                                 <properties>
+                                  <autoCreateRowSorter value="true"/>
                                   <rowMargin value="0"/>
                                   <showHorizontalLines value="true"/>
                                   <showVerticalLines value="true"/>
