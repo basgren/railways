@@ -274,15 +274,29 @@ public class MainPanel {
      * @param viewMode View mode.
      */
     public void setRoutesViewMode(int viewMode) {
-        String panelID = (viewMode == ViewConstants.VIEW_MODE_TREE) ?
-                "treePanel" : "tablePanel";
+        String panelID;
+        boolean restoreFocus;
+
+        if (viewMode == ViewConstants.VIEW_MODE_TREE) {
+            panelID = "treePanel";
+            restoreFocus = routesTable.isFocusOwner();
+        } else {
+            panelID = "tablePanel";
+            restoreFocus = routesTree.isFocusOwner();
+        }
 
         ((CardLayout) routeViews.getLayout()).show(routeViews, panelID);
 
-        if (viewMode == ViewConstants.VIEW_MODE_TREE)
+        if (viewMode == ViewConstants.VIEW_MODE_TREE) {
             routesTree.updateNodeInfo();
-        else
+            if (restoreFocus)
+                routesTree.requestFocusInWindow();
+        } else {
             routesTable.updateNodeInfo();
+            if (restoreFocus)
+                routesTable.requestFocusInWindow();
+        }
+
     }
 
 
