@@ -73,4 +73,10 @@ public abstract class RequestMethod {
     public static Collection<RequestMethod> getAllRequestMethods() {
         return requestMethods;
     }
+
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

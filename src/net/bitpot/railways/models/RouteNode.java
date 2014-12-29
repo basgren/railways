@@ -67,4 +67,15 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
     public Route getRoute() {
         return route;
     }
+
+
+
+    @Override
+    public String toString() {
+        String s = getTitle();
+        if (route != null)
+            s = s + " [" + route.getRequestMethod() + " " + route.getPath() + "]";
+
+        return s;
+    }
 }

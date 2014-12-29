@@ -213,7 +213,7 @@ public class MainPanel {
         routesTable = new RoutesTable(getRouteTableModel(), this);
 
         // Create tree manually to get is with empty model.
-        routesTree = new RoutesTree(new DefaultTreeModel(null));
+        routesTree = new RoutesTree(new DefaultTreeModel(null), this);
     }
 
 

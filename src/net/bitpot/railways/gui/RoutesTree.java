@@ -2,7 +2,10 @@ package net.bitpot.railways.gui;
 
 import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.models.RouteNode;
+import org.jetbrains.annotations.NotNull;
 
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -17,8 +20,13 @@ import java.awt.event.MouseEvent;
  */
 public class RoutesTree extends Tree {
 
-    public RoutesTree(TreeModel treemodel) {
+    private MainPanel parentPanel;
+
+    public RoutesTree(@NotNull TreeModel treemodel,
+                      @NotNull MainPanel parentPanel) {
         super(treemodel);
+
+        this.parentPanel = parentPanel;
 
         // Init routes tree
         setCellRenderer(new RouteTreeCellRenderer());
@@ -54,6 +62,19 @@ public class RoutesTree extends Tree {
                 }
             }
         });
+
+        getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                updateNodeInfo();
+            }
+        });
+    }
+
+
+    public void updateNodeInfo() {
+        RouteNode node = (RouteNode)getLastSelectedPathComponent();
+        parentPanel.showRouteInfo(node.getRoute());
     }
 
 
