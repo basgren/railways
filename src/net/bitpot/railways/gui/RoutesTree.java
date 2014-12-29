@@ -5,6 +5,7 @@ import net.bitpot.railways.models.RouteNode;
 
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -21,6 +22,9 @@ public class RoutesTree extends Tree {
 
         // Init routes tree
         setCellRenderer(new RouteTreeCellRenderer());
+
+        // Single node select
+        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         initHandlers();
     }
