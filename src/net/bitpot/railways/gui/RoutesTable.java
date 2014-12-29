@@ -64,8 +64,14 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
         addMouseListener(new MyPopupHandler());
 
 
-        getSelectionModel().addListSelectionListener(
-                new RouteSelectionListener(this));
+        getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting())
+                    updateNodeInfo();
+            }
+        });
+
 
         // Register mouse handler to handle double-clicks.
         // Double clicking a row will navigate to the action of selected route.
@@ -156,27 +162,13 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
     }
 
 
-    private class RouteSelectionListener implements ListSelectionListener {
-        private JTable table;
+    public void updateNodeInfo() {
+        int id = convertRowIndexToModel(getSelectedRow());
+        if (id < 0)
+            return;
 
-
-        public RouteSelectionListener(JTable table) {
-            this.table = table;
-        }
-
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            if (e.getValueIsAdjusting())
-                return;
-
-            int id = table.convertRowIndexToModel(table.getSelectedRow());
-            if (id < 0)
-                return;
-
-            Route route = ((RouteTableModel) table.getModel()).getRoute(id);
-            parentPanel.showRouteInfo(route);
-        }
+        Route route = ((RouteTableModel) getModel()).getRoute(id);
+        parentPanel.showRouteInfo(route);
     }
 
 

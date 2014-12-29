@@ -74,7 +74,7 @@ public class RoutesTree extends Tree {
 
     public void updateNodeInfo() {
         RouteNode node = (RouteNode)getLastSelectedPathComponent();
-        parentPanel.showRouteInfo(node.getRoute());
+        parentPanel.showRouteInfo(node != null ? node.getRoute() : null);
     }
 
 

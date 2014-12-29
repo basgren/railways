@@ -138,7 +138,7 @@
                           <forms/>
                         </constraints>
                         <properties>
-                          <minimumSize width="4" height="19"/>
+                          <minimumSize width="4" height="17"/>
                         </properties>
                       </component>
                       <component id="79496" class="javax.swing.JLabel" binding="routeLbl">
@@ -190,10 +190,9 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="67092" class="com.intellij.ui.table.JBTable" binding="routesTable" custom-create="true">
+                              <component id="373dd" class="net.bitpot.railways.gui.RoutesTable" binding="routesTable" custom-create="true">
                                 <constraints/>
                                 <properties>
-                                  <autoCreateRowSorter value="false"/>
                                   <rowMargin value="0"/>
                                   <showHorizontalLines value="true"/>
                                   <showVerticalLines value="true"/>
@@ -216,7 +215,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="992d2" class="com.intellij.ui.treeStructure.Tree" binding="routesTree" custom-create="true">
+                              <component id="1da9b" class="net.bitpot.railways.gui.RoutesTree" binding="routesTree" custom-create="true">
                                 <constraints/>
                                 <properties>
                                   <rootVisible value="false"/>

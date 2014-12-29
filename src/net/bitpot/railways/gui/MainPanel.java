@@ -8,7 +8,6 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.*;
 import net.bitpot.railways.models.routes.SimpleRoute;
@@ -52,7 +51,7 @@ public class MainPanel {
     private RouteTableModel myTableModel;
 
     private JPanel rootPanel;
-    private JBTable routesTable;
+    private RoutesTable routesTable;
     private JTextField pathFilterField;
     private JPanel centerPanel;
     private HyperlinkLabel infoLink;
@@ -71,7 +70,7 @@ public class MainPanel {
     private JPanel routesPanel;
     private JPanel routesErrorPanel;
     private JPanel routesTreeviewPanel;
-    private JTree routesTree;
+    private RoutesTree routesTree;
     private JPanel routesTablePanel;
     private JPanel routeViews;
     private JBLabel environmentLbl;
@@ -279,6 +278,11 @@ public class MainPanel {
                 "treePanel" : "tablePanel";
 
         ((CardLayout) routeViews.getLayout()).show(routeViews, panelID);
+
+        if (viewMode == ViewConstants.VIEW_MODE_TREE)
+            routesTree.updateNodeInfo();
+        else
+            routesTable.updateNodeInfo();
     }
 
 
