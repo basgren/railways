@@ -53,7 +53,8 @@ public class RouteActionParseTest {
 
     @Test
     public void testParseRoute() {
-        List<TextChunk> chunks = RouteActionParser.parse(myActionStr);
+        List<TextChunk> chunks = RouteActionParser.getInstance()
+                .parse(myActionStr);
 
         assertEquals("Chunk lists have the same length",
                 expectedChunks.length, chunks.size());

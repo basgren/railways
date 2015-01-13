@@ -19,6 +19,16 @@ public class RoutePathParser extends TextChunkHighlighter {
     private static final Pattern PARAMETER = Pattern.compile("^:[a-zA-Z_]+");
 
 
+    private static RoutePathParser instance = null;
+
+    public static RoutePathParser getInstance() {
+        if (instance == null)
+            instance = new RoutePathParser();
+
+        return instance;
+    }
+
+
     /**
      * Parses Rails route and returns array of tokens.
      *
@@ -112,5 +122,12 @@ public class RoutePathParser extends TextChunkHighlighter {
         return new RoutePathChunk(routePart.substring(startPos, endPos),
                 isBalanced ? RoutePathChunk.OPTIONAL : RoutePathChunk.PLAIN,
                 startPos);
+    }
+
+
+    @NotNull
+    @Override
+    protected TextChunk createChunk(@NotNull String text, int chunkType, int offsetAbs) {
+        return new RoutePathChunk(text, chunkType, offsetAbs);
     }
 }

@@ -15,7 +15,8 @@ import static org.junit.Assert.assertEquals;
 public class TextChunkHighlightTest
 {
     private List<TextChunk> parseAndHighlight(String subject, String hlStr) {
-        return RoutePathParser.highlight(RoutePathParser.parse(subject), hlStr);
+        return RoutePathParser.getInstance()
+                .highlight(RoutePathParser.parse(subject), hlStr);
     }
     
     private List<TextChunk> createChunkList(TextChunk... chunks) {

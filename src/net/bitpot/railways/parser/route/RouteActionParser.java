@@ -1,6 +1,6 @@
 package net.bitpot.railways.parser.route;
 
-import org.antlr.v4.runtime.misc.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,18 @@ import java.util.List;
  */
 public class RouteActionParser extends TextChunkHighlighter {
 
+    private static RouteActionParser instance = null;
+
+    public static RouteActionParser getInstance() {
+        if (instance == null)
+            instance = new RouteActionParser();
+
+        return instance;
+    }
+
+
     @NotNull
-    public static List<TextChunk> parse(String subject) {
+    public List<TextChunk> parse(String subject) {
         List<TextChunk> chunks = new ArrayList<TextChunk>();
 
         if (subject.trim().equals(""))
@@ -33,5 +43,12 @@ public class RouteActionParser extends TextChunkHighlighter {
                     RouteActionChunk.CONTAINER, 0));
 
         return chunks;
+    }
+
+
+    @NotNull
+    @Override
+    protected TextChunk createChunk(@NotNull String text, int chunkType, int offsetAbs) {
+        return new RouteActionChunk(text, chunkType, offsetAbs);
     }
 }
