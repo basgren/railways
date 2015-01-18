@@ -21,6 +21,8 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
     public RouteCellRenderer(@NotNull RoutesFilter filter) {
         super(filter);
+
+        setTransparentIconBackground(true);
     }
 
 
