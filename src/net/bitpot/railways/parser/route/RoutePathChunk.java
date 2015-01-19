@@ -2,6 +2,7 @@ package net.bitpot.railways.parser.route;
 
 import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.gui.RailwaysColors;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Basil Gren
@@ -13,7 +14,7 @@ public class RoutePathChunk extends TextChunk {
     public final static int OPTIONAL = 2;
 
 
-    public RoutePathChunk(String text, int chunkType, int offsetAbs) {
+    public RoutePathChunk(@NotNull String text, int chunkType, int offsetAbs) {
         super(text, chunkType, offsetAbs);
     }
 

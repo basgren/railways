@@ -1,5 +1,7 @@
 package net.bitpot.railways.parser.route;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,11 +10,11 @@ import java.util.List;
  * @author Basil Gren
  *         on 09.12.2014.
  */
-public class TextChunkHighlighter {
+public abstract class TextChunkHighlighter {
 
 
-    public static List<TextChunk> highlight(List<TextChunk> textChunks,
-                                        String highlightSubstr) {
+    public List<TextChunk> highlight(List<TextChunk> textChunks,
+                                     String highlightSubstr) {
 
         highlightSubstr = highlightSubstr.trim();
         ArrayList<TextChunk> result = new ArrayList<TextChunk>();
@@ -26,7 +28,7 @@ public class TextChunkHighlighter {
         if (regions == null)
             return textChunks;
 
-        // Now go through every RoutePathChunk and break it down if it intersects
+        // Now go through every TextChunk and break it down if it intersects
         // with any region. Token type is preserved.
         for(TextChunk chunk: textChunks)
             highlightChunk(chunk, regions, result);
@@ -45,7 +47,7 @@ public class TextChunkHighlighter {
      * @return Array of substring regions (begin and end offsets) or null if
      *         specified substring is empty.
      */
-    private static List<TextRegion> findSubstringRegions(String s, String subStr) {
+    private List<TextRegion> findSubstringRegions(String s, String subStr) {
         // Prevent infinite loop
         if (subStr.equals(""))
             return null;
@@ -77,7 +79,7 @@ public class TextChunkHighlighter {
      *                           should be highlighted.
      * @param chunkList Target chunk collection, that will receive new chunks.
      */
-    private static void highlightChunk(TextChunk chunk,
+    private void highlightChunk(TextChunk chunk,
                                        List<TextRegion> highlightedRegions,
                                        Collection<TextChunk> chunkList) {
         int newChunkSize;
@@ -101,7 +103,7 @@ public class TextChunkHighlighter {
             // 1st part - between chunk begin and intersection begin
             newChunkSize = intersectionBegin - offsAbs;
             if (newChunkSize > 0) {
-                chunkList.add(new RoutePathChunk(
+                chunkList.add(createChunk(
                         chunk.getText().substring(offsRel, offsRel + newChunkSize),
                         chunk.getType(), offsAbs));
                 offsRel += newChunkSize;
@@ -110,7 +112,7 @@ public class TextChunkHighlighter {
             // 2nd part - intersection itself (highlighted part).
             newChunkSize = intersectionEnd - intersectionBegin;
             if (newChunkSize > 0) {
-                RoutePathChunk hlToken = new RoutePathChunk(
+                TextChunk hlToken = createChunk(
                         chunk.getText().substring(offsRel, offsRel + newChunkSize),
                         chunk.getType(), intersectionBegin);
                 hlToken.setHighlighted(true);
@@ -123,11 +125,16 @@ public class TextChunkHighlighter {
         // the last part - between intersection and chunk end, if it's necessary
         newChunkSize = chunk.getText().length() - offsRel;
         if (newChunkSize > 0) {
-            chunkList.add(new RoutePathChunk(
+            chunkList.add(createChunk(
                     chunk.getText().substring(offsRel, offsRel + newChunkSize),
                     chunk.getType(), chunk.getBeginOffset() + offsRel));
         }
     }
+
+
+    @NotNull
+    protected abstract TextChunk createChunk(@NotNull String text,
+                                             int chunkType, int offsetAbs);
 
 
     private static class TextRegion {

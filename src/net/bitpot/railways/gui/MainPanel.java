@@ -24,6 +24,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -154,6 +158,11 @@ public class MainPanel {
                     currentRoute.navigate(false);
             }
         });
+    }
+
+
+    private void createUIComponents() {
+        routesTable = new RoutesTable();
     }
 
 
@@ -297,6 +306,19 @@ public class MainPanel {
                 routesTable.requestFocusInWindow();
         }
 
+    }
+
+
+    /**
+     * Navigates to a route in specified viewRow, if row exists.
+     * @param viewRow Row index which contains route to navigate to.
+     */
+    private void navigateToViewRow(int viewRow) {
+        if (viewRow < 0)
+            return;
+
+        int row = routesTable.convertRowIndexToModel(viewRow);
+        myTableModel.getRoute(row).navigate(false);
     }
 
 

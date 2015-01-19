@@ -155,7 +155,7 @@ public class Route implements NavigationItem {
 
     public List<TextChunk> getActionChunks() {
         if (actionChunks == null)
-            actionChunks = RouteActionParser.parse(getActionTitle());
+            actionChunks = RouteActionParser.getInstance().parse(getActionTitle());
 
         return actionChunks;
     }

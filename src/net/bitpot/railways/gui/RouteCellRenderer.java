@@ -21,6 +21,8 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
     public RouteCellRenderer(@NotNull RoutesFilter filter) {
         super(filter);
+
+        setTransparentIconBackground(true);
     }
 
 
@@ -64,7 +66,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         setToolTipText(tooltipText);
 
         // Now append text taking into account colors and highlighting.
-        List<TextChunk> chunks = TextChunkHighlighter.highlight(
+        List<TextChunk> chunks = RouteActionParser.getInstance().highlight(
                 route.getActionChunks(), getFilter().getPathFilter());
 
         for(TextChunk chunk: chunks) {
@@ -88,7 +90,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRoutePath(Route route) {
-        List<TextChunk> chunks = TextChunkHighlighter.highlight(
+        List<TextChunk> chunks = RoutePathParser.getInstance().highlight(
                 route.getPathChunks(), getFilter().getPathFilter());
 
         for(TextChunk chunk: chunks)
@@ -98,3 +100,37 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         setIcon(route.getRequestMethod().getIcon());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
