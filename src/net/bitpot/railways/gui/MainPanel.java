@@ -161,11 +161,6 @@ public class MainPanel {
     }
 
 
-    private void createUIComponents() {
-        routesTable = new RoutesTable();
-    }
-
-
     /**
      * Initializes Railways toolbar with actions defined in plugin.xml.
      */
