@@ -155,21 +155,14 @@
                 description="Shows routes as a tree."
                 icon="/actions/showAsTree.png"/>
 
-        <action id="railways.ExpandAll"
-                class="net.bitpot.railways.actions.ExpandAllAction"
-                text="Expand all"
-                icon="/actions/expandall.png" />
 
-        <action id="railways.CollapseAll"
-                class="net.bitpot.railways.actions.CollapseAllAction"
-                text="Collapse all"
-                icon="/actions/collapseall.png" />
+        <group id="railways.TreeActionsGroup">
+            <reference ref="railways.ShowAsTree"/>
+        </group>
 
 
         <group id="railways.MainToolbar">
-            <reference ref="railways.ShowAsTree"/>
-            <reference ref="railways.ExpandAll"/>
-            <reference ref="railways.CollapseAll"/>
+            <reference ref="railways.TreeActionsGroup"/>
             <separator/>
             <reference ref="railways.UpdateRoutesList"/>
             <reference ref="Railways.settingsAction"/>

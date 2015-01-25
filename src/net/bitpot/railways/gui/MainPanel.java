@@ -1,5 +1,7 @@
 package net.bitpot.railways.gui;
 
+import com.intellij.ide.CommonActionsManager;
+import com.intellij.ide.TreeExpander;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -8,6 +10,7 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.ui.tree.TreeUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.*;
 import net.bitpot.railways.models.routes.SimpleRoute;
@@ -24,10 +27,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  *
@@ -75,6 +74,7 @@ public class MainPanel {
     private JPanel routesErrorPanel;
     private JPanel routesTreeviewPanel;
     private RoutesTree routesTree;
+    private MyTreeExpander myTreeExpander = new MyTreeExpander();
     private JPanel routesTablePanel;
     private JPanel routeViews;
     private JBLabel environmentLbl;
@@ -167,11 +167,21 @@ public class MainPanel {
     private void initToolbar() {
         ActionManager am = ActionManager.getInstance();
 
+        // Add common expand/collapse actions.
+        DefaultActionGroup treeGroup = (DefaultActionGroup) am.getAction("railways.TreeActionsGroup");
+        AnAction expandAllAction = CommonActionsManager.getInstance()
+                .createExpandAllAction(myTreeExpander, getRootPanel());
+        treeGroup.add(expandAllAction);
+
+        AnAction collapseAllAction = CommonActionsManager.getInstance()
+                .createCollapseAllAction(myTreeExpander, getRootPanel());
+        treeGroup.add(collapseAllAction);
+
         // The toolbar is registered in plugin.xml
-        ActionGroup actionGroup = (ActionGroup) am.getAction("railways.MainToolbar");
+        DefaultActionGroup toolbarGroup = (DefaultActionGroup) am.getAction("railways.MainToolbar");
 
         // Create railways toolbar.
-        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+        ActionToolbar toolbar = am.createActionToolbar(ActionPlaces.UNKNOWN, toolbarGroup, true);
 
         toolbar.setTargetComponent(actionsPanel);
         actionsPanel.add(toolbar.getComponent(), BorderLayout.CENTER);
@@ -458,5 +468,28 @@ public class MainPanel {
         // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
         getRouteTableModel().fireTableRowsUpdated(0,
                 getRouteTableModel().getRowCount() - 1);
+    }
+
+
+    private final class MyTreeExpander implements TreeExpander {
+        @Override
+        public boolean canCollapse() {
+            return true;
+        }
+
+        @Override
+        public boolean canExpand() {
+            return true;
+        }
+
+        @Override
+        public void collapseAll() {
+            TreeUtil.collapseAll(routesTree, 0);
+        }
+
+        @Override
+        public void expandAll() {
+            TreeUtil.expandAll(routesTree);
+        }
     }
 }

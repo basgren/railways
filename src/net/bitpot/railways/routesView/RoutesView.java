@@ -3,7 +3,6 @@ package net.bitpot.railways.routesView;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
