@@ -84,6 +84,9 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
         // Environment which is used to run rake task.
         public String environment = null;
+
+        // Automatically update routes when routes.rb file is changed.
+        public Boolean autoUpdate = false;
     }
 
 

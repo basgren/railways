@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="net.bitpot.railways.gui.RailwaysSettingsForm">
   <grid id="27dc6" binding="rootPanel" layout-manager="FormLayout">
-    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="center:max(p;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:p:noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(p;4px):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:d:grow"/>
     <colspec value="fill:p:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:grow"/>
     <constraints>
-      <xy x="20" y="20" width="450" height="82"/>
+      <xy x="20" y="20" width="450" height="124"/>
     </constraints>
     <properties>
-      <minimumSize width="450" height="45"/>
-      <preferredSize width="450" height="80"/>
+      <minimumSize width="450" height="120"/>
+      <preferredSize width="450" height="120"/>
     </properties>
     <border type="none"/>
     <children>
@@ -57,6 +61,21 @@
           <text value="Environment"/>
         </properties>
       </component>
+      <component id="26c9e" class="javax.swing.JCheckBox" binding="autoUpdateChk">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="Auto update routes list on routes.rb change"/>
+        </properties>
+      </component>
+      <vspacer id="364d2">
+        <constraints>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+      </vspacer>
     </children>
   </grid>
 </form>

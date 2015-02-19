@@ -27,6 +27,7 @@ public class RailwaysSettingsForm {
     // default constructor, so we'd better use parent class LanguageTextField.
     private LanguageTextField routesTaskEdit;
     private JComboBox environmentCombo;
+    private JCheckBox autoUpdateChk;
 
     private final Module myModule;
 
@@ -98,8 +99,8 @@ public class RailwaysSettingsForm {
         RoutesManager.State settings = getSettings();
 
         routesTaskEdit.setText(settings.routesTaskName);
-
         initRailsEnvsComboBox(settings.environment, environmentCombo, myModule);
+        autoUpdateChk.setSelected(settings.autoUpdate);
     }
 
 
@@ -112,6 +113,7 @@ public class RailwaysSettingsForm {
         settings.routesTaskName = routesTaskEdit.getText();
         settings.environment = environmentCombo.getSelectedIndex() == 0 ? null :
                 (String)(environmentCombo.getSelectedItem());
+        settings.autoUpdate = autoUpdateChk.isSelected();
     }
 
 

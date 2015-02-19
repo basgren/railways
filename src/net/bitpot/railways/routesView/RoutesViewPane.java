@@ -119,7 +119,7 @@ public class RoutesViewPane implements Disposable {
 
         @Override
         public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
-            if (PowerSaveMode.isEnabled())
+            if (PowerSaveMode.isEnabled() || !myRoutesManager.getState().autoUpdate)
                 return;
 
             // Handle only changes in routes file.
