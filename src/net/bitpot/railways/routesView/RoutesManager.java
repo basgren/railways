@@ -77,9 +77,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
     private State myModuleSettings = new State();
     
-    private VirtualFile routesFile = null;
-
-
+    
     public static class State {
         // Name of rake task which retrieves routes.
         public String routesTaskName = "routes";
@@ -99,49 +97,8 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     public RoutesManager(Module railsModule) {
         parser = new RailsRoutesParser(railsModule);
         module = railsModule;
-
-        // TODO: check behavior when module is unloaded.
-        RailsApp app = RailsApp.fromModule(module);
-        if (app != null) {
-            routesFile = app.getRoutesFile();
-            System.out.println(">> Registering PsiTreeChangeListener");
-            
-            PsiManager.getInstance(module.getProject())
-                    .addPsiTreeChangeListener(new MyPsiTreeChangeAdapter());       
-        }
     }
 
-    
-    private class MyPsiTreeChangeAdapter extends PsiTreeChangeAdapter {
-        private final Alarm alarm = new Alarm();
-        
-        // TODO: move closer to toolwindow class to check whether it's visible - in this case we can skip update for performance.
-        @Override
-        public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
-            if (PowerSaveMode.isEnabled())
-                return;
-            
-            PsiFile f = event.getFile();
-            if (f == null || !f.getVirtualFile().equals(routesFile))
-                return;
-
-            alarm.cancelAllRequests();
-            alarm.addRequest(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println(">> " + module + ": childrenChanged: ");
-                    
-                    // Save all documents to make sure that requestMethods will be collected using actual files.
-                    FileDocumentManager.getInstance().saveAllDocuments();
-                    
-                    //updateRouteList();
-                    RailwaysUtils.invokeAction("railways.UpdateRoutesList", module.getProject());
-                }
-            }, 500, ModalityState.NON_MODAL);
-        }
-    }
-    
-    
 
     /**
      * Returns current state of RouteManager.
@@ -251,8 +208,10 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
         if (isUpdating())
             return false;
 
-        //PsiDocumentManager.getInstance(module.getProject()).commitAllDocuments();
         setState(UPDATING);
+
+        // Save all documents to make sure that requestMethods will be collected using actual files.
+        FileDocumentManager.getInstance().saveAllDocuments();
 
         // Start background task.
         (new UpdateRoutesTask()).queue();
@@ -449,9 +408,5 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
         return moduleFile.getParent().getPresentableUrl() +
                 File.separator + "railways.cache";
     }
-    
-    
-    
-    
-    
+
 }

@@ -19,7 +19,7 @@ import javax.swing.*;
 public class RailsActionInfo {
 
     // Class which is referenced by route action, it might not have
-    // implementation of the methid, as the method can be inherited.
+    // implementation of the method, as the method can be inherited.
     private RClass psiClass = null;
 
     // Route action method.
