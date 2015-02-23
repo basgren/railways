@@ -74,7 +74,6 @@ public class RoutesViewPane implements Disposable {
 
     
     public void updateRoutes() {
-        System.out.println(myModule + " >>> Updating");
         RailwaysUtils.invokeAction("railways.UpdateRoutesList", myModule.getProject());
         isInvalidated = false;
     }
