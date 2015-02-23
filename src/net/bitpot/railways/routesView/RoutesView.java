@@ -7,7 +7,9 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
@@ -66,7 +68,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         myProject = project;
         mainPanel = new MainPanel(project);
 
-        // Subscribe on files changes to update Routes list regularly.
+        // Subscribe on files changes to update Route list regularly.
         // We connect to project bus, as module bus don't work with this topic
         MessageBusConnection conn = project.getMessageBus().connect();
         conn.subscribe(PsiModificationTracker.TOPIC, new PSIModificationListener());
@@ -120,12 +122,13 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 // 2. With 'add' operation - for newly selected item.
                 if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
                     viewSelectionChanged();
-                    refreshRoutes();
+                    refreshRouteActionsStatus();
                 }
             }
         });
 
 
+        // Open tab that was active in previous IDE session
         Content savedContent = myContentManager.getContent(myState.selectedTabId);
         if (savedContent != null)
             myContentManager.setSelectedContent(savedContent);
@@ -147,7 +150,11 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
                 updateToolWindowOrientation(toolWindow);
 
-                refreshRoutes();
+                if (toolWindow.isVisible())
+                    if (currentPane != null && currentPane.isRoutesInvalidated())
+                        currentPane.updateRoutes();
+                
+                refreshRouteActionsStatus();
             }
         });
 
@@ -213,6 +220,10 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
         if (pane != null) {
             mainPanel.setDataSource(pane);
+            
+            if (pane.isRoutesInvalidated())
+                pane.updateRoutes();
+            
             syncPanelWithRoutesManager(pane.getRoutesManager());
         }
     }
@@ -221,25 +232,24 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     public void addModulePane(Module module) {
         // Skip if RoutesView is not initialized or if added module is not
         // Rails application.
-        if ((myContentManager == null) ||
-                (RailsApp.fromModule(module) == null))
+        RailsApp railsApp = RailsApp.fromModule(module); 
+        if ((myContentManager == null) || railsApp == null)
             return;
 
-        RoutesViewPane pane = new RoutesViewPane(module);
-
-        // Register pane content, so we'll have a combo-box instead tool window
+        // Register content, so we'll have a combo-box instead tool window
         // title, and each item will represent a module.
+        String contentTitle = module.getName();
         Content content = myContentManager.getFactory().createContent(getComponent(),
-                pane.getTitle(), false);
-        content.setTabName(pane.getTitle());
-        content.setIcon(pane.getIcon());
+                contentTitle, false);
+        content.setTabName(contentTitle);
+        content.setIcon(ModuleType.get(module).getIcon());
 
         // Set tool window icon to be the same as selected module icon
         content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
         myContentManager.addContent(content);
 
         // Bind content with pane for further use
-        pane.setContent(content);
+        RoutesViewPane pane = new RoutesViewPane(railsApp, myToolWindow, content);
         myPanes.add(pane);
 
         // Register contributor
@@ -266,6 +276,8 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 // Remove contributor
                 ChooseByRouteRegistry.getInstance(myProject)
                         .removeContributor(pane.getRoutesManager());
+
+                Disposer.dispose(pane);
                 break;
             }
     }
@@ -294,7 +306,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
-    private void refreshRoutes() {
+    private void refreshRouteActionsStatus() {
         RouteList routes = currentPane.getRoutesManager().getRouteList();
         if (routes.size() == 0)
             return;
@@ -316,7 +328,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
             alarm.addRequest(new Runnable() {
                 @Override
                 public void run() {
-                    refreshRoutes();
+                    refreshRouteActionsStatus();
                 }
             }, 300, ModalityState.NON_MODAL);
         }

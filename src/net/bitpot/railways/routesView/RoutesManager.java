@@ -1,14 +1,19 @@
 package net.bitpot.railways.routesView;
 
 import com.intellij.execution.process.ProcessOutput;
+import com.intellij.ide.PowerSaveMode;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
+import com.intellij.util.Alarm;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.utils.RailwaysUtils;
@@ -71,14 +76,17 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private Module module = null;
 
     private State myModuleSettings = new State();
-
-
+    
+    
     public static class State {
         // Name of rake task which retrieves routes.
         public String routesTaskName = "routes";
 
         // Environment which is used to run rake task.
         public String environment = null;
+
+        // Automatically update routes when routes.rb file is changed.
+        public Boolean autoUpdate = false;
     }
 
 
@@ -205,6 +213,9 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
         setState(UPDATING);
 
+        // Save all documents to make sure that requestMethods will be collected using actual files.
+        FileDocumentManager.getInstance().saveAllDocuments();
+
         // Start background task.
         (new UpdateRoutesTask()).queue();
         return true;
@@ -259,7 +270,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-            indicator.setText("Updating routes list for module "  +
+            indicator.setText("Updating route list for module "  +
                     getModule().getName() + "...");
             indicator.setFraction(0.0);
 
@@ -400,4 +411,5 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
         return moduleFile.getParent().getPresentableUrl() +
                 File.separator + "railways.cache";
     }
+
 }

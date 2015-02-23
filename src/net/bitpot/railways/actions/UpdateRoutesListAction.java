@@ -4,7 +4,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.routesView.RoutesManager;
@@ -33,9 +32,6 @@ public class UpdateRoutesListAction extends AnAction {
         if (rm.isUpdating())
             rm.cancelRoutesUpdate();
         else {
-            // Save all documents to make sure that requestMethods will be collected using actual files.
-            FileDocumentManager.getInstance().saveAllDocuments();
-
             if (rm.updateRouteList()) {
                 updateBtnPresentation = e.getPresentation();
                 updatePresentation(project, e.getPresentation());
@@ -57,11 +53,11 @@ public class UpdateRoutesListAction extends AnAction {
 
         if (rm.isUpdating()) {
             presentation.setIcon(RailwaysIcons.SUSPEND);
-            presentation.setText("Cancel routes list update");
+            presentation.setText("Cancel route list update");
             presentation.setDescription("Stops updating the list of routes");
         } else {
             presentation.setIcon(RailwaysIcons.UPDATE);
-            presentation.setText("Update routes list");
+            presentation.setText("Update route list");
             presentation.setDescription("Update the list of routes");
         }
     }

@@ -163,7 +163,7 @@ public class MainPanel {
 
 
     /**
-     * Hides panel with routes list and shows panel with information message.
+     * Hides panel with route list and shows panel with information message.
      *
      * @param message Message to show.
      */
