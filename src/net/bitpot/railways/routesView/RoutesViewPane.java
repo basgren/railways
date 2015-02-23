@@ -5,7 +5,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.*;
@@ -14,8 +13,6 @@ import com.intellij.util.Alarm;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
-
-import javax.swing.*;
 
 /**
  * Stores data for a module panel in Routes tool window.
@@ -35,8 +32,9 @@ public class RoutesViewPane implements Disposable {
      * @param railsApp Rails module that will be represented by this pane.
      * @param toolWindow Parent tool window
      */
-    public RoutesViewPane(RailsApp railsApp, ToolWindow toolWindow) {
+    public RoutesViewPane(RailsApp railsApp, ToolWindow toolWindow, Content content) {
         myModule = railsApp.getModule();
+        myContent = content;
 
         myRoutesManager =  ModuleServiceManager.getService(myModule, RoutesManager.class);
         myRoutesManager.initRouteList();
@@ -55,16 +53,6 @@ public class RoutesViewPane implements Disposable {
     }
 
 
-    public String getTitle() {
-        return myModule.getName();
-    }
-
-
-    public void setContent(Content content) {
-        myContent = content;
-    }
-
-
     public Content getContent() {
         return myContent;
     }
@@ -72,11 +60,6 @@ public class RoutesViewPane implements Disposable {
 
     public Module getModule() {
         return myModule;
-    }
-
-
-    public Icon getIcon() {
-        return ModuleType.get(myModule).getIcon();
     }
 
 

@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
@@ -235,21 +236,20 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         if ((myContentManager == null) || railsApp == null)
             return;
 
-        RoutesViewPane pane = new RoutesViewPane(railsApp, myToolWindow);
-
-        // Register pane content, so we'll have a combo-box instead tool window
+        // Register content, so we'll have a combo-box instead tool window
         // title, and each item will represent a module.
+        String contentTitle = module.getName();
         Content content = myContentManager.getFactory().createContent(getComponent(),
-                pane.getTitle(), false);
-        content.setTabName(pane.getTitle());
-        content.setIcon(pane.getIcon());
+                contentTitle, false);
+        content.setTabName(contentTitle);
+        content.setIcon(ModuleType.get(module).getIcon());
 
         // Set tool window icon to be the same as selected module icon
         content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
         myContentManager.addContent(content);
 
         // Bind content with pane for further use
-        pane.setContent(content);
+        RoutesViewPane pane = new RoutesViewPane(railsApp, myToolWindow, content);
         myPanes.add(pane);
 
         // Register contributor
