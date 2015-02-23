@@ -14,10 +14,10 @@ Railways - Change Notes
 * Add settings dialog to customize rake task that retrieves routes.
 * Live update route action status and icon (it's disabled in Power Save mode).
 * Implement navigation to route action implementation from engines, parent controllers and included modules.
-* Navigate to selected route action when Enter is pressed in routes list.
+* Navigate to selected route action when Enter is pressed in route list.
 * Navigate to controller class when route action cannot be found.
 * Fix displaying of engine routes.
-* Add hotkey for routes list refresh.
+* Add hotkey for route list refresh.
 * Change Routes tool window orientation depending on panel where it's docked to.
 * Persist selected module in Routes tool window between IDE restarts.
 * Minor fixes and UI improvements

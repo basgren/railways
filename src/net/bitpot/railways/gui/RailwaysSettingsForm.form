@@ -67,7 +67,7 @@
           <forms/>
         </constraints>
         <properties>
-          <text value="Auto update routes list on routes.rb change"/>
+          <text value="Auto update route list on routes.rb change"/>
         </properties>
       </component>
       <vspacer id="364d2">

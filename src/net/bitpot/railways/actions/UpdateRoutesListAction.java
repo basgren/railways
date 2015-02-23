@@ -53,11 +53,11 @@ public class UpdateRoutesListAction extends AnAction {
 
         if (rm.isUpdating()) {
             presentation.setIcon(RailwaysIcons.SUSPEND);
-            presentation.setText("Cancel routes list update");
+            presentation.setText("Cancel route list update");
             presentation.setDescription("Stops updating the list of routes");
         } else {
             presentation.setIcon(RailwaysIcons.UPDATE);
-            presentation.setText("Update routes list");
+            presentation.setText("Update route list");
             presentation.setDescription("Update the list of routes");
         }
     }

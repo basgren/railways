@@ -68,7 +68,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         myProject = project;
         mainPanel = new MainPanel(project);
 
-        // Subscribe on files changes to update Routes list regularly.
+        // Subscribe on files changes to update Route list regularly.
         // We connect to project bus, as module bus don't work with this topic
         MessageBusConnection conn = project.getMessageBus().connect();
         conn.subscribe(PsiModificationTracker.TOPIC, new PSIModificationListener());

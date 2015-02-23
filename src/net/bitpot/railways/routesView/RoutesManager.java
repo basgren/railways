@@ -270,7 +270,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-            indicator.setText("Updating routes list for module "  +
+            indicator.setText("Updating route list for module "  +
                     getModule().getName() + "...");
             indicator.setFraction(0.0);
 
