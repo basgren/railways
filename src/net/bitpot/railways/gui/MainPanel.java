@@ -10,10 +10,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
-import net.bitpot.railways.models.RailsActionInfo;
-import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.RouteTableModel;
+import net.bitpot.railways.models.*;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.routesView.RoutesManager;
@@ -440,6 +437,10 @@ public class MainPanel {
     public void refresh() {
         // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
         myTableModel.fireTableRowsUpdated(0, myTableModel.getRowCount() - 1);
+    }
+
+    public RoutesFilter getRouteFilter() {
+        return myTableModel.getFilter();
     }
 
 

@@ -92,6 +92,10 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
+    public MainPanel getMainPanel() {
+        return mainPanel;
+    }
+    
     /**
      * Initializes tool window.
      *

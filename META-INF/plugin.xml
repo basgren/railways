@@ -148,10 +148,17 @@
                 description="Open Railways settings dialog."
                 icon="AllIcons.Actions.Properties" />
 
+        
+        <action id="Railways.showMountedRoutes" class="net.bitpot.railways.actions.ShowMountedRoutesAction"
+                text="Show mounted routes"
+                description="Shows or hides routes from mounted engines." >
+        </action>
+
 
         <group id="railways.MainToolbar">
             <reference ref="railways.UpdateRoutesList"/>
             <reference ref="Railways.settingsAction"/>
+            <reference ref="Railways.showMountedRoutes"/>
         </group>
 
 
