@@ -70,9 +70,9 @@ public class SimpleRoute extends Route {
         if (action.getPsiMethod() != null)
             return action.getIcon();
         else if (action.getPsiClass() != null)
-            return RailwaysIcons.CONTROLLER_NODE;
+            return RailwaysIcons.NODE_CONTROLLER;
 
-        return RailwaysIcons.UNKNOWN;
+        return RailwaysIcons.NODE_UNKNOWN;
     }
 
 

@@ -190,6 +190,6 @@ public class Route implements NavigationItem {
 
 
     public Icon getActionIcon() {
-        return RailwaysIcons.UNKNOWN;
+        return RailwaysIcons.NODE_UNKNOWN;
     }
 }

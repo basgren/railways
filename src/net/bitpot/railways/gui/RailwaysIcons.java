@@ -24,12 +24,15 @@ public class RailwaysIcons {
     public static final Icon RACK_APPLICATION = pluginIcon("rack.png");
     public static final Icon RAKE = RubyIcons.Rake.Rake_runConfiguration;
 
-    public static final Icon CONTROLLER_NODE = RubyIcons.Ruby.Nodes.Controllernode;
-    public static final Icon METHOD_NODE = AllIcons.Nodes.Method;
-    public static final Icon ROUTE_ACTION_NODE = RubyIcons.Rails.ProjectView.Action_method;
-    public static final Icon ERROR_NODE = AllIcons.General.Error;
-    public static final Icon UNKNOWN = pluginIcon("unknown.png");
-    public static final Icon REDIRECT_NODE = pluginIcon("redirect.png");
+    // Icons for table items
+    public static final Icon NODE_CONTROLLER = RubyIcons.Ruby.Nodes.Controllernode;
+    public static final Icon NODE_ERROR = AllIcons.General.Error;
+    public static final Icon NODE_METHOD = AllIcons.Nodes.Method;
+    public static final Icon NODE_REDIRECT = pluginIcon("redirect.png");
+    public static final Icon NODE_ROUTE_ACTION = RubyIcons.Rails.ProjectView.Action_method;
+    public static final Icon NODE_UNKNOWN = pluginIcon("unknown.png");
+    
+    
 
     public static final Icon UPDATE = IconLoader.getIcon("/actions/sync.png");
     public static final Icon SUSPEND = IconLoader.getIcon("/actions/suspend.png");

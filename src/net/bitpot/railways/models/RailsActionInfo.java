@@ -41,13 +41,13 @@ public class RailsActionInfo {
             switch (vis) {
                 case PRIVATE:
                 case PROTECTED:
-                    return RailwaysIcons.METHOD_NODE;
+                    return RailwaysIcons.NODE_METHOD;
 
                 case PUBLIC:
-                    return RailwaysIcons.ROUTE_ACTION_NODE;
+                    return RailwaysIcons.NODE_ROUTE_ACTION;
             }
 
-        return RailwaysIcons.ERROR_NODE;
+        return RailwaysIcons.NODE_ERROR;
     }
 
 
