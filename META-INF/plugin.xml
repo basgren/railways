@@ -149,16 +149,18 @@
                 icon="AllIcons.Actions.Properties" />
 
         
-        <action id="Railways.showMountedRoutes" class="net.bitpot.railways.actions.ShowMountedRoutesAction"
-                text="Show mounted routes"
-                description="Shows or hides routes from mounted engines." >
+        <action id="Railways.hideMountedRoutes" class="net.bitpot.railways.actions.HideMountedRoutesAction"
+                text="Hide mounted routes"
+                description="Hide routes of mounted engines."
+                icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
         </action>
 
 
         <group id="railways.MainToolbar">
             <reference ref="railways.UpdateRoutesList"/>
             <reference ref="Railways.settingsAction"/>
-            <reference ref="Railways.showMountedRoutes"/>
+            <separator/>
+            <reference ref="Railways.hideMountedRoutes"/>
         </group>
 
 

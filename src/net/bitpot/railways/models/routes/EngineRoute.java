@@ -31,6 +31,6 @@ public class EngineRoute extends Route {
 
     @Override
     public Icon getActionIcon() {
-        return RailwaysIcons.RACK_APPLICATION;
+        return RailwaysIcons.NODE_MOUNTED_ENGINE;
     }
 }
