@@ -77,6 +77,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
     public static class State {
         public int selectedTabId;
+        public boolean hideMountedRoutes;
     }
 
     @Nullable
@@ -92,10 +93,6 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
-    public MainPanel getMainPanel() {
-        return mainPanel;
-    }
-    
     /**
      * Initializes tool window.
      *
@@ -137,6 +134,8 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         if (savedContent != null)
             myContentManager.setSelectedContent(savedContent);
 
+        mainPanel.getRouteFilter().setMountedRoutesVisible(!myState.hideMountedRoutes);
+
 
         ToolWindowManagerEx toolManager = ToolWindowManagerEx.getInstanceEx(myProject);
         toolManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
@@ -163,6 +162,17 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         });
 
         updateToolWindowOrientation(toolWindow);
+    }
+
+
+    public boolean isMountedRoutesVisible() {
+        return mainPanel.getRouteFilter().isMountedRoutesVisible();
+    }
+
+
+    public void setMountedRoutesVisible(boolean value) {
+        mainPanel.getRouteFilter().setMountedRoutesVisible(value);
+        myState.hideMountedRoutes = !value;
     }
 
 

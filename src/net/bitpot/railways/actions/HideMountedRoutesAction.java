@@ -13,29 +13,26 @@ public class HideMountedRoutesAction extends ToggleAction {
     
     @Override
     public boolean isSelected(AnActionEvent event) {
-        RoutesFilter filter = getRoutesFilter(event.getProject());
+        RoutesView view = getRoutesView(event.getProject());
         
-        return (filter != null) && (!filter.isMountedRoutesVisible());
+        return (view != null) && (!view.isMountedRoutesVisible());
     }
 
     @Override
     public void setSelected(AnActionEvent event, boolean b) {
-        RoutesFilter filter = getRoutesFilter(event.getProject());
-        if (filter == null)
+        RoutesView view = getRoutesView(event.getProject());
+        if (view == null)
             return;
         
-        filter.setMountedRoutesVisible(!b);
+        view.setMountedRoutesVisible(!b);
     }
     
     
-    private RoutesFilter getRoutesFilter(Project project) {
+    private RoutesView getRoutesView(Project project) {
         if (project == null)
             return null;
         
-        RoutesView rv = RoutesView.getInstance(project);
-        if (rv == null) return null;
-        
-        return rv.getMainPanel().getRouteFilter();
+        return RoutesView.getInstance(project);
     }
     
 }
