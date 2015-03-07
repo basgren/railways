@@ -14,9 +14,14 @@ import static org.junit.Assert.assertEquals;
  */
 public class TextChunkHighlightTest
 {
-    private List<TextChunk> parseAndHighlight(String subject, String hlStr) {
-        return RoutePathParser.getInstance()
-                .highlight(RoutePathParser.parse(subject), hlStr);
+    private List<TextChunk> parsePathAndHighlight(String subject, String hlStr) {
+        RoutePathParser parser = RoutePathParser.getInstance();
+        return parser.highlight(parser.parse(subject), hlStr);
+    }
+
+    private List<TextChunk> parseActionAndHighlight(String subject, String hlStr) {
+        RouteActionParser parser = RouteActionParser.getInstance();
+        return parser.highlight(parser.parse(subject), hlStr);
     }
     
     private List<TextChunk> createChunkList(TextChunk... chunks) {
@@ -28,7 +33,7 @@ public class TextChunkHighlightTest
             
     @Test
     public void testParseAndHighlight() {
-        List<TextChunk> actual = parseAndHighlight("/test(.:test)", "st");
+        List<TextChunk> actual = parsePathAndHighlight("/test(.:test)", "st");
 
         List<TextChunk> expected = createChunkList(
                 chunkPlain("/te", false),
@@ -43,7 +48,7 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightWhenOneTokenHasNoHighlightedText() {
-        List<TextChunk> actual = parseAndHighlight("/tasks/:id", "t");
+        List<TextChunk> actual = parsePathAndHighlight("/tasks/:id", "t");
 
         List<TextChunk> expected = createChunkList(
                 chunkPlain("/", false),
@@ -58,7 +63,7 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightMultipleRegionsInOneChunk() {
-        List<TextChunk> actual = parseAndHighlight("/test/test", "es");
+        List<TextChunk> actual = parsePathAndHighlight("/test/test", "es");
 
         List<TextChunk> expected = createChunkList(
                 chunkPlain("/t", false),
@@ -73,7 +78,7 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightSingleRegionInMultipleChunks() {
-        List<TextChunk> actual = parseAndHighlight("/test/:test", "t/:te");
+        List<TextChunk> actual = parsePathAndHighlight("/test/:test", "t/:te");
 
         List<TextChunk> expected = createChunkList(
                 chunkPlain("/tes", false),
@@ -88,7 +93,7 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightWithEmptySubstring() {
-        List<TextChunk> actual = parseAndHighlight("/test/:test", "");
+        List<TextChunk> actual = parsePathAndHighlight("/test/:test", "");
 
         List<TextChunk> expected = createChunkList(
                 chunkPlain("/test/", false),
@@ -100,11 +105,37 @@ public class TextChunkHighlightTest
 
     @Test
     public void testParseAndHighlightWithBlankSubstring() {
-        List<TextChunk> actual = parseAndHighlight("/test/:test", "   ");
+        List<TextChunk> actual = parsePathAndHighlight("/test/:test", "   ");
 
         List<TextChunk> expected = createChunkList(
                 chunkPlain("/test/", false),
                 chunkParam(":test", false)
+        );
+
+        assertChunkListEqual(expected, actual);
+    }
+
+
+    @Test
+    public void testParseAndHighlightOnBounds() {
+        List<TextChunk> actual = parsePathAndHighlight("/test/:test", "/test/");
+
+        List<TextChunk> expected = createChunkList(
+                chunkPlain("/test/", true),
+                chunkParam(":test", false)
+        );
+
+        assertChunkListEqual(expected, actual);
+    }
+
+
+    @Test
+    public void testParseActionAndHighlightOnBounds() {
+        List<TextChunk> actual = parseActionAndHighlight("ctrl#action", "ctrl#");
+
+        List<TextChunk> expected = createChunkList(
+                chunkPlain("ctrl#", true),
+                chunkParam("action", false)
         );
 
         assertChunkListEqual(expected, actual);

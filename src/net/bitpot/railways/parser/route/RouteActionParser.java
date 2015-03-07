@@ -36,7 +36,7 @@ public class RouteActionParser extends TextChunkHighlighter {
             chunks.add(new RouteActionChunk(parts[0] + "#",
                     RouteActionChunk.CONTAINER, 0));
             chunks.add(new RouteActionChunk(parts[1],
-                    RouteActionChunk.ACTION, parts[0].length()));
+                    RouteActionChunk.ACTION, parts[0].length() + 1));
 
         } else
             chunks.add(new RouteActionChunk(subject,
