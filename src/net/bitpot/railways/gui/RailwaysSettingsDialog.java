@@ -18,7 +18,7 @@ public class RailwaysSettingsDialog extends DialogWrapper {
     protected RailwaysSettingsDialog(@NotNull Module module) {
         super(module.getProject());
 
-        setTitle("Configure Railways");
+        setTitle("Configure Railways - module '" + module.getName() + "'");
 
         // Create panel and reset components
         myPanel = new RailwaysSettingsForm(module);

@@ -19,7 +19,7 @@ public class EngineRouteTest {
         Route route = new EngineRoute(null, RequestMethod.GET, "/test",
                 "", "Test::Engine");
 
-        assertEquals(RailwaysIcons.RACK_APPLICATION, route.getActionIcon());
+        assertEquals(RailwaysIcons.NODE_MOUNTED_ENGINE, route.getActionIcon());
     }
 
 }

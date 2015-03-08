@@ -147,7 +147,7 @@ public class Route implements NavigationItem {
 
     public List<TextChunk> getPathChunks() {
         if (pathChunks == null)
-            pathChunks = RoutePathParser.parse(getPath());
+            pathChunks = RoutePathParser.getInstance().parse(getPath());
 
         return pathChunks;
     }
@@ -190,6 +190,6 @@ public class Route implements NavigationItem {
 
 
     public Icon getActionIcon() {
-        return RailwaysIcons.UNKNOWN;
+        return RailwaysIcons.NODE_UNKNOWN;
     }
 }

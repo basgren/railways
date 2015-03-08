@@ -19,7 +19,7 @@ import javax.swing.*;
 public class RailsActionInfo {
 
     // Class which is referenced by route action, it might not have
-    // implementation of the methid, as the method can be inherited.
+    // implementation of the method, as the method can be inherited.
     private RClass psiClass = null;
 
     // Route action method.
@@ -41,13 +41,13 @@ public class RailsActionInfo {
             switch (vis) {
                 case PRIVATE:
                 case PROTECTED:
-                    return RailwaysIcons.METHOD_NODE;
+                    return RailwaysIcons.NODE_METHOD;
 
                 case PUBLIC:
-                    return RailwaysIcons.ROUTE_ACTION_NODE;
+                    return RailwaysIcons.NODE_ROUTE_ACTION;
             }
 
-        return RailwaysIcons.ERROR_NODE;
+        return RailwaysIcons.NODE_ERROR;
     }
 
 

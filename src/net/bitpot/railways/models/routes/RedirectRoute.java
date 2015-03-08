@@ -53,6 +53,6 @@ public class RedirectRoute extends Route {
 
     @Override
     public Icon getActionIcon() {
-        return RailwaysIcons.REDIRECT_NODE;
+        return RailwaysIcons.NODE_REDIRECT;
     }
 }

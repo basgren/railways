@@ -84,7 +84,7 @@ public class RoutePathParseTest
 
     @Test
     public void testParseRoute() {
-        List<TextChunk> tokens = RoutePathParser.parse(myRouteStr);
+        List<TextChunk> tokens = RoutePathParser.getInstance().parse(myRouteStr);
 
         assertEquals("Token lists have the same length",
                 expectedTokens.length, tokens.size());

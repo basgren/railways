@@ -17,7 +17,7 @@
           <grid id="23e59" binding="topPanel" layout-manager="FormLayout">
             <rowspec value="center:max(p;4px):noGrow"/>
             <colspec value="fill:p:noGrow"/>
-            <colspec value="left:4dlu:noGrow"/>
+            <colspec value="left:m:noGrow"/>
             <colspec value="fill:m:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:80px:grow"/>
@@ -138,7 +138,7 @@
                           <forms/>
                         </constraints>
                         <properties>
-                          <minimumSize width="4" height="17"/>
+                          <minimumSize width="4" height="23"/>
                         </properties>
                       </component>
                       <component id="79496" class="javax.swing.JLabel" binding="routeLbl">

@@ -466,8 +466,12 @@ public class MainPanel {
 
     public void refresh() {
         // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
-        getRouteTableModel().fireTableRowsUpdated(0,
+        getRouteTableModel().fireTableRowsUpdated(0, 
                 getRouteTableModel().getRowCount() - 1);
+    }
+
+    public RoutesFilter getRouteFilter() {
+        return getRouteTableModel().getFilter();
     }
 
 

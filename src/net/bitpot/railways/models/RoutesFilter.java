@@ -10,6 +10,7 @@ import java.util.Collections;
 public class RoutesFilter {
     private RouteTableModel model;
     private String pathFilter;
+    private boolean mountedRoutesVisible; 
 
 
     public RoutesFilter(@NotNull RouteTableModel parent) {
@@ -20,6 +21,7 @@ public class RoutesFilter {
 
     public void reset() {
         pathFilter = "";
+        mountedRoutesVisible = true;
     }
 
 
@@ -37,13 +39,26 @@ public class RoutesFilter {
     }
 
 
+    public boolean isMountedRoutesVisible() {
+        return mountedRoutesVisible;
+    }
+
+    public void setMountedRoutesVisible(boolean value) {
+        if (mountedRoutesVisible != value) {
+            mountedRoutesVisible = value;
+            filterChanged();
+        }
+    }
+
+
     /**
-     * Returns true if no filter parameter is set.
+     * Returns true if any filter is set and should be applied.
+     * Actually checks if filter values are set to defaults or not. 
      *
-     * @return True when all filters are reset, false - when at least one filter is set.
+     * @return True when any filter is active, false otherwise.
      */
-    public boolean isFiltersEmpty() {
-        return pathFilter.equals("");
+    public boolean isFilterActive() {
+        return !pathFilter.equals("") || !mountedRoutesVisible;
     }
 
 
@@ -56,7 +71,7 @@ public class RoutesFilter {
     public void applyFilter(@NotNull RouteList source, @NotNull RouteList target) {
         target.clear();
 
-        if (isFiltersEmpty()) {
+        if (!isFilterActive()) {
             target.setSize(source.size());
             Collections.copy(target, source);
             return;
@@ -76,6 +91,9 @@ public class RoutesFilter {
      * @return True if route matches filter, false otherwise.
      */
     private boolean matchesFilter(Route route) {
+        if (!mountedRoutesVisible && route.getParentEngine() != null)
+            return false;
+
         return route.getPath().toLowerCase().contains(pathFilter) ||
                 route.getActionTitle().toLowerCase().contains(pathFilter) ||
                 route.getRouteName().toLowerCase().contains(pathFilter);

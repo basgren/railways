@@ -68,7 +68,7 @@ public class RailwaysUtils {
         if (sdk == null) {
             Notifications.Bus.notify(new Notification("Railways",
                     "Railways Error",
-                    "Cannot update routes list for '" + module.getName() +
+                    "Cannot update route list for '" + module.getName() +
                     "' module, because its SDK is not set",
                     NotificationType.ERROR)
                     , module.getProject());

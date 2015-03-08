@@ -1,6 +1,14 @@
 Railways - Change Notes
 =======================
 
+### 0.8.2 (2015-03-09)
+
+* New feature - autorefresh route list when routes.rb is changed (enable it in 
+  the plugin settings).
+* Add toggle button to hide routes from mounted engines.
+* Minor UI fixes.
+
+
 ### 0.8.1 (2014-12-22)
 
 * Highlight route action in list depending on its availability.
@@ -14,10 +22,10 @@ Railways - Change Notes
 * Add settings dialog to customize rake task that retrieves routes.
 * Live update route action status and icon (it's disabled in Power Save mode).
 * Implement navigation to route action implementation from engines, parent controllers and included modules.
-* Navigate to selected route action when Enter is pressed in routes list.
+* Navigate to selected route action when Enter is pressed in route list.
 * Navigate to controller class when route action cannot be found.
 * Fix displaying of engine routes.
-* Add hotkey for routes list refresh.
+* Add hotkey for route list refresh.
 * Change Routes tool window orientation depending on panel where it's docked to.
 * Persist selected module in Routes tool window between IDE restarts.
 * Minor fixes and UI improvements

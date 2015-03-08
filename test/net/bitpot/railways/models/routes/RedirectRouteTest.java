@@ -19,7 +19,7 @@ public class RedirectRouteTest {
         Route route = new RedirectRoute(null, RequestMethod.GET, "/test",
                 "redirect", "/test_redirect");
 
-        assertEquals(RailwaysIcons.REDIRECT_NODE, route.getActionIcon());
+        assertEquals(RailwaysIcons.NODE_REDIRECT, route.getActionIcon());
         assertEquals("redirect to /test_redirect", route.getQualifiedActionTitle());
         assertEquals("/test_redirect", route.getActionTitle());
     }
@@ -31,7 +31,7 @@ public class RedirectRouteTest {
         Route route = new RedirectRoute(null, RequestMethod.GET, "/test",
                 "redirect", null);
 
-        assertEquals(RailwaysIcons.REDIRECT_NODE, route.getActionIcon());
+        assertEquals(RailwaysIcons.NODE_REDIRECT, route.getActionIcon());
         assertEquals("[redirect]", route.getActionTitle());
         assertEquals("[runtime defined redirect]", route.getQualifiedActionTitle());
     }
