@@ -1,6 +1,14 @@
 Railways - Change Notes
 =======================
 
+### 0.8.2 (2015-03-09)
+
+* New feature - autorefresh route list when routes.rb is changed (enable it in 
+  the plugin settings).
+* Add toggle button to hide routes from mounted engines.
+* Minor UI fixes.
+
+
 ### 0.8.1 (2014-12-22)
 
 * Highlight route action in list depending on its availability.

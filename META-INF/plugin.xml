@@ -23,11 +23,20 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.1</version>
+    <version>0.8.2-DEV</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.2</b><br/>
+        <ul>
+            <li>New feature - autorefresh route list when routes.rb is changed
+                (enable it in the plugin settings)</li>
+            <li>Add toggle button to hide routes from mounted engines.</li>
+            <li>Minor UI fixes.</li>
+        </ul></p>
+
         <p><b>0.8.1</b><br/>
         <ul>
             <li>Highlight route action in list depending on its availability.</li>
