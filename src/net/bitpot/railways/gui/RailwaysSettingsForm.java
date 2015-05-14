@@ -28,6 +28,7 @@ public class RailwaysSettingsForm {
     private LanguageTextField routesTaskEdit;
     private JComboBox environmentCombo;
     private JCheckBox autoUpdateChk;
+    private JCheckBox liveActionHighlightingChk;
 
     private final Module myModule;
 
@@ -101,6 +102,7 @@ public class RailwaysSettingsForm {
         routesTaskEdit.setText(settings.routesTaskName);
         initRailsEnvsComboBox(settings.environment, environmentCombo, myModule);
         autoUpdateChk.setSelected(settings.autoUpdate);
+        liveActionHighlightingChk.setSelected(settings.liveActionHighlighting);
     }
 
 
@@ -114,6 +116,7 @@ public class RailwaysSettingsForm {
         settings.environment = environmentCombo.getSelectedIndex() == 0 ? null :
                 (String)(environmentCombo.getSelectedItem());
         settings.autoUpdate = autoUpdateChk.isSelected();
+        settings.liveActionHighlighting = liveActionHighlightingChk.isSelected();
     }
 
 
