@@ -324,8 +324,9 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
     private void refreshRouteActionsStatus() {
-        RouteList routes = currentPane.getRoutesManager().getRouteList();
-        if (routes.size() == 0 || !isLiveHighlightingEnabled())
+        RoutesManager rm = currentPane.getRoutesManager();
+        RouteList routes = rm.getRouteList();
+        if (rm.isUpdating() || routes.size() == 0 || !isLiveHighlightingEnabled())
             return;
 
         RailwaysUtils.updateActionsStatus(currentPane.getModule(), routes);
@@ -348,7 +349,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 public void run() {
                     refreshRouteActionsStatus();
                 }
-            }, 300, ModalityState.NON_MODAL);
+            }, 1000, ModalityState.NON_MODAL);
         }
     }
 
