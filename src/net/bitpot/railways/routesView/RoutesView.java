@@ -339,7 +339,8 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
         @Override
         public void modificationCountChanged() {
-            if (PowerSaveMode.isEnabled() || !myToolWindow.isVisible() ||
+            if (PowerSaveMode.isEnabled() ||
+                    myToolWindow == null || !myToolWindow.isVisible() ||
                     !isLiveHighlightingEnabled())
                 return;
 
