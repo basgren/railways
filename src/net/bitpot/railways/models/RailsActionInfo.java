@@ -65,21 +65,37 @@ public class RailsActionInfo {
     }
 
     // TODO: cache found classes and methods to reuse found values.
-
     public void update(RailsApp app, String controllerShortName, String actionName) {
-        psiMethod = null;
-        psiClass = null;
-
-        if ((app == null) || controllerShortName.isEmpty())
+        if ((app == null) || controllerShortName.isEmpty()) {
+            psiMethod = null;
+            psiClass = null;
             return;
+        }
 
-        String qualifiedName = RailwaysPsiUtils.getControllerClassNameByShortName(
-                controllerShortName);
-        psiClass = RailwaysPsiUtils.findControllerClass(app, qualifiedName);
+        if (psiClass != null && !psiClass.isValid()) {
+            psiMethod = null;
+            psiClass = null;
+        }
 
-        if (psiClass != null)
-            psiMethod = RailwaysPsiUtils.findControllerMethod(app,
-                    psiClass, actionName);
+        // Find psiClass if it's not specified or already invalid.
+        if (psiClass == null) {
+            String qualifiedName = RailwaysPsiUtils.getControllerClassNameByShortName(
+                    controllerShortName);
+            psiClass = RailwaysPsiUtils.findControllerClass(app, qualifiedName);
+        }
+
+        if (psiClass != null) {
+            if (psiMethod == null || !psiMethod.isValid()) {
+                psiMethod = RailwaysPsiUtils.findControllerMethod(app,
+                        psiClass, actionName);
+            } else {
+                // Even if psiMethod is valid, its name can be different - it
+                // usually happens when user edits method name - the psiElement
+                // is just updated.
+                if (!psiMethod.getName().equals(actionName))
+                    psiMethod = null;
+            }
+        }
     }
 
 }

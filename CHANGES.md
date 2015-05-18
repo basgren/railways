@@ -1,6 +1,13 @@
 Railways - Change Notes
 =======================
 
+### 0.8.3 (2015-05-16)
+
+* Optimize performance of route action availability check.
+* Add option to disable live check of route action implementation.
+* Fix NPE when non-rails project is opened.
+
+
 ### 0.8.2 (2015-03-09)
 
 * New feature - autorefresh route list when routes.rb is changed (enable it in 

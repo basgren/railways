@@ -87,6 +87,10 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
         // Automatically update routes when routes.rb file is changed.
         public Boolean autoUpdate = false;
+
+        // Check whether route action is found in the project and highlight
+        // actions in route list depending on their availability.
+        public boolean liveActionHighlighting = true;
     }
 
 
