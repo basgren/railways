@@ -314,19 +314,6 @@ public class MainPanel {
     }
 
 
-    /**
-     * Navigates to a route in specified viewRow, if row exists.
-     * @param viewRow Row index which contains route to navigate to.
-     */
-    private void navigateToViewRow(int viewRow) {
-        if (viewRow < 0)
-            return;
-
-        int row = routesTable.convertRowIndexToModel(viewRow);
-        myTableModel.getRoute(row).navigate(false);
-    }
-
-
     private void setControlsEnabled(boolean value) {
         pathFilterField.setEnabled(value);
         routesCounterLbl.setVisible(value);
