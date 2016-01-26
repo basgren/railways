@@ -162,13 +162,20 @@
         <action id="Railways.settingsAction" class="net.bitpot.railways.actions.SettingsAction"
                 text="Settings"
                 description="Open Railways settings dialog."
-                icon="AllIcons.Actions.Properties" />
+                icon="AllIcons.Actions.Properties">
+        </action>
 
         
         <action id="Railways.hideMountedRoutes" class="net.bitpot.railways.actions.HideMountedRoutesAction"
                 text="Hide mounted routes"
                 description="Hide routes of mounted engines."
                 icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
+        </action>
+
+        <action id="Railways.copyRoute" class="net.bitpot.railways.actions.CopyRouteAction"
+                text="Copy path"
+                description="Copy route path">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift C"/>
         </action>
 
 
@@ -182,6 +189,7 @@
 
         <group id="railways.PopupMenu">
             <reference ref="$Copy"/>
+            <reference ref="Railways.copyRoute"/>
         </group>
 
     </actions>
