@@ -131,12 +131,12 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
         public void mouseReleased(MouseEvent e) {
             // Here we override default behavior of mouseReleased to add implementation of
             // row selection by right-click before popup is shown.
+            // Also we keep selection when user clicked outside rows to be
+            // consistent with IDE behavior
             if (e.getButton() == MouseEvent.BUTTON3) {
                 int r = rowAtPoint(e.getPoint());
                 if (r >= 0 && r < getRowCount()) {
                     setRowSelectionInterval(r, r);
-                } else {
-                    clearSelection();
                 }
             }
 

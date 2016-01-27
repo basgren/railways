@@ -7,5 +7,5 @@ public interface RoutesManagerListener {
      *
      * @param routesManager RoutesManager that changed its state.
      */
-    public void stateChanged(RoutesManager routesManager);
+    void stateChanged(RoutesManager routesManager);
 }
