@@ -126,6 +126,8 @@ public class MainPanel {
 
     private void createUIComponents() {
         routesTable = new RoutesTable();
+        routeLbl = new LabelWithCopy();
+        nameLbl = new LabelWithCopy();
     }
 
 

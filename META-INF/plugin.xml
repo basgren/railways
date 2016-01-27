@@ -192,5 +192,9 @@
             <reference ref="Railways.copyRoute"/>
         </group>
 
+        <group id="railways.CopyMenu">
+            <reference ref="$Copy"/>
+        </group>
+
     </actions>
 </idea-plugin>
