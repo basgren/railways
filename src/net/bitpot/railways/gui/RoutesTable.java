@@ -28,7 +28,6 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RoutesTable.class.getName());
 
-
     /**
      * Constructs a default <code>JTable</code> that is initialized with a default
      * data model, a default column model, and a default selection
@@ -55,7 +54,33 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
         if (PlatformDataKeys.COPY_PROVIDER.is(dataId))
             return this;
 
+        if (PlatformDataKeys.SELECTED_ITEMS.is(dataId))
+            return getSelectedRoutes();
+
+        if (PlatformDataKeys.SELECTED_ITEM.is(dataId))
+            return getSelectedRoute();
+
         return null;
+    }
+
+    private Route getSelectedRoute() {
+        return ((RouteTableModel) getModel())
+                .getRoute(convertRowIndexToModel(getSelectedRow()));
+    }
+
+
+    private Route[] getSelectedRoutes() {
+        RouteTableModel model = (RouteTableModel) getModel();
+        int[] selectedRows = getSelectedRows();
+
+        Route[] selectedRoutes = new Route[selectedRows.length];
+
+        for(int i = 0; i < selectedRows.length; i++) {
+            selectedRoutes[i] =
+                    model.getRoute(convertRowIndexToModel(selectedRows[i]));
+        }
+
+        return selectedRoutes;
     }
 
 
