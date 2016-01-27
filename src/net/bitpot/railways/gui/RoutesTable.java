@@ -10,6 +10,7 @@ import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -46,6 +47,7 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
      * @param dataId Data key
      * @return Data object.
      */
+    @Nullable
     @Override
     public Object getData(@NonNls String dataId) {
         // Good example of usage is in com.intellij.openapi.editor.impl.EditorComponentImpl (see getData method)
@@ -63,12 +65,18 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
         return null;
     }
 
+
+    @Nullable
     private Route getSelectedRoute() {
-        return ((RouteTableModel) getModel())
-                .getRoute(convertRowIndexToModel(getSelectedRow()));
+        int selectedId = convertRowIndexToModel(getSelectedRow());
+        if (selectedId < 0)
+            return null;
+
+        return ((RouteTableModel) getModel()).getRoute(selectedId);
     }
 
 
+    @NotNull
     private Route[] getSelectedRoutes() {
         RouteTableModel model = (RouteTableModel) getModel();
         int[] selectedRows = getSelectedRows();

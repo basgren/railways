@@ -173,8 +173,8 @@
         </action>
 
         <action id="Railways.copyRoute" class="net.bitpot.railways.actions.CopyRouteAction"
-                text="Copy path"
-                description="Copy route path">
+                text="Copy Path"
+                description="Copy route path to clipboard">
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift C"/>
         </action>
 

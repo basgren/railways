@@ -45,4 +45,14 @@ public class CopyRouteAction extends AnAction {
             return copyLines;
         }
     }
+
+    @Override
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        DataContext dataContext = event.getDataContext();
+        Object selectedRoute = PlatformDataKeys.SELECTED_ITEM.getData(dataContext);
+
+        presentation.setEnabled(selectedRoute != null);
+        presentation.setVisible(true);
+    }
 }
