@@ -1,6 +1,11 @@
 Railways - Change Notes
 =======================
 
+### 0.8.4 (unreleased)
+
+* Add ability to copy route path
+
+
 ### 0.8.3 (2015-05-16)
 
 * Optimize performance of route action availability check.

@@ -23,11 +23,16 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.3</version>
+    <version>0.8.4a</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.4</b><br/>
+        <ul>
+            <li>Add ability to copy route path</li>
+        </ul></p>
 
         <p><b>0.8.3</b><br/>
         <ul>
@@ -51,44 +56,6 @@
             <li>Parse redirect routes.</li>
             <li>Fix parsing - routes with unknown action format weren't added to list.</li>
         </ul></p>
-
-        <p><b>0.8.0</b><br/>
-        <ul>
-            <li>Add settings dialog to customize rake task that retrieves routes.</li>
-            <li>Live update route action status and icon (it's disabled in Power Save mode).</li>
-            <li>Implement navigation to route action implementation from engines, parent controllers and included modules.</li>
-            <li>Navigate to selected route action when Enter is pressed in route list.</li>
-            <li>Navigate to controller class when route action cannot be found.</li>
-            <li>Fix displaying of engine routes.</li>
-            <li>Add hotkey for route list refresh.</li>
-            <li>Change Routes tool window orientation depending on panel where it's docked to.</li>
-            <li>Persist selected module in Routes tool window between IDE restarts.</li>
-            <li>Minor fixes and UI improvements</li>
-        </ul></p>
-
-        <p><b>0.7.1</b><br/>
-        <ul>
-            <li>Fix plugin crash when IDE is run using Java 1.6</li>
-        </ul></p>
-
-        <p><b>0.7.0</b><br/>
-        <ul>
-            <li>Added support for projects with multiple modules.</li>
-            <li>Added module display in Go To Route popup.</li>
-            <li>Fixed routes parsing for Rails 4 projects.</li>
-            <li>Syntax highlighting for route paths in Route tool window.</li>
-            <li>Minor UI enhancements.</li>
-            <li>Plugin now released in two versions - for RubyMine and
-                IntelliJ IDEA due to issues with dependencies.</li>
-        </ul></p>
-
-
-        <p><b>0.6.1</b><br/>
-        <ul>
-            <li>Plugin now compatible with RubyMine 6.0</li>
-            <li>Added support for PATCH method (Rails 4)</li>
-        </ul></p>
-
 
         <p>
         Full list of changes can be found
