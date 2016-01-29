@@ -16,6 +16,9 @@ public class LabelWithCopy extends JBLabel implements DataProvider {
 
     CopyProvider copyProvider = new MyCopyProvider(this);
 
+    @Nullable
+    private StringFormatter formatter;
+
     public LabelWithCopy() {
         addMouseListener(new PopupHandler() {
             @Override
@@ -29,6 +32,10 @@ public class LabelWithCopy extends JBLabel implements DataProvider {
                 popupMenu.getComponent().show(comp, x, y);
             }
         });
+    }
+
+    public void setCopyFormatter(StringFormatter formatter) {
+        this.formatter = formatter;
     }
 
     @Nullable
@@ -56,6 +63,9 @@ public class LabelWithCopy extends JBLabel implements DataProvider {
 
             if (text.isEmpty() || text.equals("-"))
                 return null;
+
+            if (formatter != null)
+                text = formatter.format(text);
 
             Collection<String> result = new ArrayList<String>(1);
             result.add(text);

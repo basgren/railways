@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import net.bitpot.railways.gui.ErrorInfoDlg;
+import net.bitpot.railways.gui.StringFormatter;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.routesView.RoutesManager;
@@ -29,6 +30,14 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 public class RailwaysUtils {
     @SuppressWarnings("unused")
     private final static Logger log = Logger.getInstance(RailwaysUtils.class.getName());
+
+    public final static StringFormatter STRIP_REQUEST_FORMAT = new StringFormatter() {
+
+        @Override
+        public String format(String str) {
+            return stripRequestFormat(str);
+        }
+    };
 
     /**
      * Returns true if specified project has at least one Ruby on Rails module.
@@ -143,6 +152,18 @@ public class RailwaysUtils {
 
         for (Route route: routeList)
             route.updateActionStatus(app);
+    }
+
+
+    private final static String FORMAT_STR = "(.:format)";
+
+    @NotNull
+    public static String stripRequestFormat(@NotNull String routePath) {
+        int endIndex = routePath.length() - FORMAT_STR.length();
+        if (routePath.indexOf(FORMAT_STR) == endIndex)
+            return routePath.substring(0, endIndex);
+
+        return routePath;
     }
 
 }

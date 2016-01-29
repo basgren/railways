@@ -4,6 +4,7 @@ import com.intellij.ide.CopyProvider;
 import com.intellij.ide.TextCopyProvider;
 import com.intellij.openapi.actionSystem.*;
 import net.bitpot.railways.models.Route;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class CopyRouteAction extends AnAction {
             List<String> copyLines = new ArrayList<String>(routes.length);
 
             for (Route route : routes) {
-                copyLines.add(route.getPath());
+                copyLines.add(RailwaysUtils.stripRequestFormat(route.getPath()));
             }
 
             return copyLines;

@@ -126,8 +126,10 @@ public class MainPanel {
 
     private void createUIComponents() {
         routesTable = new RoutesTable();
-        routeLbl = new LabelWithCopy();
         nameLbl = new LabelWithCopy();
+
+        routeLbl = new LabelWithCopy();
+        ((LabelWithCopy)routeLbl).setCopyFormatter(RailwaysUtils.STRIP_REQUEST_FORMAT);
     }
 
 
