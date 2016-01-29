@@ -6,6 +6,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.ArrayUtil;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.NonNls;
@@ -135,7 +136,9 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
             // consistent with IDE behavior
             if (e.getButton() == MouseEvent.BUTTON3) {
                 int r = rowAtPoint(e.getPoint());
-                if (r >= 0 && r < getRowCount()) {
+                boolean isSelectionClicked = ArrayUtil.indexOf(getSelectedRows(), r) >= 0;
+
+                if (!isSelectionClicked && r >= 0 && r < getRowCount()) {
                     setRowSelectionInterval(r, r);
                 }
             }
