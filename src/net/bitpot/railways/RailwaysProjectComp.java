@@ -48,7 +48,7 @@ public class RailwaysProjectComp implements ProjectComponent {
 
     private class ProjectModulesListener extends ModuleAdapter {
         @Override
-        public void moduleAdded(Project project, Module module) {
+        public void moduleAdded(@NotNull Project project, @NotNull Module module) {
             if (project != myProject) return;
 
             // Notify RoutesView
@@ -58,7 +58,7 @@ public class RailwaysProjectComp implements ProjectComponent {
 
 
         @Override
-        public void moduleRemoved(Project project, Module module) {
+        public void moduleRemoved(@NotNull Project project, @NotNull Module module) {
             if (project != myProject) return;
 
             // Notify RoutesView

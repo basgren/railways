@@ -95,9 +95,12 @@ public class MainPanel {
 
     private JBSplitter mySplitter;
 
+    private RoutesView view;
 
-    public MainPanel(Project project) {
+
+    public MainPanel(Project project, RoutesView view) {
         this.project = project;
+        this.view = view;
 
         initToolbar();
 
@@ -469,12 +472,12 @@ public class MainPanel {
     private final class MyTreeExpander implements TreeExpander {
         @Override
         public boolean canCollapse() {
-            return true;
+            return view.getViewMode() == ViewConstants.VIEW_MODE_TREE;
         }
 
         @Override
         public boolean canExpand() {
-            return true;
+            return view.getViewMode() == ViewConstants.VIEW_MODE_TREE;
         }
 
         @Override

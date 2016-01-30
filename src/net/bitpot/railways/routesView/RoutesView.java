@@ -67,7 +67,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
     public RoutesView(Project project) {
         myProject = project;
-        mainPanel = new MainPanel(project);
+        mainPanel = new MainPanel(project, this);
 
         // Subscribe on files changes to update Route list regularly.
         // We connect to project bus, as module bus don't work with this topic
