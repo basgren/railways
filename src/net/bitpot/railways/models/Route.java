@@ -9,6 +9,7 @@ import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.parser.route.RouteActionParser;
 import net.bitpot.railways.parser.route.RoutePathParser;
 import net.bitpot.railways.parser.route.TextChunk;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
@@ -142,6 +143,15 @@ public class Route implements NavigationItem {
 
     public String getPath() {
         return path;
+    }
+
+    public String getPathWithMethod() {
+        String path = RailwaysUtils.stripRequestFormat(getPath());
+
+        if (getRequestMethod() == RequestMethod.ANY)
+            return path;
+
+        return String.format("%s %s", getRequestMethod().getName(), path);
     }
 
 

@@ -3,7 +3,7 @@ Railways - Change Notes
 
 ### 0.8.4 (unreleased)
 
-* Add ability to copy route path
+* Add ability to copy route path with http method
 * Add ability to copy data from multiple selected rows
 * Make right-click behavior more intuitive for the routes table
 

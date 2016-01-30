@@ -30,7 +30,7 @@
 
         <p><b>0.8.4</b><br/>
         <ul>
-            <li>Add ability to copy route path</li>
+            <li>Add ability to copy route path with http method</li>
             <li>Add ability to copy data from multiple selected rows</li>
             <li>Make right-click behavior more intuitive for the routes table</li>
         </ul></p>
@@ -156,6 +156,13 @@
                 class="net.bitpot.railways.actions.CopyRoutePathAction"
                 text="Copy Path"
                 description="Copy route path to clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift alt C"/>
+        </action>
+
+        <action id="Railways.copyFullRoutePath"
+                class="net.bitpot.railways.actions.CopyFullRoutePathAction"
+                text="Copy Full Path"
+                description="Copy route path with HTTP method to clipboard">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift C"/>
         </action>
 
@@ -170,6 +177,7 @@
 
         <group id="railways.PopupMenu">
             <reference ref="Railways.copyRouteName"/>
+            <reference ref="Railways.copyFullRoutePath"/>
             <reference ref="Railways.copyRoutePath"/>
         </group>
 
