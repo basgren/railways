@@ -33,6 +33,7 @@
         <ul>
             <li>Add ability to copy route path</li>
             <li>Add ability to copy data from multiple selected rows</li>
+            <li>Make right-click behavior more intuitive for the routes table</li>
         </ul></p>
 
         <p><b>0.8.3</b><br/>

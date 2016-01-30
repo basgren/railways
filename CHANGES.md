@@ -5,6 +5,7 @@ Railways - Change Notes
 
 * Add ability to copy route path
 * Add ability to copy data from multiple selected rows
+* Make right-click behavior more intuitive for the routes table
 
 
 ### 0.8.3 (2015-05-16)

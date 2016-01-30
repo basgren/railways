@@ -31,26 +31,6 @@ public class RailwaysApplicationComp implements ApplicationComponent {
 
         // Save plugin object for accessing in static methods.
         instance = this;
-
-        ActionManager.getInstance().addAnActionListener(new AnActionListener() {
-            @Override
-            public void beforeActionPerformed(AnAction anAction,
-                                              DataContext dataContext,
-                                              AnActionEvent anActionEvent) {
-                System.out.println(String.format(">>> Action: %s",
-                        anActionEvent.getPresentation().getText()));
-            }
-
-            @Override
-            public void afterActionPerformed(AnAction anAction, DataContext dataContext, AnActionEvent anActionEvent) {
-
-            }
-
-            @Override
-            public void beforeEditorTyping(char c, DataContext dataContext) {
-
-            }
-        });
     }
 
 
