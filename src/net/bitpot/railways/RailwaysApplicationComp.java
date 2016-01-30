@@ -1,5 +1,10 @@
 package net.bitpot.railways;
 
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +31,26 @@ public class RailwaysApplicationComp implements ApplicationComponent {
 
         // Save plugin object for accessing in static methods.
         instance = this;
+
+        ActionManager.getInstance().addAnActionListener(new AnActionListener() {
+            @Override
+            public void beforeActionPerformed(AnAction anAction,
+                                              DataContext dataContext,
+                                              AnActionEvent anActionEvent) {
+                System.out.println(String.format(">>> Action: %s",
+                        anActionEvent.getPresentation().getText()));
+            }
+
+            @Override
+            public void afterActionPerformed(AnAction anAction, DataContext dataContext, AnActionEvent anActionEvent) {
+
+            }
+
+            @Override
+            public void beforeEditorTyping(char c, DataContext dataContext) {
+
+            }
+        });
     }
 
 

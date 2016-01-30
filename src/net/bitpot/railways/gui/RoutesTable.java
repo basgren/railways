@@ -1,9 +1,7 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.ide.CopyProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;
@@ -14,19 +12,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 
 
 /**
  * We should add some behavior to default JTable to be able copy custom data.
- * To add ability to copy data we should follow next steps:
- * 1. Our component (JTable) should implement DataProvider interface. In this case when action is invoked
- * in context of this component, we will be able to pass out own data object, i.e. CopyProvider.
- * 2. Implement CopyProvider interface (it also could be done in private class) which is responsible for
- * changing Copy action status and copying custom information.
+ *
+ * Our component (JTable) should implement DataProvider interface. In this
+ * case when action is invoked in context of this component, we will be able to
+ * pass our own data to the action handler.
  */
-public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
+public class RoutesTable extends JBTable implements DataProvider {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RoutesTable.class.getName());
 
@@ -52,10 +48,6 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
     @Override
     public Object getData(@NonNls String dataId) {
         // Good example of usage is in com.intellij.openapi.editor.impl.EditorComponentImpl (see getData method)
-
-        // We have custom copy provider, so return it when requested.
-        if (PlatformDataKeys.COPY_PROVIDER.is(dataId))
-            return this;
 
         if (PlatformDataKeys.SELECTED_ITEMS.is(dataId))
             return getSelectedRoutes();
@@ -90,39 +82,6 @@ public class RoutesTable extends JBTable implements CopyProvider, DataProvider {
         }
 
         return selectedRoutes;
-    }
-
-
-    /**
-     * Performs copy operation of the first selected route in the table.
-     *
-     * @param dataContext Data context which action was invoked in.
-     */
-    @Override
-    public void performCopy(@NotNull DataContext dataContext) {
-        if (getSelectedRow() < 0)
-            return;
-
-        Route route = ((RouteTableModel) getModel()).getRoute(convertRowIndexToModel(getSelectedRow()));
-        CopyPasteManager.getInstance().setContents(new StringSelection(route.getRouteName()));
-    }
-
-
-    /**
-     * Specifies conditions when copy action is enabled or disabled in routes popup menu.
-     *
-     * @param dataContext Data context.
-     * @return True or false.
-     */
-    @Override
-    public boolean isCopyEnabled(@NotNull DataContext dataContext) {
-        return getSelectedRowCount() > 0;
-    }
-
-
-    @Override
-    public boolean isCopyVisible(@NotNull DataContext dataContext) {
-        return true;
     }
 
 

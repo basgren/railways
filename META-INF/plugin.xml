@@ -32,6 +32,7 @@
         <p><b>0.8.4</b><br/>
         <ul>
             <li>Add ability to copy route path</li>
+            <li>Add ability to copy data from multiple selected rows</li>
         </ul></p>
 
         <p><b>0.8.3</b><br/>
@@ -119,30 +120,42 @@
         </action>
 
 
-        <action id="Railways.gotoRouteAction" class="net.bitpot.railways.actions.GotoRouteMethodAction"
+        <action id="Railways.gotoRouteAction"
+                class="net.bitpot.railways.actions.GotoRouteMethodAction"
                 text="Goto route action"
                 description="Navigate to route action." >
             <keyboard-shortcut first-keystroke="control shift G" keymap="$default" />
         </action>
 
 
-        <action id="Railways.settingsAction" class="net.bitpot.railways.actions.SettingsAction"
+        <action id="Railways.settingsAction"
+                class="net.bitpot.railways.actions.SettingsAction"
                 text="Settings"
                 description="Open Railways settings dialog."
                 icon="AllIcons.Actions.Properties">
         </action>
 
         
-        <action id="Railways.hideMountedRoutes" class="net.bitpot.railways.actions.HideMountedRoutesAction"
+        <action id="Railways.hideMountedRoutes"
+                class="net.bitpot.railways.actions.HideMountedRoutesAction"
                 text="Hide mounted routes"
                 description="Hide routes of mounted engines."
                 icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
         </action>
 
-        <action id="Railways.copyRoute" class="net.bitpot.railways.actions.CopyRouteAction"
+        <action id="Railways.copyRouteName"
+                class="net.bitpot.railways.actions.CopyRouteNameAction"
+                text="Copy Name"
+                description="Copy route name to clipboard"
+                icon="AllIcons.Actions.Copy">
+            <keyboard-shortcut keymap="$default" first-keystroke="control C"/>
+        </action>
+
+        <action id="Railways.copyRoutePath"
+                class="net.bitpot.railways.actions.CopyRoutePathAction"
                 text="Copy Path"
                 description="Copy route path to clipboard">
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift C"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift C"/>
         </action>
 
 
@@ -155,8 +168,8 @@
 
 
         <group id="railways.PopupMenu">
-            <reference ref="$Copy"/>
-            <reference ref="Railways.copyRoute"/>
+            <reference ref="Railways.copyRouteName"/>
+            <reference ref="Railways.copyRoutePath"/>
         </group>
 
         <group id="railways.CopyMenu">
