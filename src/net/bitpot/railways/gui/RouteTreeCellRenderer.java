@@ -3,6 +3,7 @@ package net.bitpot.railways.gui;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteNode;
+import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,11 +34,11 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
             if (route == null)
                 return;
 
-            append(node.getTitle());
+            append(RailwaysUtils.stripRequestFormat(node.getTitle()));
             String text = route.getActionTitle();
 
             if (text != null)
-                append(" (" + text + ")", RailwaysColors.CONTROLLER_METHOD_ATTR);
+                append("  " + text, RailwaysColors.CONTROLLER_METHOD_ATTR);
 
             setIcon(route.getRequestMethod().getIcon());
         } else {
