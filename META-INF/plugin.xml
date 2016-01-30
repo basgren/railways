@@ -23,11 +23,18 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.3</version>
+    <version>0.8.4</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.4</b><br/>
+        <ul>
+            <li>Add ability to copy route path with http method</li>
+            <li>Add ability to copy data from multiple selected rows</li>
+            <li>Make right-click behavior more intuitive for the routes table</li>
+        </ul></p>
 
         <p><b>0.8.3</b><br/>
         <ul>
@@ -51,44 +58,6 @@
             <li>Parse redirect routes.</li>
             <li>Fix parsing - routes with unknown action format weren't added to list.</li>
         </ul></p>
-
-        <p><b>0.8.0</b><br/>
-        <ul>
-            <li>Add settings dialog to customize rake task that retrieves routes.</li>
-            <li>Live update route action status and icon (it's disabled in Power Save mode).</li>
-            <li>Implement navigation to route action implementation from engines, parent controllers and included modules.</li>
-            <li>Navigate to selected route action when Enter is pressed in route list.</li>
-            <li>Navigate to controller class when route action cannot be found.</li>
-            <li>Fix displaying of engine routes.</li>
-            <li>Add hotkey for route list refresh.</li>
-            <li>Change Routes tool window orientation depending on panel where it's docked to.</li>
-            <li>Persist selected module in Routes tool window between IDE restarts.</li>
-            <li>Minor fixes and UI improvements</li>
-        </ul></p>
-
-        <p><b>0.7.1</b><br/>
-        <ul>
-            <li>Fix plugin crash when IDE is run using Java 1.6</li>
-        </ul></p>
-
-        <p><b>0.7.0</b><br/>
-        <ul>
-            <li>Added support for projects with multiple modules.</li>
-            <li>Added module display in Go To Route popup.</li>
-            <li>Fixed routes parsing for Rails 4 projects.</li>
-            <li>Syntax highlighting for route paths in Route tool window.</li>
-            <li>Minor UI enhancements.</li>
-            <li>Plugin now released in two versions - for RubyMine and
-                IntelliJ IDEA due to issues with dependencies.</li>
-        </ul></p>
-
-
-        <p><b>0.6.1</b><br/>
-        <ul>
-            <li>Plugin now compatible with RubyMine 6.0</li>
-            <li>Added support for PATCH method (Rails 4)</li>
-        </ul></p>
-
 
         <p>
         Full list of changes can be found
@@ -152,23 +121,49 @@
         </action>
 
 
-        <action id="Railways.gotoRouteAction" class="net.bitpot.railways.actions.GotoRouteMethodAction"
+        <action id="Railways.gotoRouteAction"
+                class="net.bitpot.railways.actions.GotoRouteMethodAction"
                 text="Goto route action"
                 description="Navigate to route action." >
             <keyboard-shortcut first-keystroke="control shift G" keymap="$default" />
         </action>
 
 
-        <action id="Railways.settingsAction" class="net.bitpot.railways.actions.SettingsAction"
+        <action id="Railways.settingsAction"
+                class="net.bitpot.railways.actions.SettingsAction"
                 text="Settings"
                 description="Open Railways settings dialog."
-                icon="AllIcons.Actions.Properties" />
+                icon="AllIcons.Actions.Properties">
+        </action>
 
         
-        <action id="Railways.hideMountedRoutes" class="net.bitpot.railways.actions.HideMountedRoutesAction"
+        <action id="Railways.hideMountedRoutes"
+                class="net.bitpot.railways.actions.HideMountedRoutesAction"
                 text="Hide mounted routes"
                 description="Hide routes of mounted engines."
                 icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
+        </action>
+
+        <action id="Railways.copyRouteName"
+                class="net.bitpot.railways.actions.CopyRouteNameAction"
+                text="Copy Name"
+                description="Copy route name to clipboard"
+                icon="AllIcons.Actions.Copy">
+            <keyboard-shortcut keymap="$default" first-keystroke="control C"/>
+        </action>
+
+        <action id="Railways.copyRoutePath"
+                class="net.bitpot.railways.actions.CopyRoutePathAction"
+                text="Copy Path"
+                description="Copy route path to clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift alt C"/>
+        </action>
+
+        <action id="Railways.copyFullRoutePath"
+                class="net.bitpot.railways.actions.CopyFullRoutePathAction"
+                text="Copy Full Path"
+                description="Copy route path with HTTP method to clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift C"/>
         </action>
 
 
@@ -195,6 +190,12 @@
 
 
         <group id="railways.PopupMenu">
+            <reference ref="Railways.copyRouteName"/>
+            <reference ref="Railways.copyFullRoutePath"/>
+            <reference ref="Railways.copyRoutePath"/>
+        </group>
+
+        <group id="railways.CopyMenu">
             <reference ref="$Copy"/>
         </group>
 

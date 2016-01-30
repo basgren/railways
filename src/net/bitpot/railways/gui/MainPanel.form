@@ -138,10 +138,10 @@
                           <forms/>
                         </constraints>
                         <properties>
-                          <minimumSize width="4" height="23"/>
+                          <minimumSize width="4" height="19"/>
                         </properties>
                       </component>
-                      <component id="79496" class="javax.swing.JLabel" binding="routeLbl">
+                      <component id="79496" class="javax.swing.JLabel" binding="routeLbl" custom-create="true">
                         <constraints>
                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <forms top="0" left="3" bottom="0" right="0"/>
@@ -161,7 +161,7 @@
                           <text value="-"/>
                         </properties>
                       </component>
-                      <component id="58058" class="javax.swing.JLabel" binding="nameLbl">
+                      <component id="58058" class="javax.swing.JLabel" binding="nameLbl" custom-create="true">
                         <constraints>
                           <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <forms top="0" left="3" bottom="0" right="0"/>

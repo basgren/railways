@@ -227,6 +227,10 @@ public class MainPanel {
 
         // Create tree manually to get is with empty model.
         routesTree = new RoutesTree(new DefaultTreeModel(null), this);
+
+        nameLbl = new LabelWithCopy();
+        routeLbl = new LabelWithCopy();
+        ((LabelWithCopy)routeLbl).setCopyFormatter(RailwaysUtils.STRIP_REQUEST_FORMAT);
     }
 
 
@@ -429,7 +433,7 @@ public class MainPanel {
     public void showRoutesUpdateError(int parserError) {
         updateErrorPanel(parserError);
         showPanel(INFO_PANEL_NAME);
-    
+
         UpdateRoutesListAction.updateIcon(project);
     }
 
@@ -453,7 +457,7 @@ public class MainPanel {
 
     public void refresh() {
         // Use fireTableRowsUpdated to avoid full tree refresh and to keep selection.
-        getRouteTableModel().fireTableRowsUpdated(0, 
+        getRouteTableModel().fireTableRowsUpdated(0,
                 getRouteTableModel().getRowCount() - 1);
     }
 

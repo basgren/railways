@@ -3,6 +3,7 @@ package net.bitpot.railways.utils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -24,6 +25,15 @@ public class RailwaysUtilsTest {
 
         result = RailwaysPsiUtils.getControllerClassPathByShortName("api/users/search");
         assertArrayEquals(new String[] {"Api", "Users", "SearchController"}, result);
+    }
+
+    @Test
+    public void test_stripRequestFormat() {
+        String result = RailwaysUtils.stripRequestFormat("/books/:id(.:format)");
+        assertEquals("/books/:id", result);
+
+        result = RailwaysUtils.stripRequestFormat("/books");
+        assertEquals("/books", result);
     }
 
 }
