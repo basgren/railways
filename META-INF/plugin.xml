@@ -180,9 +180,10 @@
 
 
         <group id="railways.MainToolbar">
+            <reference ref="railways.UpdateRoutesList"/>
+            <separator/>
             <reference ref="railways.TreeActionsGroup"/>
             <separator/>
-            <reference ref="railways.UpdateRoutesList"/>
             <reference ref="Railways.settingsAction"/>
             <separator/>
             <reference ref="Railways.hideMountedRoutes"/>

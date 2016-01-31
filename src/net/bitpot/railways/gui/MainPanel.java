@@ -318,6 +318,8 @@ public class MainPanel {
                 routesTable.requestFocusInWindow();
         }
 
+        pathFilterField.setEnabled(viewMode == ViewConstants.VIEW_MODE_TABLE);
+        routesCounterLbl.setEnabled(viewMode == ViewConstants.VIEW_MODE_TABLE);
     }
 
 
