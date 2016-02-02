@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
+import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -230,6 +231,7 @@ public class MainPanel {
 
         // Create tree manually to get is with empty model.
         routesTree = new RoutesTree(new DefaultTreeModel(null), this);
+        new MySpeedSearch(routesTree);
 
         nameLbl = new LabelWithCopy();
         routeLbl = new LabelWithCopy();
@@ -491,5 +493,16 @@ public class MainPanel {
         public void expandAll() {
             TreeUtil.expandAll(routesTree);
         }
+    }
+
+    private class MySpeedSearch extends TreeSpeedSearch {
+
+        public MySpeedSearch(JTree tree) {
+            super(tree);
+        }
+
+        // TODO: highlight selected tokens
+        // TODO: reposition speed search popup
+
     }
 }
