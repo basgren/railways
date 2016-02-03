@@ -1,6 +1,7 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
+import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.utils.RailwaysUtils;
@@ -45,5 +46,7 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
             setIcon(RailwaysIcons.ROUTE_PARENT);
             append(node.getTitle());
         }
+
+        SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, selected);
     }
 }

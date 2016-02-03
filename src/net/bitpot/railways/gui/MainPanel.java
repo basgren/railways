@@ -11,6 +11,7 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
 import net.bitpot.railways.models.*;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 
 /**
@@ -231,6 +233,7 @@ public class MainPanel {
 
         // Create tree manually to get is with empty model.
         routesTree = new RoutesTree(new DefaultTreeModel(null), this);
+
         new MySpeedSearch(routesTree);
 
         nameLbl = new LabelWithCopy();
@@ -495,14 +498,20 @@ public class MainPanel {
         }
     }
 
-    private class MySpeedSearch extends TreeSpeedSearch {
+    private final static Convertor<TreePath, String> ROUTE_NODE_TO_STRING = new Convertor<TreePath, String>() {
+        @Override
+        public String convert(TreePath object) {
+            RouteNode node = (RouteNode)object.getLastPathComponent();
 
-        public MySpeedSearch(JTree tree) {
-            super(tree);
+            return node.isLeaf() ?
+                    RailwaysUtils.stripRequestFormat(node.getTitle()) :
+                    node.getTitle();
         }
+    };
 
-        // TODO: highlight selected tokens
-        // TODO: reposition speed search popup
-
+    private class MySpeedSearch extends TreeSpeedSearch {
+        public MySpeedSearch(JTree tree) {
+            super(tree, ROUTE_NODE_TO_STRING);
+        }
     }
 }
