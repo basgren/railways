@@ -1,6 +1,7 @@
 package net.bitpot.railways.models;
 
 import com.intellij.openapi.diagnostic.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -77,5 +78,25 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
             s = s + " [" + route.getRequestMethod() + " " + route.getPath() + "]";
 
         return s;
+    }
+
+    /**
+     * Performs one-level search of child node by title.
+     *
+     * @param title Title to search for
+     * @return RouteNode or null if nothing is found.
+     */
+    @Nullable
+    public RouteNode findByTitle(String title) {
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            RouteNode node = (RouteNode) getChildAt(i);
+
+            if (node.getTitle().equals(title))
+                return node;
+        }
+
+        return null;
     }
 }

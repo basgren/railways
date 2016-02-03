@@ -29,10 +29,10 @@ public class RailwaysUtilsTest {
 
     @Test
     public void test_stripRequestFormat() {
-        String result = RailwaysUtils.stripRequestFormat("/books/:id(.:format)");
+        String result = RailwaysUtils.trimRequestFormat("/books/:id(.:format)");
         assertEquals("/books/:id", result);
 
-        result = RailwaysUtils.stripRequestFormat("/books");
+        result = RailwaysUtils.trimRequestFormat("/books");
         assertEquals("/books", result);
     }
 

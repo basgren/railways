@@ -146,7 +146,7 @@ public class Route implements NavigationItem {
     }
 
     public String getPathWithMethod() {
-        String path = RailwaysUtils.stripRequestFormat(getPath());
+        String path = RailwaysUtils.trimRequestFormat(getPath());
 
         if (getRequestMethod() == RequestMethod.ANY)
             return path;

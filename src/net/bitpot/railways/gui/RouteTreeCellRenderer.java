@@ -35,7 +35,7 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
             if (route == null)
                 return;
 
-            append(RailwaysUtils.stripRequestFormat(node.getTitle()));
+            append(RailwaysUtils.trimRequestFormat(node.getTitle()));
             String text = route.getActionTitle();
 
             if (text != null)

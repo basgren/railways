@@ -1,5 +1,6 @@
 # Routes that should build simple nested route tree (1 parent, 1 leaf)
 
+           root GET          /                           clients#index
         clients GET          /clients(.:format)          clients#index
      new_client GET          /clients/new(.:format)      clients#new
     edit_client GET          /clients/:id/edit(.:format) clients#edit

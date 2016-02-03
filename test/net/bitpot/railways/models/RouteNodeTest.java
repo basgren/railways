@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Testing RouteNode.
@@ -40,21 +41,19 @@ public class RouteNodeTest
     {
         RouteNode root = buildRouteTreeFromFile("2_simple_nested_routes.txt");
 
-        assertEquals("Root node has 2 child nodes", 2, root.getChildCount());
+        assertEquals("Root node has 3 child nodes", 3, root.getChildCount());
 
         // As we don't check sorting here, just iterate through nodes and check
         // if we have appropriate children.
-        for(int i = 0; i < root.getChildCount(); i++) {
-            RouteNode node = (RouteNode) root.getChildAt(i);
+        assertNotNull(root.findByTitle("/"));
 
-            if (node.isLeaf()) {
-                assertEquals("clients(.:format)", node.getTitle());
-                assertEquals("Child should be a route", true, node.isLeaf());
-            } else {
-                assertEquals("clients", node.getTitle());
-                assertEquals("Child should be a container", false, node.isLeaf());
-            }
-        }
+        RouteNode node2 = root.findByTitle("clients(.:format)");
+        assertNotNull(node2);
+        assertEquals("Child should be a route", true, node2.isLeaf());
+
+        RouteNode node3 = root.findByTitle("clients");
+        assertNotNull(node3);
+        assertEquals("Child should be a route", false, node3.isLeaf());
     }
 
 

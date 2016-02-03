@@ -504,7 +504,7 @@ public class MainPanel {
             RouteNode node = (RouteNode)object.getLastPathComponent();
 
             return node.isLeaf() ?
-                    RailwaysUtils.stripRequestFormat(node.getTitle()) :
+                    RailwaysUtils.trimRequestFormat(node.getTitle()) :
                     node.getTitle();
         }
     };

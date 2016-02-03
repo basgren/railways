@@ -35,7 +35,7 @@ public class RailwaysUtils {
 
         @Override
         public String format(String str) {
-            return stripRequestFormat(str);
+            return trimRequestFormat(str);
         }
     };
 
@@ -158,7 +158,7 @@ public class RailwaysUtils {
     private final static String FORMAT_STR = "(.:format)";
 
     @NotNull
-    public static String stripRequestFormat(@NotNull String routePath) {
+    public static String trimRequestFormat(@NotNull String routePath) {
         int endIndex = routePath.length() - FORMAT_STR.length();
         if (routePath.indexOf(FORMAT_STR) == endIndex)
             return routePath.substring(0, endIndex);

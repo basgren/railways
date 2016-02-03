@@ -3,6 +3,7 @@ package net.bitpot.railways.parser;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.models.RouteNode;
+import net.bitpot.railways.utils.RailwaysUtils;
 
 /**
  * @author Basil Gren
@@ -16,7 +17,8 @@ public class RouteTreeBuilder {
 
         for(Route route: list) {
             // Break route path into parts, but remove leading slash before.
-            String[] parts = route.getPath().substring(1).split("/");
+            String path = route.getPath(); // RailwaysUtils.trimRequestFormat(route.getPath());
+            String[] parts = path.substring(1).split("/");
 
             pushRouteNode(root, route, parts, 0);
         }
@@ -29,31 +31,29 @@ public class RouteTreeBuilder {
 
     private static void pushRouteNode(RouteNode parent, Route route,
                                       String[] parts, int partIndex) {
-        boolean isLeaf = (partIndex + 1 == parts.length);
+        boolean isLastPart = (partIndex + 1 == parts.length);
 
-        RouteNode child = null;
-        String childTitle = parts[partIndex];
+        RouteNode targetNode = null;
+        String currentTitle = parts[partIndex];
 
         // Search for existing container node
-        if (!isLeaf) {
+        if (!isLastPart) {
+            RouteNode newTarget = parent.findByTitle(currentTitle);
 
-            for (int i = 0; i < parent.getChildCount(); i++) {
-                RouteNode node = (RouteNode) parent.getChildAt(i);
-
-                if (node.getTitle().equals(childTitle)) {
-                    child = node;
-                    break;
-                }
-            }
+            if (newTarget != null)
+                targetNode = newTarget;
         }
 
-        if (child == null) {
-            child = new RouteNode(childTitle, isLeaf ? route : null);
-            parent.add(child);
+        if (targetNode == null) {
+            if (currentTitle.equals(""))
+                currentTitle = "/";
+
+            targetNode = new RouteNode(currentTitle, isLastPart ? route : null);
+            parent.add(targetNode);
         }
 
-        if (!isLeaf) {
-            pushRouteNode(child, route, parts, partIndex + 1);
+        if (!isLastPart) {
+            pushRouteNode(targetNode, route, parts, partIndex + 1);
         }
     }
 

@@ -7,6 +7,6 @@ public class CopyRoutePathAction extends CopyRouteActionBase {
 
     @Override
     public String getRouteValue(Route route) {
-        return RailwaysUtils.stripRequestFormat(route.getPath());
+        return RailwaysUtils.trimRequestFormat(route.getPath());
     }
 }
