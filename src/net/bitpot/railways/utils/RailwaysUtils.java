@@ -159,6 +159,9 @@ public class RailwaysUtils {
 
     @NotNull
     public static String trimRequestFormat(@NotNull String routePath) {
+        if (routePath.length() < FORMAT_STR.length())
+            return routePath;
+
         int endIndex = routePath.length() - FORMAT_STR.length();
         if (routePath.indexOf(FORMAT_STR) == endIndex)
             return routePath.substring(0, endIndex);

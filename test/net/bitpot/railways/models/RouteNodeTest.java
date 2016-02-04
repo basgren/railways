@@ -41,19 +41,26 @@ public class RouteNodeTest
     {
         RouteNode root = buildRouteTreeFromFile("2_simple_nested_routes.txt");
 
-        assertEquals("Root node has 3 child nodes", 3, root.getChildCount());
+        assertEquals("Root node has 2 child nodes", 2, root.getChildCount());
 
         // As we don't check sorting here, just iterate through nodes and check
         // if we have appropriate children.
-        assertNotNull(root.findByTitle("/"));
+        assertNotNull(root.find("/"));
 
-        RouteNode node2 = root.findByTitle("clients(.:format)");
-        assertNotNull(node2);
-        assertEquals("Child should be a route", true, node2.isLeaf());
+        RouteNode clientGroup = root.find("clients", false);
+        assertNotNull(clientGroup);
 
-        RouteNode node3 = root.findByTitle("clients");
-        assertNotNull(node3);
-        assertEquals("Child should be a route", false, node3.isLeaf());
+        assertEquals("Root node has 3 child nodes", 3, clientGroup.getChildCount());
+
+
+
+//        RouteNode node2 = root.find("clients(.:format)");
+//        assertNotNull(node2);
+//        assertEquals("Child should be a route", true, node2.isLeaf());
+//
+//        RouteNode node3 = root.find("clients");
+//        assertNotNull(node3);
+//        assertEquals("Child should be a route", false, node3.isLeaf());
     }
 
 

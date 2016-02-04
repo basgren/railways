@@ -65,6 +65,10 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Route getRoute() {
         return route;
     }
@@ -87,13 +91,27 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
      * @return RouteNode or null if nothing is found.
      */
     @Nullable
-    public RouteNode findByTitle(String title) {
+    public RouteNode find(String title) {
         int count = getChildCount();
 
         for (int i = 0; i < count; i++) {
             RouteNode node = (RouteNode) getChildAt(i);
 
             if (node.getTitle().equals(title))
+                return node;
+        }
+
+        return null;
+    }
+
+    public RouteNode find(String title, boolean findRoutes) {
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            RouteNode node = (RouteNode) getChildAt(i);
+            boolean isRoute = node.getRoute() != null;
+
+            if (isRoute == findRoutes && node.getTitle().equals(title))
                 return node;
         }
 

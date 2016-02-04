@@ -11,13 +11,21 @@ import net.bitpot.railways.utils.RailwaysUtils;
  */
 public class RouteTreeBuilder {
 
+    // For nested resource routes we should group them together under one parent
+    // node. For example, we have "/books" and "/books/:id" route. In treeview
+    // we should have 3 nodes:
+    //
+    //  + books
+    //      + GET /
+    //      + GET :id
+
 
     public static RouteNode buildTree(RouteList list) {
         RouteNode root = new RouteNode("", null);
 
         for(Route route: list) {
             // Break route path into parts, but remove leading slash before.
-            String path = route.getPath(); // RailwaysUtils.trimRequestFormat(route.getPath());
+            String path = RailwaysUtils.trimRequestFormat(route.getPath());
             String[] parts = path.substring(1).split("/");
 
             pushRouteNode(root, route, parts, 0);
@@ -38,10 +46,25 @@ public class RouteTreeBuilder {
 
         // Search for existing container node
         if (!isLastPart) {
-            RouteNode newTarget = parent.findByTitle(currentTitle);
+            RouteNode newTarget = parent.find(currentTitle);
 
-            if (newTarget != null)
-                targetNode = newTarget;
+            // If we found a leaf node (linked to Route), we should create
+            // new group and move it into new group.
+            if (newTarget != null) {
+                if (newTarget.getRoute() != null) {
+                    targetNode = new RouteNode(currentTitle, null);
+                    parent.add(targetNode);
+
+                    // And now move all routes to new targetNode.
+                    while (newTarget != null) {
+                        newTarget.setTitle("/");
+                        targetNode.add(newTarget);
+                        newTarget = parent.find(currentTitle, true);
+                    }
+                } else
+                    targetNode = newTarget;
+            }
+
         }
 
         if (targetNode == null) {
