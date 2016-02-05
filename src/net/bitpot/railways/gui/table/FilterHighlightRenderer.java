@@ -1,8 +1,9 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.gui.table;
 
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
+import net.bitpot.railways.gui.RailwaysColors;
 import net.bitpot.railways.models.RoutesFilter;
 import org.jetbrains.annotations.NotNull;
 

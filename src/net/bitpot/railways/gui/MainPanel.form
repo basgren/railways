@@ -190,7 +190,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="373dd" class="net.bitpot.railways.gui.RoutesTable" binding="routesTable" custom-create="true">
+                              <component id="373dd" class="net.bitpot.railways.gui.table.RoutesTable" binding="routesTable" custom-create="true">
                                 <constraints/>
                                 <properties>
                                   <rowMargin value="0"/>
@@ -215,7 +215,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="1da9b" class="net.bitpot.railways.gui.RoutesTree" binding="routesTree" custom-create="true">
+                              <component id="1da9b" class="net.bitpot.railways.gui.tree.RoutesTree" binding="routesTree" custom-create="true">
                                 <constraints/>
                                 <properties>
                                   <rootVisible value="false"/>

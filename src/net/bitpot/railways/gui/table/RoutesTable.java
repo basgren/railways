@@ -1,10 +1,11 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.gui.table;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;
+import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.NonNls;

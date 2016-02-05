@@ -14,6 +14,8 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import net.bitpot.railways.actions.UpdateRoutesListAction;
+import net.bitpot.railways.gui.table.RoutesTable;
+import net.bitpot.railways.gui.tree.RoutesTree;
 import net.bitpot.railways.models.*;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.RailsRoutesParser;
