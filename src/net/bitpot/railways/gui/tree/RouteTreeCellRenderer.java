@@ -30,25 +30,36 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
 
         RouteNode node = (RouteNode) value;
 
-        if (node.isLeaf()) {
-            Route route = node.getRoute();
-
-            // When there are no routes, root node can be a leaf
-            if (route == null)
-                return;
-
-            append(RailwaysUtils.trimRequestFormat(node.getTitle()));
-            String text = route.getActionTitle();
-
-            if (text != null)
-                append("  " + text, RailwaysColors.CONTROLLER_METHOD_ATTR);
-
-            setIcon(route.getRequestMethod().getIcon());
-        } else {
-            setIcon(RailwaysIcons.ROUTE_PARENT);
-            append(node.getTitle());
-        }
+        if (node.isLeaf())
+            renderRoute(node);
+        else
+            renderGroup(node);
 
         SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, selected);
+    }
+
+    private void renderRoute(RouteNode node) {
+        Route route = node.getRoute();
+
+        // When there are no routes, root node can be a leaf
+        if (route == null)
+            return;
+
+        append(RailwaysUtils.trimRequestFormat(node.getTitle()));
+        String text = route.getActionTitle();
+
+        if (text != null)
+            append("  " + text, RailwaysColors.CONTROLLER_METHOD_ATTR);
+
+        setIcon(route.getRequestMethod().getIcon());
+    }
+
+    private void renderGroup(RouteNode node) {
+        setIcon(RailwaysIcons.ROUTE_PARENT);
+        append(node.getTitle());
+
+        // TODO: count routes only, skip groups
+        int count = node.getChildCount();
+        append(String.format("  (%d)", count), RailwaysColors.CHILDREN_COUNT_ATTR);
     }
 }

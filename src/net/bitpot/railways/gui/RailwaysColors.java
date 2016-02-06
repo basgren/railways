@@ -51,6 +51,9 @@ public class RailwaysColors {
     public static final SimpleTextAttributes CONTROLLER_METHOD_ATTR =
             plainTextAttr(JBColor.GRAY, null);
 
+    public static final SimpleTextAttributes CHILDREN_COUNT_ATTR =
+            new SimpleTextAttributes(null, JBColor.GRAY, null, SimpleTextAttributes.STYLE_ITALIC);
+
 
     private static Color schemeColor(String name) {
         return TextAttributesKey.find(name)
