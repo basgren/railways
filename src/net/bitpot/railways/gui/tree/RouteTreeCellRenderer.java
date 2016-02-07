@@ -58,8 +58,9 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
         setIcon(RailwaysIcons.ROUTE_PARENT);
         append(node.getTitle());
 
-        // TODO: count routes only, skip groups
-        int count = node.getChildCount();
-        append(String.format("  (%d)", count), RailwaysColors.CHILDREN_COUNT_ATTR);
+        int count = node.getChildRoutesCount();
+        String countStr = count == 1 ? " (%d route)" : " (%d routes)";
+
+        append(String.format(countStr, count), RailwaysColors.CHILDREN_COUNT_ATTR);
     }
 }

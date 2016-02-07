@@ -45,6 +45,9 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
         this.route = route;
     }
 
+    public boolean isRoute() {
+        return route != null;
+    }
 
     /**
      * Sorts routes alphabetically
@@ -109,12 +112,27 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
 
         for (int i = 0; i < count; i++) {
             RouteNode node = (RouteNode) getChildAt(i);
-            boolean isRoute = node.getRoute() != null;
 
-            if (isRoute == findRoutes && node.getTitle().equals(title))
+            if (node.isRoute() == findRoutes && node.getTitle().equals(title))
                 return node;
         }
 
         return null;
+    }
+
+    public int getChildRoutesCount() {
+        int totalRoutes = 0;
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            RouteNode node = (RouteNode) getChildAt(i);
+
+            if (node.isRoute())
+                totalRoutes++;
+            else
+                totalRoutes += node.getChildRoutesCount();
+        }
+
+        return totalRoutes;
     }
 }
