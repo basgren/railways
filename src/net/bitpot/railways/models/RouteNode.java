@@ -46,7 +46,7 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
     }
 
     public boolean isRoute() {
-        return route != null;
+        return this.route != null;
     }
 
     /**

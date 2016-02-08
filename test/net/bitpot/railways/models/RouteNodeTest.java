@@ -2,6 +2,7 @@ package net.bitpot.railways.models;
 
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.parser.RouteTreeBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -51,46 +52,40 @@ public class RouteNodeTest
         assertNotNull(clientGroup);
 
         assertEquals("Root node has 3 child nodes", 3, clientGroup.getChildCount());
-
-
-
-//        RouteNode node2 = root.find("clients(.:format)");
-//        assertNotNull(node2);
-//        assertEquals("Child should be a route", true, node2.isLeaf());
-//
-//        RouteNode node3 = root.find("clients");
-//        assertNotNull(node3);
-//        assertEquals("Child should be a route", false, node3.isLeaf());
     }
 
 
     @Test
     public void testNestedRoutesSorting()
     {
-        // /clients(.:format)
-        // /clients/search(.:format)
-        // /clients/new(.:format)
-        // /clients/:id/edit(.:format)
+        // /clients(.:format)          clients#index
+        // /clients/search(.:format)   clients#index
+        // /clients/new(.:format)      clients#new
+        // /clients/:id/edit(.:format) clients#edit
+        // /clients/:id(.:format)      clients#show
         RouteNode root = buildRouteTreeFromFile("3_route_nodes_sorting.txt");
-        RouteNode child;
 
-        assertEquals("Root node has 2 child nodes", 2, root.getChildCount());
+        assertHasChild(root, "clients", 0, false);
 
-        // Check first child
-        child = (RouteNode) root.getChildAt(0);
-        assertEquals("First child should be 'clients' container",
-                "clients", child.getTitle());
+        RouteNode clientsNode = (RouteNode)root.getChildAt(0);
+        assertHasChild(clientsNode, ":id",      0, false);
+        assertHasChild(clientsNode, "/",        1, true);
+        assertHasChild(clientsNode, "new",      2, true);
+        assertHasChild(clientsNode, "search",   3, true);
 
-        // Test sorting in child nodes
-        assertEquals(":id",                 ((RouteNode)child.getChildAt(0)).getTitle());
-        assertEquals(":id(.:format)",       ((RouteNode)child.getChildAt(1)).getTitle());
-        assertEquals("new(.:format)",       ((RouteNode)child.getChildAt(2)).getTitle());
-        assertEquals("search(.:format)",    ((RouteNode)child.getChildAt(3)).getTitle());
+        RouteNode idNode = (RouteNode)clientsNode.getChildAt(0);
+        assertHasChild(idNode, "/", 0, true);
+    }
 
+    private void assertHasChild(@NotNull RouteNode parent, String title,
+                                int position, boolean isRoute) {
+        RouteNode child = (RouteNode)parent.getChildAt(position);
+        assertNotNull("Expected child node at position" + position, child);
+        assertEquals(String.format("Expected child node to have title \"%s\" at position %d",
+                title, position), title, child.getTitle());
 
-        // Check second child
-        child = (RouteNode) root.getChildAt(1);
-        assertEquals("Second child should be 'clients(.:format)' route",
-                "clients(.:format)", child.getTitle());
+        String nodeType = isRoute ? "route" : "group";
+
+        assertEquals(String.format("Expected child at position %d to be a %s", position, nodeType), child.isRoute(), isRoute);
     }
 }
