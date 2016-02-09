@@ -3,6 +3,7 @@ package net.bitpot.railways.models;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.parser.RouteTreeBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -64,17 +65,19 @@ public class RouteNodeTest
         // /clients/:id/edit(.:format) clients#edit
         // /clients/:id(.:format)      clients#show
         RouteNode root = buildRouteTreeFromFile("3_route_nodes_sorting.txt");
+        assertNotNull(root);
 
         assertHasChild(root, "clients", 0, false);
+        assertHasChild(root, "clients", 1, true);
 
         RouteNode clientsNode = (RouteNode)root.getChildAt(0);
         assertHasChild(clientsNode, ":id",      0, false);
-        assertHasChild(clientsNode, "/",        1, true);
+        assertHasChild(clientsNode, ":id",      1, true);
         assertHasChild(clientsNode, "new",      2, true);
         assertHasChild(clientsNode, "search",   3, true);
 
         RouteNode idNode = (RouteNode)clientsNode.getChildAt(0);
-        assertHasChild(idNode, "/", 0, true);
+        assertHasChild(idNode, "edit", 0, true);
     }
 
     private void assertHasChild(@NotNull RouteNode parent, String title,
