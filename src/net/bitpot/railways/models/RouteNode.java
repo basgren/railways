@@ -88,13 +88,13 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
     }
 
     /**
-     * Performs one-level search of child node by title.
+     * Performs one-level search of child node of any type by title.
      *
      * @param title Title to search for
      * @return RouteNode or null if nothing is found.
      */
     @Nullable
-    public RouteNode find(String title) {
+    public RouteNode findNode(String title) {
         int count = getChildCount();
 
         for (int i = 0; i < count; i++) {
@@ -107,7 +107,17 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
         return null;
     }
 
-    public RouteNode find(String title, boolean findRoutes) {
+    @Nullable
+    public RouteNode findGroup(String title) {
+        return findNode(title, false);
+    }
+
+    @Nullable
+    public RouteNode findRoute(String title) {
+        return findNode(title, true);
+    }
+
+    private RouteNode findNode(String title, boolean findRoutes) {
         int count = getChildCount();
 
         for (int i = 0; i < count; i++) {

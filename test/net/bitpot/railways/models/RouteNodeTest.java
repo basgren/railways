@@ -3,13 +3,13 @@ package net.bitpot.railways.models;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.parser.RouteTreeBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testing RouteNode.
@@ -47,9 +47,9 @@ public class RouteNodeTest
 
         // As we don't check sorting here, just iterate through nodes and check
         // if we have appropriate children.
-        assertNotNull(root.find("/"));
+        assertNotNull(root.findNode("/"));
 
-        RouteNode clientGroup = root.find("clients", false);
+        RouteNode clientGroup = root.findGroup("clients");
         assertNotNull(clientGroup);
 
         assertEquals("Root node has 3 child nodes", 3, clientGroup.getChildCount());
@@ -82,6 +82,8 @@ public class RouteNodeTest
 
     private void assertHasChild(@NotNull RouteNode parent, String title,
                                 int position, boolean isRoute) {
+        assertTrue("No child node at position " + position, parent.getChildCount() > position);
+
         RouteNode child = (RouteNode)parent.getChildAt(position);
         assertNotNull("Expected child node at position" + position, child);
         assertEquals(String.format("Expected child node to have title \"%s\" at position %d",

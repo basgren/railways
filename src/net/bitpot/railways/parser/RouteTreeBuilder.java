@@ -46,7 +46,7 @@ public class RouteTreeBuilder {
 
         // Search for existing container node
         if (!isLastPart) {
-            RouteNode newTarget = parent.find(currentTitle);
+            RouteNode newTarget = parent.findNode(currentTitle);
 
             // If we found a leaf node (linked to Route), we should create
             // new group and move it into new group.
@@ -59,7 +59,7 @@ public class RouteTreeBuilder {
                     while (newTarget != null) {
                         newTarget.setTitle("/");
                         targetNode.add(newTarget);
-                        newTarget = parent.find(currentTitle, true);
+                        newTarget = parent.findRoute(currentTitle);
                     }
                 } else
                     targetNode = newTarget;
