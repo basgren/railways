@@ -5,3 +5,12 @@
      new_client GET          /clients/new(.:format)      clients#new
     edit_client GET          /clients/:id/edit(.:format) clients#edit
 
+# In without semantic grouping these routes should build the next tree:
+#
+# clients
+#   :id
+#     edit
+#   new
+# /
+# clients
+

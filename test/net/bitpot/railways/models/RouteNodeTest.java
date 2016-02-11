@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class RouteNodeTest
 {
+    @NotNull
     private RouteNode buildRouteTreeFromFile(String filename) {
         try {
             RailsRoutesParser parser = new RailsRoutesParser();
@@ -24,7 +25,7 @@ public class RouteNodeTest
             return RouteTreeBuilder.buildTree(routes);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return null;
+            return new RouteNode("", null);
         }
     }
 
@@ -43,16 +44,20 @@ public class RouteNodeTest
     {
         RouteNode root = buildRouteTreeFromFile("2_simple_nested_routes.txt");
 
-        assertEquals("Root node has 2 child nodes", 2, root.getChildCount());
+        assertHasChildrenCount(root, 3);
 
-        // As we don't check sorting here, just iterate through nodes and check
-        // if we have appropriate children.
-        assertNotNull(root.findNode("/"));
+        assertHasChild(root, "clients", 0, false);
+        assertHasChild(root, "/",       1, true);
+        assertHasChild(root, "clients", 2, true);
 
-        RouteNode clientGroup = root.findGroup("clients");
-        assertNotNull(clientGroup);
+        RouteNode clientsNode = (RouteNode)root.getChildAt(0);
+        assertHasChildrenCount(clientsNode, 2);
+        assertHasChild(clientsNode, ":id", 0, false);
+        assertHasChild(clientsNode, "new", 1, true);
 
-        assertEquals("Root node has 3 child nodes", 3, clientGroup.getChildCount());
+        RouteNode idNode = (RouteNode)clientsNode.getChildAt(0);
+        assertHasChildrenCount(idNode, 1);
+        assertHasChild(idNode, "edit", 0, true);
     }
 
 
@@ -92,5 +97,10 @@ public class RouteNodeTest
         String nodeType = isRoute ? "route" : "group";
 
         assertEquals(String.format("Expected child at position %d to be a %s", position, nodeType), child.isRoute(), isRoute);
+    }
+
+    private void assertHasChildrenCount(RouteNode node, int count) {
+        assertEquals(String.format("Expected node to have %d children", count),
+                count, node.getChildCount());
     }
 }

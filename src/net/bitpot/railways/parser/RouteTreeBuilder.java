@@ -11,14 +11,6 @@ import net.bitpot.railways.utils.RailwaysUtils;
  */
 public class RouteTreeBuilder {
 
-    // For nested resource routes we should group them together under one parent
-    // node. For example, we have "/books" and "/books/:id" route. In treeview
-    // we should have 3 nodes:
-    //
-    //  + books
-    //      + GET /
-    //      + GET :id
-
 
     public static RouteNode buildTree(RouteList list) {
         RouteNode root = new RouteNode("", null);
@@ -28,7 +20,7 @@ public class RouteTreeBuilder {
             String path = RailwaysUtils.trimRequestFormat(route.getPath());
             String[] parts = path.substring(1).split("/");
 
-            pushRouteNode(root, route, parts, 0);
+            layoutNode(root, route, parts, 0);
         }
 
         root.sort();
@@ -37,8 +29,42 @@ public class RouteTreeBuilder {
     }
 
 
-    private static void pushRouteNode(RouteNode parent, Route route,
+    private static void layoutNode(RouteNode parent, Route route,
                                       String[] parts, int partIndex) {
+        boolean isLastPart = (partIndex + 1 == parts.length);
+        String currentTitle = parts[partIndex];
+
+        if (isLastPart) {
+            if (currentTitle.equals(""))
+                currentTitle = "/";
+
+            parent.add(new RouteNode(currentTitle, route));
+
+            return;
+        }
+
+        // Search for existing container node
+        RouteNode targetNode = parent.findGroup(currentTitle);
+
+        if (targetNode == null) {
+            targetNode = new RouteNode(currentTitle, null);
+            parent.add(targetNode);
+        }
+
+        layoutNode(targetNode, route, parts, partIndex + 1);
+    }
+
+
+    // For nested resource routes we should group them together under one parent
+    // node. For example, we have "/books" and "/books/:id" route. In treeview
+    // we should have 3 nodes:
+    //
+    //  + books
+    //      + GET /
+    //      + GET :id
+    // TODO: This one is experimental - need to polish a bit
+    private static void layoutNodeGrouped(RouteNode parent, Route route,
+                                          String[] parts, int partIndex) {
         boolean isLastPart = (partIndex + 1 == parts.length);
 
         RouteNode targetNode = null;
@@ -46,7 +72,7 @@ public class RouteTreeBuilder {
 
         // Search for existing container node
         if (!isLastPart) {
-            RouteNode newTarget = parent.findNode(currentTitle);
+            RouteNode newTarget = parent.findGroup(currentTitle);
 
             // If we found a leaf node (linked to Route), we should create
             // new group and move it into new group.
@@ -76,7 +102,7 @@ public class RouteTreeBuilder {
         }
 
         if (!isLastPart) {
-            pushRouteNode(targetNode, route, parts, partIndex + 1);
+            layoutNodeGrouped(targetNode, route, parts, partIndex + 1);
         }
     }
 
