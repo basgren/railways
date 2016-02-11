@@ -1,7 +1,7 @@
 package net.bitpot.railways.models.routes;
 
 import com.intellij.openapi.module.Module;
-import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.ui.RailwaysIcons;
 import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.requestMethods.RequestMethod;

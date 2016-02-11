@@ -4,7 +4,7 @@ package net.bitpot.railways.models;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
-import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.ui.RailwaysIcons;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.parser.route.RouteActionParser;
 import net.bitpot.railways.parser.route.RoutePathParser;

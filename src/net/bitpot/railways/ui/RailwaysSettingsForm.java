@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.ui;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;

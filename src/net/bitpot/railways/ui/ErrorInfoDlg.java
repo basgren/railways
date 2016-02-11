@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.ui;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,7 @@
 package net.bitpot.railways.parser.route;
 
 import com.intellij.ui.SimpleTextAttributes;
-import net.bitpot.railways.gui.RailwaysColors;
+import net.bitpot.railways.ui.RailwaysColors;
 import org.jetbrains.annotations.NotNull;
 
 /**

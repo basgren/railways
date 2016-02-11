@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.ui;
 
 import com.intellij.ide.TextCopyProvider;
 import net.bitpot.railways.models.Route;

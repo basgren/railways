@@ -1,9 +1,9 @@
-package net.bitpot.railways.gui.tree;
+package net.bitpot.railways.ui.tree;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import net.bitpot.railways.gui.RailwaysColors;
-import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.ui.RailwaysColors;
+import net.bitpot.railways.ui.RailwaysIcons;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.utils.RailwaysUtils;

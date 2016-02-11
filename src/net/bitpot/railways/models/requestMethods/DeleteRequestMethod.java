@@ -1,6 +1,6 @@
 package net.bitpot.railways.models.requestMethods;
 
-import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.ui.RailwaysIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

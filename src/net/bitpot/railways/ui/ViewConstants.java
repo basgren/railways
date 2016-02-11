@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.ui;
 
 /**
  * @author Basil Gren

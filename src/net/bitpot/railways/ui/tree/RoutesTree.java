@@ -1,7 +1,7 @@
-package net.bitpot.railways.gui.tree;
+package net.bitpot.railways.ui.tree;
 
 import com.intellij.ui.treeStructure.Tree;
-import net.bitpot.railways.gui.MainPanel;
+import net.bitpot.railways.ui.MainPanel;
 import net.bitpot.railways.models.RouteNode;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,7 @@
 package net.bitpot.railways.models;
 
 import com.intellij.openapi.module.Module;
-import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.ui.RailwaysIcons;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;

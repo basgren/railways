@@ -1,7 +1,7 @@
-package net.bitpot.railways.gui.table;
+package net.bitpot.railways.ui.table;
 
 import com.intellij.ui.SimpleTextAttributes;
-import net.bitpot.railways.gui.RailwaysColors;
+import net.bitpot.railways.ui.RailwaysColors;
 import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;

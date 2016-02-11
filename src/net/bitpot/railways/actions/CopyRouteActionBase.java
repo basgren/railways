@@ -2,7 +2,7 @@ package net.bitpot.railways.actions;
 
 import com.intellij.ide.CopyProvider;
 import com.intellij.openapi.actionSystem.*;
-import net.bitpot.railways.gui.RoutesCopyProvider;
+import net.bitpot.railways.ui.RoutesCopyProvider;
 import net.bitpot.railways.models.Route;
 
 /**

@@ -3,7 +3,7 @@ package net.bitpot.railways.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
-import net.bitpot.railways.gui.ViewConstants;
+import net.bitpot.railways.ui.ViewConstants;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 

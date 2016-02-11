@@ -1,4 +1,4 @@
-package net.bitpot.railways.gui;
+package net.bitpot.railways.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.IconLoader;
