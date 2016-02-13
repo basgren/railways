@@ -1,11 +1,11 @@
 package net.bitpot.railways.ui.tree;
 
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.ui.MainPanel;
 import net.bitpot.railways.models.RouteNode;
+import net.bitpot.railways.ui.MainPanel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,12 +15,12 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -78,6 +78,8 @@ public class RoutesTree extends Tree implements DataProvider {
                 updateNodeInfo();
             }
         });
+
+        addMouseListener(new MyPopupHandler());
     }
 
 
@@ -128,5 +130,18 @@ public class RoutesTree extends Tree implements DataProvider {
         }
 
         return result.toArray(new Route[result.size()]);
+    }
+
+    private class MyPopupHandler extends PopupHandler {
+
+        @Override
+        public void invokePopup(Component comp, int x, int y) {
+            ActionManager actMgr = ActionManager.getInstance();
+            ActionGroup group = (ActionGroup) ActionManager.getInstance()
+                    .getAction("railways.PopupMenu");
+
+            ActionPopupMenu popupMenu = actMgr.createActionPopupMenu(ActionPlaces.UNKNOWN, group);
+            popupMenu.getComponent().show(comp, x, y);
+        }
     }
 }
