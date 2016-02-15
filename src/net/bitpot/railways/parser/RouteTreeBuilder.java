@@ -47,7 +47,11 @@ public class RouteTreeBuilder {
         RouteNode targetNode = parent.findGroup(currentTitle);
 
         if (targetNode == null) {
-            targetNode = new RouteNode(currentTitle, null);
+            RouteNode.GroupType groupType = RouteNode.GroupType.GROUP;
+            if ((partIndex == 0) && (route.getParentEngine() != null))
+                groupType = RouteNode.GroupType.MOUNTED_ROOT;
+
+            targetNode = new RouteNode(currentTitle, null, groupType);
             parent.add(targetNode);
         }
 

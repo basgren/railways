@@ -1,7 +1,6 @@
-package net.bitpot.railways.models;
+package net.bitpot.railways.parser;
 
-import net.bitpot.railways.parser.RailsRoutesParser;
-import net.bitpot.railways.parser.RouteTreeBuilder;
+import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.ui.tree.RouteNode;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Testing RouteNode.
  */
-public class RouteNodeTest
+public class RouteTreeBuilderTest
 {
     @NotNull
     private RouteNode buildRouteTreeFromFile(String filename) {
@@ -84,6 +83,17 @@ public class RouteNodeTest
 
         RouteNode idNode = (RouteNode)clientsNode.getChildAt(0);
         assertHasChild(idNode, "edit", 0, true);
+    }
+
+    @Test
+    public void testMountedRoutes() {
+        RouteNode root = buildRouteTreeFromFile("4_engine_routes.txt");
+        assertNotNull(root);
+
+        assertHasChild(root, "admin", 0, false);
+        RouteNode admin = (RouteNode)root.getChildAt(0);
+        assertEquals("Route group should be of mounted root type",
+                RouteNode.GroupType.MOUNTED_ROOT, admin.getGroupType());
     }
 
     private void assertHasChild(@NotNull RouteNode parent, String title,

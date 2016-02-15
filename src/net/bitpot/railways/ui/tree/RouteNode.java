@@ -9,6 +9,8 @@ import javax.swing.tree.TreeNode;
 import java.util.Collections;
 import java.util.Comparator;
 
+// TODO: rewrite RouteNode - breakdown into GroupNode and RouteNode inherited from RouteTreeNode. RouteNode cannot have children
+
 /**
  * Container for routes. Can contain any RouteItem (Route of RouteNode).
  */
@@ -17,8 +19,14 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
     @SuppressWarnings("unused")
     private static Logger log = Logger.getInstance(RouteNode.class.getName());
 
+    public enum GroupType {
+        GROUP,
+        MOUNTED_ROOT
+    }
+
     private Route route;
     private String title;
+    private GroupType groupType;
 
 
     private static final Comparator<RouteNode> comparator = new Comparator<RouteNode>() {
@@ -44,6 +52,12 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
     public RouteNode(String title, Route route) {
         this.title = title;
         this.route = route;
+    }
+
+    public RouteNode(String title, Route route, GroupType groupType) {
+        this(title, route);
+
+        this.groupType = groupType;
     }
 
     public boolean isRoute() {
@@ -145,5 +159,9 @@ public class RouteNode extends DefaultMutableTreeNode implements TreeNode {
         }
 
         return totalRoutes;
+    }
+
+    public GroupType getGroupType() {
+        return groupType;
     }
 }

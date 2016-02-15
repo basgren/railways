@@ -54,7 +54,11 @@ public class RouteTreeCellRenderer extends ColoredTreeCellRenderer {
     }
 
     private void renderGroup(RouteNode node) {
-        setIcon(RailwaysIcons.ROUTE_PARENT);
+        if (node.getGroupType() == RouteNode.GroupType.MOUNTED_ROOT)
+            setIcon(RailwaysIcons.NODE_MOUNTED_ENGINE);
+        else
+            setIcon(RailwaysIcons.ROUTE_PARENT);
+
         append(node.getTitle());
 
         int count = node.getChildRoutesCount();
