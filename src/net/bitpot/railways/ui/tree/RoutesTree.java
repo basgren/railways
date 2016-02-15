@@ -4,7 +4,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.ui.MainPanel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

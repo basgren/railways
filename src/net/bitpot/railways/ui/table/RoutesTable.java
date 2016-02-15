@@ -7,7 +7,6 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;
 import net.bitpot.railways.ui.MainPanel;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteTableModel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

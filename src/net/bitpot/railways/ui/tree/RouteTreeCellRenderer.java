@@ -5,7 +5,6 @@ import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import net.bitpot.railways.ui.RailwaysColors;
 import net.bitpot.railways.ui.RailwaysIcons;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteNode;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
 

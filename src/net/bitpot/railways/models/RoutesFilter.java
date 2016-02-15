@@ -1,5 +1,6 @@
 package net.bitpot.railways.models;
 
+import net.bitpot.railways.ui.table.RouteTableModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

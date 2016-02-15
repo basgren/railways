@@ -1,5 +1,8 @@
-package net.bitpot.railways.models;
+package net.bitpot.railways.ui.table;
 
+import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.RouteList;
+import net.bitpot.railways.models.RoutesFilter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.table.AbstractTableModel;

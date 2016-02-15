@@ -1,6 +1,7 @@
 package net.bitpot.railways.models;
 
 import net.bitpot.railways.parser.RailsRoutesParser;
+import net.bitpot.railways.ui.table.RouteTableModel;
 import org.junit.Before;
 import org.junit.Test;
 

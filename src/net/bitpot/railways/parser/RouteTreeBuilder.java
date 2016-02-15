@@ -2,7 +2,7 @@ package net.bitpot.railways.parser;
 
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.RouteNode;
+import net.bitpot.railways.ui.tree.RouteNode;
 import net.bitpot.railways.utils.RailwaysUtils;
 
 /**

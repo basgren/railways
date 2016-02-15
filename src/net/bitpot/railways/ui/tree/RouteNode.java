@@ -1,6 +1,7 @@
-package net.bitpot.railways.models;
+package net.bitpot.railways.ui.tree;
 
 import com.intellij.openapi.diagnostic.Logger;
+import net.bitpot.railways.models.Route;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;

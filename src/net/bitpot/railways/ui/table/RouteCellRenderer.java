@@ -4,7 +4,6 @@ import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.ui.RailwaysColors;
 import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.RouteTableModel;
 import net.bitpot.railways.models.RoutesFilter;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.route.*;
