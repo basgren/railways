@@ -1,6 +1,5 @@
 package net.bitpot.railways.gui;
 
-import com.intellij.ide.TextCopyProvider;
 import net.bitpot.railways.models.Route;
 import org.jetbrains.annotations.Nullable;
 

@@ -22,11 +22,16 @@
     <a href="https://github.com/basgren/railways">GitHub plugin page</a>.
     ]]></description>
 
-    <version>0.8.4</version>
+    <version>0.8.5</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.5</b><br/>
+        <ul>
+            <li>Fix compatibility with previous version of IDEA and RubyMine</li>
+        </ul></p>
 
         <p><b>0.8.4</b><br/>
         <ul>

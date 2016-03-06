@@ -1,7 +1,6 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.ide.CopyProvider;
-import com.intellij.ide.TextCopyProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBLabel;
