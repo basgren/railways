@@ -19,6 +19,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.expressions.RListOfExpressions;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.methodCall.RCall;
@@ -27,6 +28,7 @@ import org.jetbrains.plugins.ruby.utils.NamingConventions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Class that contains helper methods for working with PSI elements.
@@ -183,10 +185,21 @@ public class RailwaysPsiUtils {
 
 
     /**
-     * Performs search in modules that are included in specified class.
+     * Performs search in all modules that are included in specified class. So
+     * if ruby-class contains explicit includes:
+     *
+     *     include Admin::MyModule
+     *     include Concerns::Logging
+     *
+     * the specified methodName will be searched in both modules in order
+     * of their declaration.
      *
      * @param ctrlClass Class to look for modules.
+     * @param methodName Method name to search within modules of specified ruby
+*                   class
+     * @return First method which name matches methodName
      */
+    @Nullable
     private static RMethod findMethodInClassModules(RClass ctrlClass, String methodName) {
         PsiElement[] elements = PsiTreeUtil.collectElements(ctrlClass,
                 INCLUDE_MODULE_FILTER);
@@ -195,13 +208,14 @@ public class RailwaysPsiUtils {
         // same-named methods of previously included module.
         int i = elements.length;
         while (--i >= 0) {
-            RCall call = (RCall)elements[i];
+            RCall includeMethodCall = (RCall)elements[i];
 
-            RPsiElement arg = call.getCallArguments().getElement(0);
-            if (arg == null)
+            // TODO: replace `getModuleNameArgument` call with `includeMethodCall.getArguments().getFirstElement()` when both Ruby plugin for IDEA and RubyMine have the same code base (i.e. both have RListOfExpressions.getFirstElement method).
+            RPsiElement moduleNameArg = getModuleNameArgument(includeMethodCall);
+            if (moduleNameArg == null)
                 continue;
 
-            RContainer cont = findClassOrModule(arg.getText(),
+            RContainer cont = findClassOrModule(moduleNameArg.getText(),
                     ctrlClass.getProject());
 
             if (cont instanceof RModule)
@@ -212,13 +226,41 @@ public class RailwaysPsiUtils {
         return null;
     }
 
+    @Nullable
+    private static RPsiElement getModuleNameArgument(RCall includeMethodCall) {
+
+        // In 2016.2 versions of the platform there are differences in
+        // RListOfExpressions interface:
+        //
+        //  * RubyMine 2016.2 (RM-162.1236.17, built on July 19, 2016)
+        //    RListOfExpressions already doesn't have getElement(0) method,
+        //    but has getFirstElement() instead.
+        //
+        //  * Intellij IDEA 2016.2 with Ruby plugin v2016.2.20160616
+        //    RListOfExpressions still has getElement(0) method
+        //
+        // BUT! In both versions of RListOfExpressions there's `getElements()`
+        // method, so let's use it!
+
+        RListOfExpressions args = includeMethodCall.getCallArguments();
+        List<RPsiElement> psiElems = args.getElements();
+
+        if (psiElems.size() > 0)
+            return psiElems.get(0);
+
+        return null;
+    }
 
     /**
      * Method wraps RubyPsiUtils.getMethodWithPossibleZeroArgsByName method,
      * which declaration was changed in RubyMine 7.0.
      */
+    @Nullable
     private static RMethod getMethodWithPossibleZeroArgsByName(@NotNull RContainer container,
                                                                @Nullable String methodName) {
+
+        // TODO: remove this reflection stuff and use only freshest version of IDE - don't forget to update since-build in plugin meta info
+
         // Declaration in RubyMine 6.3:
         //
         //     public static RMethod getMethodWithPossibleZeroArgsByName(
@@ -246,6 +288,7 @@ public class RailwaysPsiUtils {
     @Nullable
     private static Object getRubyPsiUtilObject() {
         try {
+            // TODO: simplify this method when support for older platform versions is dropped
             // New version of RubyPsiUtil has getInstance() method
             Method method = RubyPsiUtil.class.getMethod("getInstance");
             return method.invoke(RubyPsiUtil.class);

@@ -28,6 +28,12 @@
 
     <change-notes><![CDATA[
 
+        <p><b>0.8.6</b><br/>
+        <ul>
+            <li>Add plugin compatibility with RubyMine 2016.2 and (liekly)
+                with following releases of Ruby plugin for IDEA</li>
+        </ul></p>
+
         <p><b>0.8.5</b><br/>
         <ul>
             <li>Fix compatibility with previous version of IDEA and RubyMine</li>
