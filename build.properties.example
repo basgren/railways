@@ -3,7 +3,7 @@
 # below to match your environment.
 
 
-# Path to JDK (currently JDK 6 is used to build the plugin)
+# Path to JDK (currently JDK 8 is used to build the plugin)
 jdk.home=/path/to/jdk
 
 # Path to IntelliJ IDEA directory in which the plugin is being developed

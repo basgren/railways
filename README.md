@@ -11,7 +11,7 @@ Features:
   "Goto route action" popup available in code editor by pressing **Ctrl + Shift + G**
 * Provides quick routes filtering by route path, controller/action or route name
 
-Current release is tested on RubyMine 7.0, RubyMine 6.3, IntelliJ IDEA 14.0.
+Current release is tested on RubyMine 2016.1, RubyMine 2016.2, IntelliJ IDEA 2016.2.
 
 ## Development Environment
 
@@ -20,12 +20,11 @@ Current release is tested on RubyMine 7.0, RubyMine 6.3, IntelliJ IDEA 14.0.
 2. Open the project in IntelliJ IDEA
 
 3. Set up a JDK if it's not set (File > Project Structure > SDKs > Add New JDK).
-   It's highly recommended to use JDK 1.6 to make plugin compatible with wider
-   range of systems.
+   Select JDK 1.8.
 
-4. Set up IntelliJ plugin SDK. You should have RubyMine 7 installed.
+4. Set up IntelliJ plugin SDK. You should have RubyMine 2016.2 installed.
    Go to File > Project Structure > SDKs > Add new IntelliJ IDEA Plugin SDK,
-   name it "RubyMine 7 SDK" and select path to your RubyMine 7 installation.
+   name it "RubyMine 2016.2 SDK" and select path to your RubyMine installation.
    When you are asked to select JDK, specify JDK from previous step.
 
 5. Select a project SDK for your project using "File > Project Structure >
