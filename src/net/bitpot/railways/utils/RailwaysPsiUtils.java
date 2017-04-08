@@ -19,6 +19,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
+import org.jetbrains.plugins.ruby.ruby.lang.psi.expressions.RListOfExpressions;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.methodCall.RCall;
@@ -27,6 +28,7 @@ import org.jetbrains.plugins.ruby.utils.NamingConventions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Class that contains helper methods for working with PSI elements.
@@ -78,8 +80,7 @@ public class RailwaysPsiUtils {
         RClass currentClass = ctrlClass;
 
         while (true) {
-            RMethod method = getMethodWithPossibleZeroArgsByName(
-                    currentClass, methodName);
+            RMethod method = RubyPsiUtil.getMethodWithPossibleZeroArgsByName(currentClass, methodName);
             if (method != null)
                 return method;
 
@@ -183,10 +184,21 @@ public class RailwaysPsiUtils {
 
 
     /**
-     * Performs search in modules that are included in specified class.
+     * Performs search in all modules that are included in specified class. So
+     * if ruby-class contains explicit includes:
+     *
+     *     include Admin::MyModule
+     *     include Concerns::Logging
+     *
+     * the specified methodName will be searched in both modules in order
+     * of their declaration.
      *
      * @param ctrlClass Class to look for modules.
+     * @param methodName Method name to search within modules of specified ruby
+     *                   class
+     * @return First method which name matches methodName
      */
+    @Nullable
     private static RMethod findMethodInClassModules(RClass ctrlClass, String methodName) {
         PsiElement[] elements = PsiTreeUtil.collectElements(ctrlClass,
                 INCLUDE_MODULE_FILTER);
@@ -195,70 +207,21 @@ public class RailwaysPsiUtils {
         // same-named methods of previously included module.
         int i = elements.length;
         while (--i >= 0) {
-            RCall call = (RCall)elements[i];
+            RCall includeMethodCall = (RCall)elements[i];
 
-            RPsiElement arg = call.getCallArguments().getElement(0);
-            if (arg == null)
+            RPsiElement moduleNameArg = includeMethodCall.getArguments().get(0);
+            if (moduleNameArg == null)
                 continue;
 
-            RContainer cont = findClassOrModule(arg.getText(),
+            RContainer cont = findClassOrModule(moduleNameArg.getText(),
                     ctrlClass.getProject());
 
             if (cont instanceof RModule)
-                return getMethodWithPossibleZeroArgsByName(
-                        cont, methodName);
+                return RubyPsiUtil.getMethodWithPossibleZeroArgsByName(cont, methodName);
         }
 
         return null;
     }
-
-
-    /**
-     * Method wraps RubyPsiUtils.getMethodWithPossibleZeroArgsByName method,
-     * which declaration was changed in RubyMine 7.0.
-     */
-    private static RMethod getMethodWithPossibleZeroArgsByName(@NotNull RContainer container,
-                                                               @Nullable String methodName) {
-        // Declaration in RubyMine 6.3:
-        //
-        //     public static RMethod getMethodWithPossibleZeroArgsByName(
-        //             @NotNull RContainer var0, @Nullable String var1)
-        //
-        // Declaration in RubyMine 7.0:
-        //
-        //     public RMethod getMethodWithPossibleZeroArgsByName(
-        //             @NotNull RContainer container, @Nullable String name)
-
-        Object psiUtils = getRubyPsiUtilObject();
-        if (psiUtils == null)
-            return null;
-
-        try {
-            Method method = RubyPsiUtil.class.getMethod(
-                    "getMethodWithPossibleZeroArgsByName", RContainer.class, String.class);
-            return (RMethod)(method.invoke(psiUtils, container, methodName));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    @Nullable
-    private static Object getRubyPsiUtilObject() {
-        try {
-            // New version of RubyPsiUtil has getInstance() method
-            Method method = RubyPsiUtil.class.getMethod("getInstance");
-            return method.invoke(RubyPsiUtil.class);
-        } catch (NoSuchMethodException e) {
-            // No getInstance() method => we use RubyMine < 7.0
-            return RubyPsiUtil.class;
-        } catch (InvocationTargetException e) {
-            return null;
-        } catch (IllegalAccessException e) {
-            return null;
-        }
-    }
-
 
     public static void logPsiParentChain(PsiElement elem) {
         while (elem != null) {

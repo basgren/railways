@@ -1,6 +1,11 @@
 Railways - Change Notes
 =======================
 
+### 0.8.5 (2016-03-07)
+
+* Fix compatibility with previous version of IDEA and RubyMine
+
+
 ### 0.8.4 (2016-01-30)
 
 * Add ability to copy route path with http method

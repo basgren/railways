@@ -1,8 +1,8 @@
 package net.bitpot.railways.routesView;
 
 import com.intellij.execution.process.ProcessOutput;
-import com.intellij.ide.PowerSaveMode;
-import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -12,8 +12,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.util.Alarm;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.parser.RailsRoutesParser;
 import net.bitpot.railways.utils.RailwaysUtils;
@@ -218,10 +216,13 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
         setState(UPDATING);
 
         // Save all documents to make sure that requestMethods will be collected using actual files.
-        FileDocumentManager.getInstance().saveAllDocuments();
+        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
+            FileDocumentManager.getInstance().saveAllDocuments();
 
-        // Start background task.
-        (new UpdateRoutesTask()).queue();
+            // Start background task.
+            (new UpdateRoutesTask()).queue();
+        });
+
         return true;
     }
 
