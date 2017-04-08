@@ -9,6 +9,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMetho
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.Visibility;
 
 import javax.swing.*;
+import java.util.Objects;
 
 /**
  * Contains information about controller action.
@@ -72,15 +73,17 @@ public class RailsActionInfo {
             return;
         }
 
-        if (psiClass != null && !psiClass.isValid()) {
+        String qualifiedName =
+                RailwaysPsiUtils.getControllerClassNameByShortName(controllerShortName);
+
+        if (psiClass != null && (!psiClass.isValid() ||
+                !Objects.equals(psiClass.getFQN().getFullPath(), qualifiedName))) {
             psiMethod = null;
             psiClass = null;
         }
 
         // Find psiClass if it's not specified or already invalid.
         if (psiClass == null) {
-            String qualifiedName = RailwaysPsiUtils.getControllerClassNameByShortName(
-                    controllerShortName);
             psiClass = RailwaysPsiUtils.findControllerClass(app, qualifiedName);
         }
 
