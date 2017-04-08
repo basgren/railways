@@ -80,8 +80,7 @@ public class RailwaysPsiUtils {
         RClass currentClass = ctrlClass;
 
         while (true) {
-            RMethod method = getMethodWithPossibleZeroArgsByName(
-                    currentClass, methodName);
+            RMethod method = RubyPsiUtil.getMethodWithPossibleZeroArgsByName(currentClass, methodName);
             if (method != null)
                 return method;
 
@@ -196,7 +195,7 @@ public class RailwaysPsiUtils {
      *
      * @param ctrlClass Class to look for modules.
      * @param methodName Method name to search within modules of specified ruby
-*                   class
+     *                   class
      * @return First method which name matches methodName
      */
     @Nullable
@@ -210,8 +209,7 @@ public class RailwaysPsiUtils {
         while (--i >= 0) {
             RCall includeMethodCall = (RCall)elements[i];
 
-            // TODO: replace `getModuleNameArgument` call with `includeMethodCall.getArguments().getFirstElement()` when both Ruby plugin for IDEA and RubyMine have the same code base (i.e. both have RListOfExpressions.getFirstElement method).
-            RPsiElement moduleNameArg = getModuleNameArgument(includeMethodCall);
+            RPsiElement moduleNameArg = includeMethodCall.getArguments().get(0);
             if (moduleNameArg == null)
                 continue;
 
@@ -219,89 +217,11 @@ public class RailwaysPsiUtils {
                     ctrlClass.getProject());
 
             if (cont instanceof RModule)
-                return getMethodWithPossibleZeroArgsByName(
-                        cont, methodName);
+                return RubyPsiUtil.getMethodWithPossibleZeroArgsByName(cont, methodName);
         }
 
         return null;
     }
-
-    @Nullable
-    private static RPsiElement getModuleNameArgument(RCall includeMethodCall) {
-
-        // In 2016.2 versions of the platform there are differences in
-        // RListOfExpressions interface:
-        //
-        //  * RubyMine 2016.2 (RM-162.1236.17, built on July 19, 2016)
-        //    RListOfExpressions already doesn't have getElement(0) method,
-        //    but has getFirstElement() instead.
-        //
-        //  * Intellij IDEA 2016.2 with Ruby plugin v2016.2.20160616
-        //    RListOfExpressions still has getElement(0) method
-        //
-        // BUT! In both versions of RListOfExpressions there's `getElements()`
-        // method, so let's use it!
-
-        RListOfExpressions args = includeMethodCall.getCallArguments();
-        List<RPsiElement> psiElems = args.getElements();
-
-        if (psiElems.size() > 0)
-            return psiElems.get(0);
-
-        return null;
-    }
-
-    /**
-     * Method wraps RubyPsiUtils.getMethodWithPossibleZeroArgsByName method,
-     * which declaration was changed in RubyMine 7.0.
-     */
-    @Nullable
-    private static RMethod getMethodWithPossibleZeroArgsByName(@NotNull RContainer container,
-                                                               @Nullable String methodName) {
-
-        // TODO: remove this reflection stuff and use only freshest version of IDE - don't forget to update since-build in plugin meta info
-
-        // Declaration in RubyMine 6.3:
-        //
-        //     public static RMethod getMethodWithPossibleZeroArgsByName(
-        //             @NotNull RContainer var0, @Nullable String var1)
-        //
-        // Declaration in RubyMine 7.0:
-        //
-        //     public RMethod getMethodWithPossibleZeroArgsByName(
-        //             @NotNull RContainer container, @Nullable String name)
-
-        Object psiUtils = getRubyPsiUtilObject();
-        if (psiUtils == null)
-            return null;
-
-        try {
-            Method method = RubyPsiUtil.class.getMethod(
-                    "getMethodWithPossibleZeroArgsByName", RContainer.class, String.class);
-            return (RMethod)(method.invoke(psiUtils, container, methodName));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    @Nullable
-    private static Object getRubyPsiUtilObject() {
-        try {
-            // TODO: simplify this method when support for older platform versions is dropped
-            // New version of RubyPsiUtil has getInstance() method
-            Method method = RubyPsiUtil.class.getMethod("getInstance");
-            return method.invoke(RubyPsiUtil.class);
-        } catch (NoSuchMethodException e) {
-            // No getInstance() method => we use RubyMine < 7.0
-            return RubyPsiUtil.class;
-        } catch (InvocationTargetException e) {
-            return null;
-        } catch (IllegalAccessException e) {
-            return null;
-        }
-    }
-
 
     public static void logPsiParentChain(PsiElement elem) {
         while (elem != null) {
