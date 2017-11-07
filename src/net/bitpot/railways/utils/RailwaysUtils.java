@@ -21,7 +21,7 @@ import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.ruby.gem.GemsRunner;
+import org.jetbrains.plugins.ruby.gem.RubyGemExecutionContext;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
 /**
@@ -87,11 +87,13 @@ public class RailwaysUtils {
         try {
             railsEnv = (railsEnv == null) ? "" : "RAILS_ENV=" + railsEnv;
 
-            // Will work on IntelliJ platform since 122.633 build (RubyMine 5)
-            return GemsRunner.runGemsExecutableScript(sdk, module,
-                    "rake", "rake",
-                    moduleContentRoot, new ExecutionModes.SameThreadMode(),
-                    routesTaskName, "--trace", railsEnv);
+            // Will work on IntelliJ platform since 2017.3
+            return RubyGemExecutionContext.create(sdk, "rake")
+                    .withModule(module)
+                    .withWorkingDirPath(moduleContentRoot)
+                    .withExecutionMode(new ExecutionModes.SameThreadMode())
+                    .withArguments(routesTaskName, "--trace", railsEnv)
+                    .executeScript();
         } catch (Exception e) {
             e.printStackTrace();
         }
