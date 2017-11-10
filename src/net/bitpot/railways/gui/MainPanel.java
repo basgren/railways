@@ -233,7 +233,7 @@ public class MainPanel {
         pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent e) {
-                myTableModel.getFilter().setPathFilter(pathFilterField.getText());
+                myTableModel.getFilter().setFilterText(pathFilterField.getText());
             }
         });
 

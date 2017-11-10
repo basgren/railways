@@ -34,7 +34,7 @@ public class TableModelFilterTest
     public void testSimpleFilter()
     {
         RoutesFilter filter = model.getFilter();
-        filter.setPathFilter("user");
+        filter.setFilterText("user");
 
         assertEquals(model.getRowCount(), 14);
     }
@@ -44,7 +44,7 @@ public class TableModelFilterTest
     public void testMethodFilter()
     {
         RoutesFilter filter = model.getFilter();
-        filter.setPathFilter("#search");
+        filter.setFilterText("#search");
 
         assertEquals(2, model.getRowCount());
     }
@@ -54,8 +54,36 @@ public class TableModelFilterTest
     public void testCaseInsensitivity()
     {
         RoutesFilter filter = model.getFilter();
-        filter.setPathFilter("SEarcH");
+        filter.setFilterText("SEarcH");
 
         assertEquals(2, model.getRowCount());
     }
+
+    @Test
+    public void testWildcardSearch() {
+        RoutesFilter filter = model.getFilter();
+        filter.setFilterText("admin*:id");
+
+        assertEquals(4, model.getRowCount());
+    }
+
+    @Test
+    public void testFindMatchedString() {
+        testFilterMatching("/books/:id/edit(.:format)", "boo*it", "books/:id/edit");
+        testFilterMatching("/books/:id/edit(.:format)", "boo", "boo");
+        testFilterMatching("/books/:id/edit(.:format)", "boo*", "boo");
+        testFilterMatching("/books", "booo", "");
+        testFilterMatching("/books(.:format)", "boo*(", "books(");
+        testFilterMatching("/books/:id(.:format)", "boo*/:id(", "books/:id(");
+        testFilterMatching("/boooks/:id(.:format)", "o.o", "");
+        testFilterMatching("\\.[]{}()+-?^$|", "\\.[]{}()+-?^$|", "\\.[]{}()+-?^$|");
+    }
+
+    private void testFilterMatching(String subject, String filterText, String expected) {
+        RoutesFilter filter = model.getFilter();
+        filter.setFilterText(filterText);
+
+        assertEquals(expected, filter.findMatchedString(subject));
+    }
+
 }

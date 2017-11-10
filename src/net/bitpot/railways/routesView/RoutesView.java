@@ -28,23 +28,23 @@ import net.bitpot.railways.gui.MainPanel;
 import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.navigation.ChooseByRouteRegistry;
 import net.bitpot.railways.utils.RailwaysUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 
 import javax.swing.*;
 import java.util.ArrayList;
 
-@State(
-    name="RoutesToolWindow",
-    storages= {
-        @Storage(file = StoragePathMacros.WORKSPACE_FILE)
-    }
-)
-
 /**
  * Implements tool window logic. Synchronizes the number of tool window panes
  * with the number of opened Rails modules in the project.
  */
+@State(
+        name="RoutesToolWindow",
+        storages= {
+                @Storage(file = StoragePathMacros.WORKSPACE_FILE)
+        }
+)
 public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         Disposable {
 
@@ -52,19 +52,19 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         return ServiceManager.getService(project, RoutesView.class);
     }
 
-    private Project myProject;
+    @NotNull private final Project myProject;
     private ContentManager myContentManager;
 
     private MainPanel mainPanel;
 
-    private ArrayList<RoutesViewPane> myPanes = new ArrayList<RoutesViewPane>();
+    private ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
     private RoutesViewPane currentPane = null;
     private ToolWindow myToolWindow;
 
     private State myState = new State();
 
 
-    public RoutesView(Project project) {
+    public RoutesView(@NotNull Project project) {
         myProject = project;
         mainPanel = new MainPanel(project);
 
@@ -75,9 +75,9 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
-    public static class State {
-        public int selectedTabId;
-        public boolean hideMountedRoutes;
+    static class State {
+        int selectedTabId;
+        boolean hideMountedRoutes;
     }
 
     @Nullable
@@ -98,7 +98,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
      *
      * @param toolWindow Tool window to initialize.
      */
-    public synchronized void initToolWindow(final ToolWindow toolWindow) {
+    synchronized void initToolWindow(final ToolWindow toolWindow) {
         myToolWindow = toolWindow;
         myContentManager = toolWindow.getContentManager();
 
@@ -156,7 +156,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 if (toolWindow.isVisible())
                     if (currentPane != null && currentPane.isRoutesInvalidated())
                         currentPane.updateRoutes();
-                
+
                 refreshRouteActionsStatus();
             }
         });
@@ -226,7 +226,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     }
 
 
-    public void setCurrentPane(RoutesViewPane pane) {
+    private void setCurrentPane(RoutesViewPane pane) {
         if (currentPane == pane)
             return;
 
@@ -234,10 +234,10 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
         if (pane != null) {
             mainPanel.setDataSource(pane);
-            
+
             if (pane.isRoutesInvalidated())
                 pane.updateRoutes();
-            
+
             syncPanelWithRoutesManager(pane.getRoutesManager());
         }
     }
@@ -246,7 +246,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     public void addModulePane(Module module) {
         // Skip if RoutesView is not initialized or if added module is not
         // Rails application.
-        RailsApp railsApp = RailsApp.fromModule(module); 
+        RailsApp railsApp = RailsApp.fromModule(module);
         if ((myContentManager == null) || railsApp == null)
             return;
 
@@ -345,12 +345,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 return;
 
             alarm.cancelAllRequests();
-            alarm.addRequest(new Runnable() {
-                @Override
-                public void run() {
-                    refreshRouteActionsStatus();
-                }
-            }, 1000, ModalityState.NON_MODAL);
+            alarm.addRequest(() -> refreshRouteActionsStatus(), 1000, ModalityState.NON_MODAL);
         }
     }
 
@@ -360,13 +355,11 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         @Override
         public void stateChanged(final RoutesManager routesManager) {
             // Railways can invoke this event from another thread
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-                public void run() {
-                    // Synchronize with routesManager only if it belongs to
-                    // currently selected pane.
-                    if (routesManager == getCurrentRoutesManager())
-                        syncPanelWithRoutesManager(routesManager);
-                }
+            UIUtil.invokeLaterIfNeeded(() -> {
+                // Synchronize with routesManager only if it belongs to
+                // currently selected pane.
+                if (routesManager == getCurrentRoutesManager())
+                    syncPanelWithRoutesManager(routesManager);
             });
         }
     }

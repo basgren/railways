@@ -3,6 +3,7 @@ package net.bitpot.railways.models;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.Collections;
 
 /**
  * Table models.
@@ -94,12 +95,22 @@ public class RouteTableModel extends AbstractTableModel {
     }
 
 
-    public void filterChanged() {
+    void filterChanged() {
         // Here we should update model.
-        filter.applyFilter(myRouteList, filteredRoutes);
+        filteredRoutes.clear();
+
+        if (!filter.isFilterActive()) {
+            filteredRoutes.setSize(myRouteList.size());
+            Collections.copy(filteredRoutes, myRouteList);
+        } else {
+            // Filter all elements
+            for (Route route : myRouteList)
+                if (filter.match(route))
+                    filteredRoutes.add(route);
+        }
+
         this.fireTableDataChanged();
     }
-
 
     /**
      * Returns route object associated with specified row.

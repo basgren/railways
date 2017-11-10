@@ -19,7 +19,7 @@ import java.util.List;
 public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
-    public RouteCellRenderer(@NotNull RoutesFilter filter) {
+    RouteCellRenderer(@NotNull RoutesFilter filter) {
         super(filter);
 
         setTransparentIconBackground(true);
@@ -66,8 +66,9 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
         setToolTipText(tooltipText);
 
         // Now append text taking into account colors and highlighting.
+        String highlightedText = getFilter().findMatchedString(route.getActionTitle());
         List<TextChunk> chunks = RouteActionParser.getInstance().highlight(
-                route.getActionChunks(), getFilter().getPathFilter());
+                route.getActionChunks(), highlightedText);
 
         for(TextChunk chunk: chunks) {
             SimpleTextAttributes textAttrs;
@@ -90,8 +91,9 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     private void renderRoutePath(Route route) {
+        String highlightedText = getFilter().findMatchedString(route.getPath());
         List<TextChunk> chunks = RoutePathParser.getInstance().highlight(
-                route.getPathChunks(), getFilter().getPathFilter());
+                route.getPathChunks(), highlightedText);
 
         for(TextChunk chunk: chunks)
             append(chunk.getText(), chunk.getTextAttrs());

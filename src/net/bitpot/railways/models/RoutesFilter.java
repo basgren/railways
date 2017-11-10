@@ -2,42 +2,37 @@ package net.bitpot.railways.models;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class that contains all parameters of routes filtration.
  */
 public class RoutesFilter {
-    private RouteTableModel model;
-    private String pathFilter;
-    private boolean mountedRoutesVisible; 
+    private RouteTableModel tableModel;
+    private String filterText = "";
+    @NotNull private Pattern filterPattern = Pattern.compile("");
+    private boolean mountedRoutesVisible = true;
 
-
-    public RoutesFilter(@NotNull RouteTableModel parent) {
-        model = parent;
-        reset();
+    private static Pattern buildPattern(String filterText) {
+        // Escape regex special chars except "*"
+        filterText = filterText.replaceAll("[\\\\\\.\\[\\]\\{\\}\\(\\)\\+\\-\\?\\^\\$\\|]", "\\\\$0");
+        String regex = filterText.replace("*", ".*?");
+        return Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
 
-
-    public void reset() {
-        pathFilter = "";
-        mountedRoutesVisible = true;
+    public RoutesFilter(@NotNull RouteTableModel tableModel) {
+        this.tableModel = tableModel;
     }
 
-
-    public String getPathFilter() {
-        return pathFilter;
-    }
-
-
-    public void setPathFilter(String pathFilter) {
-        pathFilter = pathFilter.toLowerCase();
-        if (!this.pathFilter.equals(pathFilter)) {
-            this.pathFilter = pathFilter;
-            filterChanged();
+    public void setFilterText(String filterText) {
+        filterText = filterText.toLowerCase();
+        if (!this.filterText.equals(filterText)) {
+            this.filterText = filterText;
+            filterPattern = buildPattern(filterText);
+            tableModel.filterChanged();
         }
     }
-
 
     public boolean isMountedRoutesVisible() {
         return mountedRoutesVisible;
@@ -46,43 +41,19 @@ public class RoutesFilter {
     public void setMountedRoutesVisible(boolean value) {
         if (mountedRoutesVisible != value) {
             mountedRoutesVisible = value;
-            filterChanged();
+            tableModel.filterChanged();
         }
     }
-
 
     /**
      * Returns true if any filter is set and should be applied.
-     * Actually checks if filter values are set to defaults or not. 
+     * Actually checks if filter values are set to defaults or not.
      *
      * @return True when any filter is active, false otherwise.
      */
-    public boolean isFilterActive() {
-        return !pathFilter.equals("") || !mountedRoutesVisible;
+    boolean isFilterActive() {
+        return !filterText.equals("") || !mountedRoutesVisible;
     }
-
-
-    /**
-     * Applies current filter and fills target route list with suitable elements.
-     *
-     * @param source Source route list
-     * @param target Target route list.
-     */
-    public void applyFilter(@NotNull RouteList source, @NotNull RouteList target) {
-        target.clear();
-
-        if (!isFilterActive()) {
-            target.setSize(source.size());
-            Collections.copy(target, source);
-            return;
-        }
-
-        // Filter all elements
-        for (Route route : source)
-            if (matchesFilter(route))
-                target.add(route);
-    }
-
 
     /**
      * Checks whether specified route matches current filter.
@@ -90,17 +61,18 @@ public class RoutesFilter {
      * @param route Route to be matched against current filter.
      * @return True if route matches filter, false otherwise.
      */
-    private boolean matchesFilter(Route route) {
+    boolean match(Route route) {
         if (!mountedRoutesVisible && route.getParentEngine() != null)
             return false;
 
-        return route.getPath().toLowerCase().contains(pathFilter) ||
-                route.getActionTitle().toLowerCase().contains(pathFilter) ||
-                route.getRouteName().toLowerCase().contains(pathFilter);
+        return filterPattern.matcher(route.getPath()).find() ||
+                filterPattern.matcher(route.getActionTitle()).find() ||
+                filterPattern.matcher(route.getRouteName()).find();
     }
 
-
-    private void filterChanged() {
-        model.filterChanged();
+    public String findMatchedString(String text) {
+        Matcher matcher = filterPattern.matcher(text);
+        return matcher.find() ? matcher.group() : "";
     }
+
 }

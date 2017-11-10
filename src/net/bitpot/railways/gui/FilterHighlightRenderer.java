@@ -5,6 +5,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.models.RoutesFilter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -20,18 +21,18 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
     private RoutesFilter filter;
 
 
-    public FilterHighlightRenderer(@NotNull RoutesFilter filter) {
+    FilterHighlightRenderer(@NotNull RoutesFilter filter) {
         this.filter = filter;
     }
 
 
-    protected RoutesFilter getFilter() {
+    RoutesFilter getFilter() {
         return filter;
     }
 
 
     @Override
-    protected void customizeCellRenderer(JTable table, Object value,
+    protected void customizeCellRenderer(JTable table, @Nullable Object value,
                                          boolean selected, boolean hasFocus, int row, int column) {
         // Value can be null in older JDKs (below 1.7, I suppose).
         // Info: http://stackoverflow.com/questions/3054775/jtable-strange-behavior-from-getaccessiblechild-method-resulting-in-null-point
@@ -47,7 +48,7 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
         } else {
             setBackground(UIUtil.getTableBackground());
             setForeground(UIUtil.getTableForeground());
-            appendHighlighted(text, filter.getPathFilter());
+            appendHighlighted(text, filter.findMatchedString(text));
         }
     }
 
@@ -58,7 +59,7 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
      * @param value Value to be displayed.
      * @param highlight Substring of value to be highlighted.
      */
-    protected void appendHighlighted(String value, String highlight) {
+    private void appendHighlighted(String value, String highlight) {
         appendHighlighted(value, highlight,
                 SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
@@ -71,8 +72,8 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
      * @param highlight Substring of value to be highlighted.
      * @param textAttrs Attributes of not highlighted text.
      */
-    protected void appendHighlighted(String value, String highlight,
-                                     SimpleTextAttributes textAttrs) {
+    private void appendHighlighted(String value, String highlight,
+                                   SimpleTextAttributes textAttrs) {
         if (highlight.equals("")) {
             append(value, textAttrs);
             return;

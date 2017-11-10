@@ -31,13 +31,7 @@ public class RailwaysUtils {
     @SuppressWarnings("unused")
     private final static Logger log = Logger.getInstance(RailwaysUtils.class.getName());
 
-    public final static StringFormatter STRIP_REQUEST_FORMAT = new StringFormatter() {
-
-        @Override
-        public String format(String str) {
-            return stripRequestFormat(str);
-        }
-    };
+    public final static StringFormatter STRIP_REQUEST_FORMAT = RailwaysUtils::stripRequestFormat;
 
     /**
      * Returns true if specified project has at least one Ruby on Rails module.
