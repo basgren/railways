@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
     <name>Railways</name>
     <category>Navigation</category>
     <description><![CDATA[
@@ -23,11 +23,16 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.7</version>
+    <version>0.8.8</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.8</b><br/>
+        <ul>
+            <li>Add support of IDE version 2017.3 (@hurricup)</li>
+        </ul></p>
 
         <p><b>0.8.7</b><br/>
         <ul>
@@ -152,7 +157,6 @@
                 icon="AllIcons.Actions.Properties">
         </action>
 
-        
         <action id="Railways.hideMountedRoutes"
                 class="net.bitpot.railways.actions.HideMountedRoutesAction"
                 text="Hide mounted routes"
