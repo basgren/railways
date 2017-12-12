@@ -22,11 +22,16 @@
     <a href="https://github.com/basgren/railways">GitHub plugin page</a>.
     ]]></description>
 
-    <version>0.8.8</version>
+    <version>0.8.9</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.9</b><br/>
+        <ul>
+            <li>Add ability to filter routes using wildcard (*)</li>
+        </ul></p>
 
         <p><b>0.8.8</b><br/>
         <ul>
