@@ -122,15 +122,11 @@ public class RailwaysUtils {
 
         // For simple actions which don't heavily use data context, we can create
         // it manually.
-        DataContext dataContext = new DataContext() {
-            @Nullable
-            @Override
-            public Object getData(@NonNls String dataId) {
-                if (CommonDataKeys.PROJECT.is(dataId))
-                    return project;
+        DataContext dataContext = dataId -> {
+            if (CommonDataKeys.PROJECT.is(dataId))
+                return project;
 
-                return null;
-            }
+            return null;
         };
 
         act.actionPerformed(new AnActionEvent(null, dataContext,

@@ -98,12 +98,7 @@ public class MainPanel {
         myTableModel = new RouteTableModel();
         routesTable.setModel(myTableModel);
 
-        myTableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                updateCounterLabel();
-            }
-        });
+        myTableModel.addTableModelListener(e -> updateCounterLabel());
 
         routesTable.setDefaultRenderer(Route.class,
                 new RouteCellRenderer(myTableModel.getFilter()));
@@ -192,7 +187,7 @@ public class MainPanel {
                 infoLink.setHyperlinkText("Configure");
                 infoLinkAction = LINK_OPEN_SETTINGS;
 
-                AnAction act = ActionManager.getInstance().getAction("Railways.settingsAction");
+                AnAction act = ActionManager.getInstance().getAction("railways.settingsAction");
                 infoLink.setIcon(act.getTemplatePresentation().getIcon());
                 break;
 
@@ -264,31 +259,24 @@ public class MainPanel {
         routesTable.getSelectionModel().addListSelectionListener(
                 new RouteSelectionListener(routesTable));
 
-        infoLink.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
-                if (rm == null)
-                    return;
+        infoLink.addHyperlinkListener(e -> {
+            RoutesManager rm = RoutesView.getInstance(project).getCurrentRoutesManager();
+            if (rm == null)
+                return;
 
-                switch (infoLinkAction) {
-                    case LINK_OPEN_SETTINGS:
-                        RailwaysUtils.invokeAction("Railways.settingsAction", project);
-                        break;
+            switch (infoLinkAction) {
+                case LINK_OPEN_SETTINGS:
+                    RailwaysUtils.invokeAction("railways.settingsAction", project);
+                    break;
 
-                    default:
-                        RailwaysUtils.showErrorInfo(rm);
-                }
-
+                default:
+                    RailwaysUtils.showErrorInfo(rm);
             }
         });
 
-        actionLbl.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (currentRoute != null)
-                    currentRoute.navigate(false);
-            }
+        actionLbl.addHyperlinkListener(e -> {
+            if (currentRoute != null)
+                currentRoute.navigate(false);
         });
     }
 

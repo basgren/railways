@@ -14,7 +14,7 @@ import java.util.List;
 public class ChooseByRouteRegistry {
 
     private List<RouteItemsContributor> myContributors =
-            new ArrayList<RouteItemsContributor>();
+            new ArrayList<>();
 
 
     public static ChooseByRouteRegistry getInstance(Project project) {

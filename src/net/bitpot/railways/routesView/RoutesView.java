@@ -345,7 +345,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
                 return;
 
             alarm.cancelAllRequests();
-            alarm.addRequest(() -> refreshRouteActionsStatus(), 1000, ModalityState.NON_MODAL);
+            alarm.addRequest(RoutesView.this::refreshRouteActionsStatus, 1000, ModalityState.NON_MODAL);
         }
     }
 

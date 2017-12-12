@@ -142,7 +142,7 @@
         </action>
 
 
-        <action id="Railways.gotoRouteAction"
+        <action id="railways.gotoRouteAction"
                 class="net.bitpot.railways.actions.GotoRouteMethodAction"
                 text="Goto route action"
                 description="Navigate to route action." >
@@ -150,7 +150,7 @@
         </action>
 
 
-        <action id="Railways.settingsAction"
+        <action id="railways.settingsAction"
                 class="net.bitpot.railways.actions.SettingsAction"
                 text="Settings"
                 description="Open Railways settings dialog."
@@ -158,14 +158,14 @@
         </action>
 
 
-        <action id="Railways.hideMountedRoutes"
+        <action id="railways.hideMountedRoutes"
                 class="net.bitpot.railways.actions.HideMountedRoutesAction"
                 text="Hide mounted routes"
                 description="Hide routes of mounted engines."
                 icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
         </action>
 
-        <action id="Railways.copyRouteName"
+        <action id="railways.copyRouteName"
                 class="net.bitpot.railways.actions.CopyRouteNameAction"
                 text="Copy Name"
                 description="Copy route name to clipboard"
@@ -173,14 +173,14 @@
             <keyboard-shortcut keymap="$default" first-keystroke="control C"/>
         </action>
 
-        <action id="Railways.copyRoutePath"
+        <action id="railways.copyRoutePath"
                 class="net.bitpot.railways.actions.CopyRoutePathAction"
                 text="Copy Path"
                 description="Copy route path to clipboard">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift alt C"/>
         </action>
 
-        <action id="Railways.copyFullRoutePath"
+        <action id="railways.copyFullRoutePath"
                 class="net.bitpot.railways.actions.CopyFullRoutePathAction"
                 text="Copy Full Path"
                 description="Copy route path with HTTP method to clipboard">
@@ -190,16 +190,16 @@
 
         <group id="railways.MainToolbar">
             <reference ref="railways.UpdateRoutesList"/>
-            <reference ref="Railways.settingsAction"/>
+            <reference ref="railways.settingsAction"/>
             <separator/>
-            <reference ref="Railways.hideMountedRoutes"/>
+            <reference ref="railways.hideMountedRoutes"/>
         </group>
 
 
         <group id="railways.PopupMenu">
-            <reference ref="Railways.copyRouteName"/>
-            <reference ref="Railways.copyFullRoutePath"/>
-            <reference ref="Railways.copyRoutePath"/>
+            <reference ref="railways.copyRouteName"/>
+            <reference ref="railways.copyFullRoutePath"/>
+            <reference ref="railways.copyRoutePath"/>
         </group>
 
         <group id="railways.CopyMenu">

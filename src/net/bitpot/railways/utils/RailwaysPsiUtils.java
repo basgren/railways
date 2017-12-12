@@ -19,16 +19,12 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.modules.RModule;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.names.RSuperClass;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.expressions.RListOfExpressions;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.indexes.RubyClassModuleNameIndex;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.methodCall.RCall;
 import org.jetbrains.plugins.ruby.utils.NamingConventions;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Class that contains helper methods for working with PSI elements.
@@ -174,13 +170,9 @@ public class RailwaysPsiUtils {
     /**
      * Filter that selects only 'include Module::Name' expressions.
      */
-    private final static PsiElementFilter INCLUDE_MODULE_FILTER = new PsiElementFilter() {
-        @Override
-        public boolean isAccepted(PsiElement psiElement) {
-            return (psiElement instanceof RCall) &&
-                    ((RCall)psiElement).getCommand().equals("include");
-        }
-    };
+    private final static PsiElementFilter INCLUDE_MODULE_FILTER = psiElement ->
+            (psiElement instanceof RCall) &&
+            ((RCall)psiElement).getCommand().equals("include");
 
 
     /**

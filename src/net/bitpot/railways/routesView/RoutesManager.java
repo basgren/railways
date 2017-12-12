@@ -22,16 +22,14 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import java.io.File;
 import java.util.LinkedList;
 
-
-@State(
-        name = "RailwaysModuleConfiguration",
-        storages = {@Storage(file = "$MODULE_FILE$")}
-)
-
 /**
  * Class is responsible for receiving and storing the list of routes for
  * a Rails module.
  */
+@State(
+        name = "RailwaysModuleConfiguration",
+        storages = {@Storage(file = "$MODULE_FILE$")}
+)
 public class RoutesManager implements PersistentStateComponent<RoutesManager.State> {
 
     /**
@@ -60,7 +58,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
     private int myRoutesState = DEFAULT;
 
-    private LinkedList<RoutesManagerListener> listeners = new LinkedList<RoutesManagerListener>();
+    private LinkedList<RoutesManagerListener> listeners = new LinkedList<>();
 
     // This field is set only when route update task is being executed.
     private ProgressIndicator routesUpdateIndicator = null;
@@ -74,8 +72,8 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private Module module = null;
 
     private State myModuleSettings = new State();
-    
-    
+
+
     public static class State {
         // Name of rake task which retrieves routes.
         public String routesTaskName = "routes";

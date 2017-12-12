@@ -25,7 +25,7 @@ public class RoutesViewPane implements Disposable {
     private PsiTreeChangeListener myRoutesChangeListener;
     private boolean isInvalidated = false;
 
-    
+
     /**
      * Creates a separate panel for Rails module.
      *
@@ -38,15 +38,15 @@ public class RoutesViewPane implements Disposable {
 
         myRoutesManager =  ModuleServiceManager.getService(myModule, RoutesManager.class);
         myRoutesManager.initRouteList();
-        
+
         myRoutesChangeListener = new MyPsiTreeChangeListener(
                 railsApp.getRoutesFile(), toolWindow);
-        
+
         PsiManager.getInstance(myModule.getProject())
                 .addPsiTreeChangeListener(myRoutesChangeListener);
     }
-    
-    
+
+
     public void dispose() {
         PsiManager.getInstance(myModule.getProject())
                 .removePsiTreeChangeListener(myRoutesChangeListener);
@@ -72,13 +72,13 @@ public class RoutesViewPane implements Disposable {
         return isInvalidated;
     }
 
-    
+
     public void updateRoutes() {
         RailwaysUtils.invokeAction("railways.UpdateRoutesList", myModule.getProject());
         isInvalidated = false;
     }
-    
-    
+
+
     /**
      * Sets flag when routes should be updated, but the actual update was
      * skipped by performance reasons (panel or tool window wasn't visible).
@@ -87,7 +87,7 @@ public class RoutesViewPane implements Disposable {
         isInvalidated = true;
     }
 
-    
+
     private class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
         private final Alarm alarm = new Alarm();
         private VirtualFile routesFile;
@@ -108,7 +108,7 @@ public class RoutesViewPane implements Disposable {
             PsiFile f = event.getFile();
             if (f == null || !f.getVirtualFile().equals(routesFile))
                 return;
-            
+
             // Don't perform update if panel or tool window is invisible.
             if (!myToolWindow.isVisible() || !myContent.isSelected()) {
                 invalidateRoutes();
@@ -116,12 +116,7 @@ public class RoutesViewPane implements Disposable {
             }
 
             alarm.cancelAllRequests();
-            alarm.addRequest(new Runnable() {
-                @Override
-                public void run() {
-                    updateRoutes();
-                }
-            }, 700, ModalityState.NON_MODAL);
+            alarm.addRequest(RoutesViewPane.this::updateRoutes, 700, ModalityState.NON_MODAL);
         }
     }
 }

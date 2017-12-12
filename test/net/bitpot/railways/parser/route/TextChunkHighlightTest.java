@@ -23,14 +23,14 @@ public class TextChunkHighlightTest
         RouteActionParser parser = RouteActionParser.getInstance();
         return parser.highlight(parser.parse(subject), hlStr);
     }
-    
+
     private List<TextChunk> createChunkList(TextChunk... chunks) {
-        ArrayList<TextChunk> result = new ArrayList<TextChunk>();
+        ArrayList<TextChunk> result = new ArrayList<>();
         Collections.addAll(result, chunks);
-        
+
         return result;
     }
-            
+
     @Test
     public void testParseAndHighlight() {
         List<TextChunk> actual = parsePathAndHighlight("/test(.:test)", "st");

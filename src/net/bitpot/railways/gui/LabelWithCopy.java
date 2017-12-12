@@ -67,7 +67,7 @@ public class LabelWithCopy extends JBLabel implements DataProvider {
             if (formatter != null)
                 text = formatter.format(text);
 
-            Collection<String> result = new ArrayList<String>(1);
+            Collection<String> result = new ArrayList<>(1);
             result.add(text);
 
             return result;

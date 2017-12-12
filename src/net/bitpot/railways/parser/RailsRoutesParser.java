@@ -34,7 +34,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private static final Pattern LINE_PATTERN = Pattern.compile("^([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+(\\S+?)\\s+(.+?)$");
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
-    private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?\\}\\s*$)");
+    private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?}\\s*$)");
     private static final Pattern REDIRECT_PATTERN = Pattern.compile("redirect\\(\\d+(?:,\\s*(.+?))?\\)");
 
     private static final String EXCEPTION_REGEX = "(?s)rake aborted!\\s*(.+?)Tasks:";
@@ -133,7 +133,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         routes = new RouteList();
         insertPos = -1;
         currentEngine = null;
-        mountedEngines = new ArrayList<RailsEngine>();
+        mountedEngines = new ArrayList<>();
     }
 
 
@@ -258,7 +258,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             // We can have several request methods here: "GET|POST"
             String[] requestMethods = getGroup(groups, 2).split("\\|");
-            List<Route> result = new ArrayList<Route>();
+            List<Route> result = new ArrayList<>();
 
             // Also fix path if this route belongs to some engine
             if (currentEngine != null) {

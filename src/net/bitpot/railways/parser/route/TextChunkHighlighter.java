@@ -17,7 +17,7 @@ public abstract class TextChunkHighlighter {
                                      String highlightSubstr) {
 
         highlightSubstr = highlightSubstr.trim();
-        ArrayList<TextChunk> result = new ArrayList<TextChunk>();
+        ArrayList<TextChunk> result = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
         for(TextChunk t: textChunks)
@@ -53,7 +53,7 @@ public abstract class TextChunkHighlighter {
             return null;
 
         int startOffset = 0, endOffset;
-        ArrayList<TextRegion> regions = new ArrayList<TextRegion>();
+        ArrayList<TextRegion> regions = new ArrayList<>();
 
         while(startOffset != -1) {
             startOffset = s.indexOf(subStr, startOffset);

@@ -4,7 +4,7 @@ import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.ModuleAdapter;
+import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
@@ -46,9 +46,9 @@ public class RailwaysProjectComp implements ProjectComponent {
     }
 
 
-    private class ProjectModulesListener extends ModuleAdapter {
+    private class ProjectModulesListener implements ModuleListener {
         @Override
-        public void moduleAdded(Project project, Module module) {
+        public void moduleAdded(@NotNull Project project, @NotNull Module module) {
             if (project != myProject) return;
 
             // Notify RoutesView
@@ -58,7 +58,7 @@ public class RailwaysProjectComp implements ProjectComponent {
 
 
         @Override
-        public void moduleRemoved(Project project, Module module) {
+        public void moduleRemoved(@NotNull Project project, @NotNull Module module) {
             if (project != myProject) return;
 
             // Notify RoutesView

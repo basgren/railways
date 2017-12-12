@@ -26,7 +26,7 @@ public class RailwaysSettingsForm {
     // Autocomplete field is inherited from LanguageTextField, but doesn't have
     // default constructor, so we'd better use parent class LanguageTextField.
     private LanguageTextField routesTaskEdit;
-    private JComboBox environmentCombo;
+    private JComboBox<String> environmentCombo;
     private JCheckBox autoUpdateChk;
     private JCheckBox liveActionHighlightingChk;
 
@@ -76,7 +76,7 @@ public class RailwaysSettingsForm {
                 };
 
 
-        TextFieldWithAutoCompletion<RakeTask> field = new TextFieldWithAutoCompletion<RakeTask>(
+        TextFieldWithAutoCompletion<RakeTask> field = new TextFieldWithAutoCompletion<>(
                 myModule.getProject(), listProvider, true, null);
 
         RakeTaskModuleCache cachedTasks = RakeTaskModuleCache.getInstance(myModule);
@@ -121,13 +121,13 @@ public class RailwaysSettingsForm {
 
 
     private void initRailsEnvsComboBox(@Nullable String value,
-                                       @NotNull JComboBox combo,
+                                       @NotNull JComboBox<String> combo,
                                        @Nullable Module module) {
         String[] envs = RailsUtil.getAllEnvironments(module);
-        Object[] objects = new Object[envs.length + 1];
-        objects[0] = "Default";
-        System.arraycopy(envs, 0, objects, 1, envs.length);
-        combo.setModel(new DefaultComboBoxModel(objects));
+        String[] strings = new String[envs.length + 1];
+        strings[0] = "Default";
+        System.arraycopy(envs, 0, strings, 1, envs.length);
+        combo.setModel(new DefaultComboBoxModel<>(strings));
         combo.setSelectedItem(value == null ? "Default" : value);
     }
 

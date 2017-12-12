@@ -13,7 +13,7 @@ import java.util.Vector;
 public class RouteList extends Vector<Route> {
     // Route name is a key, array of routes with this name is a value.
     // This hash is used for quick lookup in navigation dialogs.
-    private HashMap<String, ArrayList<Route>> namesIndex = new HashMap<String, ArrayList<Route>>();
+    private HashMap<String, ArrayList<Route>> namesIndex = new HashMap<>();
 
 
     @Override
@@ -50,11 +50,8 @@ public class RouteList extends Vector<Route> {
 
         for (Route route : this) {
             // As we do not use null as value, we can skip checking existence of the key
-            ArrayList<Route> value = namesIndex.get(route.getName());
-            if (value == null) {
-                value = new ArrayList<Route>();
-                namesIndex.put(route.getName(), value);
-            }
+            ArrayList<Route> value = namesIndex.computeIfAbsent(route.getName(),
+                    k -> new ArrayList<>());
 
             value.add(route);
         }

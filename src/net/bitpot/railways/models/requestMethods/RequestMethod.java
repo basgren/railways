@@ -24,7 +24,7 @@ public abstract class RequestMethod {
 
 
     private static List<RequestMethod> createRequestMethods() {
-        Vector<RequestMethod> methods = new Vector<RequestMethod>();
+        Vector<RequestMethod> methods = new Vector<>();
         methods.add(GET);
         methods.add(POST);
         methods.add(PUT);

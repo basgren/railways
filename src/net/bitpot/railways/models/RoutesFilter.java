@@ -16,7 +16,7 @@ public class RoutesFilter {
 
     private static Pattern buildPattern(String filterText) {
         // Escape regex special chars except "*"
-        filterText = filterText.replaceAll("[\\\\\\.\\[\\]\\{\\}\\(\\)\\+\\-\\?\\^\\$\\|]", "\\\\$0");
+        filterText = filterText.replaceAll("[\\\\.\\[\\]{}()+\\-?^$|]", "\\\\$0");
         String regex = filterText.replace("*", ".*?");
         return Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }

@@ -25,7 +25,7 @@ public class RouteActionParser extends TextChunkHighlighter {
 
     @NotNull
     public List<TextChunk> parse(String subject) {
-        List<TextChunk> chunks = new ArrayList<TextChunk>();
+        List<TextChunk> chunks = new ArrayList<>();
 
         if (subject.trim().equals(""))
             return chunks;

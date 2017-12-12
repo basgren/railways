@@ -30,7 +30,7 @@ public abstract class RoutesCopyProvider extends TextCopyProvider {
         if (routes == null)
             return null;
 
-        List<String> copyLines = new ArrayList<String>(routes.length);
+        List<String> copyLines = new ArrayList<>(routes.length);
 
         for (Route route : routes) {
             copyLines.add(getCopyValue(route));

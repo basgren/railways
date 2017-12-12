@@ -38,7 +38,7 @@ public class RoutePathParser extends TextChunkHighlighter {
     @NotNull
     public List<TextChunk> parse(String routePath) {
         RoutePathChunk chunk;
-        ArrayList<TextChunk> chunks = new ArrayList<TextChunk>();
+        ArrayList<TextChunk> chunks = new ArrayList<>();
         int pos = 0;
 
         // Try to find chunk
