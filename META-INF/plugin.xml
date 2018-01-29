@@ -23,11 +23,16 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.9</version>
+    <version>0.8.10</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.10</b><br/>
+        <ul>
+            <li>Add support of IDE version 2018.1</li>
+        </ul></p>
 
         <p><b>0.8.9</b><br/>
         <ul>
@@ -93,7 +98,7 @@
     </change-notes>
 
 
-    <idea-version since-build="173" until-build="173.*"/>
+    <idea-version since-build="181" until-build="181.*"/>
 
 
     <depends>com.intellij.modules.ruby</depends>
