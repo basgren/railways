@@ -69,7 +69,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private RouteList routeList = new RouteList();
 
     // Rails module
-    private Module module = null;
+    private Module module;
 
     private State myModuleSettings = new State();
 

@@ -218,7 +218,13 @@ public class RailsRoutesParserTest
         assertEquals("[runtime defined redirect]", actual.getQualifiedActionTitle());
     }
 
+    @Test
+    public void testParsingInvalidLines() {
+        String line = "do bundle exec /home/dauser/.rvm/rubies/ruby-2.2.7/bin/ruby /home/dauser/test-app/bin/rake routes --trace ";
 
+        List<Route> routes = parser.parseLine(line);
+        assertNull("Line should not be treated as valid route line", routes);
+    }
 
     private String readFile( String file ) throws IOException {
         BufferedReader reader = new BufferedReader( new FileReader (file));
