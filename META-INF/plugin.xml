@@ -23,11 +23,17 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.11</version>
+    <version>0.8.12</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.12</b><br/>
+        <ul>
+            <li>Add support of IDE version 2018.3</li>
+            <li>Update rake routes parser to avoid capturing warnings in output</li>
+        </ul></p>
 
         <p><b>0.8.11</b><br/>
         <ul>
@@ -103,7 +109,7 @@
     </change-notes>
 
 
-    <idea-version since-build="182" until-build="182.*"/>
+    <idea-version since-build="183" until-build="183.*"/>
 
 
     <depends>com.intellij.modules.ruby</depends>
