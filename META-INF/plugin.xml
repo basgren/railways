@@ -31,7 +31,8 @@
 
         <p><b>0.8.12</b><br/>
         <ul>
-            <li>Add support of IDE version 2018.3</li>
+            <li>Add support of IDE version 2018.3.1 (version 2018.3 is not supported
+                due to issue in RubyMine)</li>
             <li>Update rake routes parser to avoid capturing warnings in output</li>
         </ul></p>
 
@@ -109,7 +110,7 @@
     </change-notes>
 
 
-    <idea-version since-build="183" until-build="183.*"/>
+    <idea-version since-build="183.4588.71" until-build="183.*"/>
 
 
     <depends>com.intellij.modules.ruby</depends>
