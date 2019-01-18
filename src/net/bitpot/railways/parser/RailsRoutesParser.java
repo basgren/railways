@@ -31,7 +31,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     public static final int ERROR_RAKE_TASK_NOT_FOUND = -2;
 
 
-    private static final Pattern ROUTE_LINE_PATTERN = Pattern.compile("^([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+(/\\S*?)\\s+(.+?)$");
+    private static final Pattern ROUTE_LINE_PATTERN = Pattern.compile("^([a-z0-9_]+)?\\s*([A-Z|]+)?\\s+([/(]\\S*?)\\s+(.+?)$");
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?}\\s*$)");
@@ -213,6 +213,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
      * @param line Line from 'rake routes' output
      * @return Route object, if line contains route information, null if parsing failed.
      */
+    @Nullable
     public List<Route> parseLine(String line) {
         // 1. Break line into 3 groups - [name]+[verb], path, conditions(action, controller)
         Matcher groups = ROUTE_LINE_PATTERN.matcher(line.trim());
