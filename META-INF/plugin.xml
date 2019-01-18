@@ -23,11 +23,16 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.12</version>
+    <version>0.8.13</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.13</b><br/>
+        <ul>
+            <li>Enhance route parsing: allow route path starting with '('</li>
+        </ul></p>
 
         <p><b>0.8.12</b><br/>
         <ul>
