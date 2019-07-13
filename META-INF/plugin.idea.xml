@@ -126,12 +126,6 @@
     <depends>org.jetbrains.plugins.ruby</depends>
 
 
-    <application-components>
-        <component>
-            <implementation-class>net.bitpot.railways.RailwaysApplicationComp</implementation-class>
-        </component>
-    </application-components>
-
     <project-components>
         <component>
             <implementation-class>net.bitpot.railways.RailwaysProjectComp</implementation-class>
