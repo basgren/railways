@@ -23,11 +23,16 @@
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
-    <version>0.8.13</version>
+    <version>0.8.14</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.14</b><br/>
+        <ul>
+            <li>Add support of IDE version 2019.1</li>
+        </ul></p>
 
         <p><b>0.8.13</b><br/>
         <ul>
@@ -115,7 +120,7 @@
     </change-notes>
 
 
-    <idea-version since-build="183.4588.71" until-build="183.*"/>
+    <idea-version since-build="191" until-build="191.*"/>
 
 
     <depends>com.intellij.modules.ruby</depends>
