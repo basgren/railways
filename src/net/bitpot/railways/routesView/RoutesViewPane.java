@@ -32,15 +32,14 @@ public class RoutesViewPane implements Disposable {
      * @param railsApp Rails module that will be represented by this pane.
      * @param toolWindow Parent tool window
      */
-    public RoutesViewPane(RailsApp railsApp, ToolWindow toolWindow, Content content) {
+    RoutesViewPane(RailsApp railsApp, ToolWindow toolWindow, Content content) {
         myModule = railsApp.getModule();
         myContent = content;
 
-        myRoutesManager =  ModuleServiceManager.getService(myModule, RoutesManager.class);
+        myRoutesManager = ModuleServiceManager.getService(myModule, RoutesManager.class);
         myRoutesManager.initRouteList();
 
-        myRoutesChangeListener = new MyPsiTreeChangeListener(
-                railsApp.getRoutesFile(), toolWindow);
+        myRoutesChangeListener = new MyPsiTreeChangeListener(railsApp.getRoutesFiles(), toolWindow);
 
         PsiManager.getInstance(myModule.getProject())
                 .addPsiTreeChangeListener(myRoutesChangeListener);

@@ -51,12 +51,6 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestMethod> {
 
 
     @Override
-    public char getCheckBoxMnemonic() {
-        return 0;
-    }
-
-
-    @Override
     public boolean loadInitialCheckBoxState() {
         return false;
     }

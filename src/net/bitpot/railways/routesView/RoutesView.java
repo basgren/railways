@@ -13,8 +13,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
-import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.content.Content;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
 @State(
         name="RoutesToolWindow",
         storages= {
-                @Storage(file = StoragePathMacros.WORKSPACE_FILE)
+                @Storage(value = StoragePathMacros.WORKSPACE_FILE)
         }
 )
 public class RoutesView implements PersistentStateComponent<RoutesView.State>,
@@ -60,6 +60,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     private ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
     private RoutesViewPane currentPane = null;
     private ToolWindow myToolWindow;
+    private MessageBusConnection myConnection;
 
     private State myState = new State();
 
@@ -67,6 +68,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     public RoutesView(@NotNull Project project) {
         myProject = project;
         mainPanel = new MainPanel(project);
+        myConnection = myProject.getMessageBus().connect();
 
         // Subscribe on files changes to update Route list regularly.
         // We connect to project bus, as module bus don't work with this topic
@@ -88,7 +90,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
 
     @Override
-    public void loadState(RoutesView.State state) {
+    public void loadState(@NotNull RoutesView.State state) {
         myState = state;
     }
 
@@ -136,9 +138,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
         mainPanel.getRouteFilter().setMountedRoutesVisible(!myState.hideMountedRoutes);
 
-
-        ToolWindowManagerEx toolManager = ToolWindowManagerEx.getInstanceEx(myProject);
-        toolManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+        myConnection.subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
 
             /**
              * This method is called when ToolWindow changes its state, i.e.
@@ -211,7 +211,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
     @Override
     public void dispose() {
-        // Do nothing now
+        myConnection.disconnect();
     }
 
 

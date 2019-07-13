@@ -13,7 +13,7 @@ import net.bitpot.railways.models.requestMethods.RequestMethod;
  */
 @State(
         name = "GotoRouteFilterConfiguration",
-        storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+        storages = {@Storage(value = StoragePathMacros.WORKSPACE_FILE)})
 public class GotoRouteFilterConfiguration extends ChooseByNameFilterConfiguration<RequestMethod> {
 
     public static ChooseByNameFilterConfiguration<RequestMethod> getInstance(Project project) {

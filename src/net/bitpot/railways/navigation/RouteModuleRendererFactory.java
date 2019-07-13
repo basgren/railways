@@ -47,11 +47,8 @@ public class RouteModuleRendererFactory extends ModuleRendererFactory {
             // com.intellij.ide.util.PsiElementModuleRenderer.customizeCellRenderer()
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, UIUtil.getListCellHPadding()));
             setHorizontalTextPosition(SwingConstants.LEFT);
-            setBackground(isSelected ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground());
-            setForeground(isSelected ? UIUtil.getListSelectionForeground() : UIUtil.getInactiveTextColor());
-
-            if (UIUtil.isUnderNimbusLookAndFeel())
-                setOpaque(false);
+            setBackground(UIUtil.getListBackground(isSelected, cellHasFocus));
+            setForeground(isSelected ? UIUtil.getListForeground(true, cellHasFocus) : UIUtil.getInactiveTextColor());
 
             return component;
         }

@@ -28,7 +28,7 @@ import java.util.LinkedList;
  */
 @State(
         name = "RailwaysModuleConfiguration",
-        storages = {@Storage(file = "$MODULE_FILE$")}
+        storages = {@Storage(value = "$MODULE_FILE$")}
 )
 public class RoutesManager implements PersistentStateComponent<RoutesManager.State> {
 
