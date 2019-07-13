@@ -39,15 +39,15 @@ public class FilterHighlightRenderer extends ColoredTableCellRenderer {
         if (value == null)
             return;
 
+        setBorder(null);
+        setBackground(UIUtil.getTableBackground(selected, table.hasFocus()));
+        setForeground(UIUtil.getTableForeground(selected, table.hasFocus()));
+
         String text = value.toString();
 
         if (selected) {
             append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-            setBackground(UIUtil.getTableSelectionBackground());
-            setForeground(UIUtil.getTableSelectionForeground());
         } else {
-            setBackground(UIUtil.getTableBackground());
-            setForeground(UIUtil.getTableForeground());
             appendHighlighted(text, filter.findMatchedString(text));
         }
     }

@@ -1,6 +1,7 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.ui.UIUtil;
 import net.bitpot.railways.models.RailsActionInfo;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteTableModel;
@@ -8,6 +9,7 @@ import net.bitpot.railways.models.RoutesFilter;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.parser.route.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -27,7 +29,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     @Override
-    protected void customizeCellRenderer(JTable table, Object value,
+    protected void customizeCellRenderer(JTable table, @Nullable Object value,
                                          boolean selected, boolean hasFocus, int row, int column) {
         // Value can be null in older JDKs (below 1.7, I suppose).
         // Info: http://stackoverflow.com/questions/3054775/jtable-strange-behavior-from-getaccessiblechild-method-resulting-in-null-point
@@ -36,14 +38,16 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
         Route route = (Route) value;
 
-        int modelCol = table.convertColumnIndexToModel(column);
-        switch (modelCol) {
-            case RouteTableModel.COL_ACTION:
-                renderRouteAction(route);
-                break;
+        setBorder(null);
+        setBackground(UIUtil.getTableBackground(selected, table.hasFocus()));
+        setForeground(UIUtil.getTableForeground(selected, table.hasFocus()));
 
-            default:
-                renderRoutePath(route);
+        int modelCol = table.convertColumnIndexToModel(column);
+
+        if (modelCol == RouteTableModel.COL_ACTION) {
+            renderRouteAction(route);
+        } else {
+            renderRoutePath(route);
         }
     }
 

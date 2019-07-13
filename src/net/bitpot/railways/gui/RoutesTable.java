@@ -32,7 +32,7 @@ public class RoutesTable extends JBTable implements DataProvider {
      * data model, a default column model, and a default selection
      * model.
      */
-    public RoutesTable() {
+    RoutesTable() {
         super();
 
         addMouseListener(new MyPopupHandler());
@@ -47,7 +47,7 @@ public class RoutesTable extends JBTable implements DataProvider {
      */
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NotNull @NonNls String dataId) {
         // Good example of usage is in com.intellij.openapi.editor.impl.EditorComponentImpl (see getData method)
 
         if (PlatformDataKeys.SELECTED_ITEMS.is(dataId))
