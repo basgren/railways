@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * @author Basil Gren
  */
-public class DeleteRequestMethod extends RequestMethod {
+public class DeleteRequestMethod implements RequestMethod {
     @Override
     public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_DELETE;

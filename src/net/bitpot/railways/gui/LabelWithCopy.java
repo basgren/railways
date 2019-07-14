@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBLabel;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.util.Collection;
 
 public class LabelWithCopy extends JBLabel implements DataProvider {
 
-    CopyProvider copyProvider = new MyCopyProvider(this);
+    private CopyProvider copyProvider = new MyCopyProvider(this);
 
     @Nullable
     private StringFormatter formatter;
@@ -40,7 +41,7 @@ public class LabelWithCopy extends JBLabel implements DataProvider {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String s) {
+    public Object getData(@NotNull @NonNls String s) {
         if (PlatformDataKeys.COPY_PROVIDER.is(s))
             return copyProvider;
 

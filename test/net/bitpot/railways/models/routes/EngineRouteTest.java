@@ -1,8 +1,8 @@
 package net.bitpot.railways.models.routes;
 
 import net.bitpot.railways.gui.RailwaysIcons;
+import net.bitpot.railways.models.RequestMethods;
 import net.bitpot.railways.models.Route;
-import net.bitpot.railways.models.requestMethods.RequestMethod;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +16,7 @@ public class EngineRouteTest {
     @Test
     public void testSimpleRedirectRoute()
     {
-        Route route = new EngineRoute(null, RequestMethod.GET, "/test",
+        Route route = new EngineRoute(null, RequestMethods.GET, "/test",
                 "", "Test::Engine");
 
         assertEquals(RailwaysIcons.NODE_MOUNTED_ENGINE, route.getActionIcon());

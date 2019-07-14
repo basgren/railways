@@ -3,9 +3,9 @@ package net.bitpot.railways.parser;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.RailsEngine;
+import net.bitpot.railways.models.RequestMethods;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.models.routes.EngineRoute;
 import net.bitpot.railways.models.routes.RedirectRoute;
 import net.bitpot.railways.models.routes.SimpleRoute;
@@ -102,7 +102,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
                     continue;
 
                 routeList = parseLine(strLine);
-                if (routeList != null) {
+                if (!routeList.isEmpty()) {
                     addRoutes(routeList);
 
                     addRakeEngineIfPresent(routeList);
@@ -211,15 +211,17 @@ public class RailsRoutesParser extends AbstractRoutesParser {
      * new Route will be created and its fields set with appropriate parsed values.
      *
      * @param line Line from 'rake routes' output
-     * @return Route object, if line contains route information, null if parsing failed.
+     * @return List of Route objects. When parsing failed, the list will be empty.
      */
-    @Nullable
+    @NotNull
     public List<Route> parseLine(String line) {
+        List<Route> result = new ArrayList<>();
+
         // 1. Break line into 3 groups - [name]+[verb], path, conditions(action, controller)
         Matcher groups = ROUTE_LINE_PATTERN.matcher(line.trim());
 
         if (!groups.matches())
-            return null;
+            return result;
 
         String routeController = "", routeAction = "";
         String routeName = getGroup(groups, 1);
@@ -261,7 +263,6 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
         // We can have several request methods here: "GET|POST"
         String[] requestMethods = getGroup(groups, 2).split("\\|");
-        List<Route> result = new ArrayList<>();
 
         // Also fix path if this route belongs to some engine
         if (currentEngine != null) {
@@ -277,17 +278,17 @@ public class RailsRoutesParser extends AbstractRoutesParser {
 
             if (!engineClass.isEmpty()) {
                 route = new EngineRoute(myModule,
-                        RequestMethod.get(requestMethodName), routePath,
+                        RequestMethods.get(requestMethodName), routePath,
                         routeName, engineClass);
 
             } else if (redirectPath != null) {
                 route = new RedirectRoute(myModule,
-                        RequestMethod.get(requestMethodName), routePath,
+                        RequestMethods.get(requestMethodName), routePath,
                         routeName, redirectPath);
 
             } else {
                 route = new SimpleRoute(myModule,
-                        RequestMethod.get(requestMethodName), routePath,
+                        RequestMethods.get(requestMethodName), routePath,
                         routeName, routeController, routeAction);
             }
 

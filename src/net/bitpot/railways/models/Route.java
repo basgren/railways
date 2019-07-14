@@ -22,11 +22,11 @@ import java.util.List;
  */
 public class Route implements NavigationItem {
 
-    private Module module = null;
+    private Module module;
 
-    private RequestMethod requestMethod = RequestMethod.ANY;
-    private String path = "";
-    private String routeName = "";
+    private RequestMethod requestMethod;
+    private String path;
+    private String routeName;
 
     @Nullable
     private RailsEngine myParentEngine = null;
@@ -148,7 +148,7 @@ public class Route implements NavigationItem {
     public String getPathWithMethod() {
         String path = RailwaysUtils.stripRequestFormat(getPath());
 
-        if (getRequestMethod() == RequestMethod.ANY)
+        if (getRequestMethod() == RequestMethods.ANY)
             return path;
 
         return String.format("%s %s", getRequestMethod().getName(), path);

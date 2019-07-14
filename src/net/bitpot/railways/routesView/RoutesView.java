@@ -118,7 +118,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
         // tool window header.
         myContentManager.addContentManagerListener(new ContentManagerAdapter() {
             @Override
-            public void selectionChanged(ContentManagerEvent event) {
+            public void selectionChanged(@NotNull ContentManagerEvent event) {
                 // When user selects a module from tool window combo,
                 // selectionChanges is called twice:
                 // 1. With 'remove' operation -  for previously selected item,

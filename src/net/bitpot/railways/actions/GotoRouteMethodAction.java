@@ -8,14 +8,13 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
+import net.bitpot.railways.models.Route;
+import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.navigation.ChooseByRouteNameFilter;
 import net.bitpot.railways.navigation.GotoRouteFilterConfiguration;
 import net.bitpot.railways.navigation.GotoRouteMethodModel;
-import net.bitpot.railways.models.requestMethods.RequestMethod;
-import net.bitpot.railways.models.Route;
 import net.bitpot.railways.utils.RailwaysUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Action opens popup with list of all routes.

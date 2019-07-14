@@ -31,12 +31,14 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestMethod> {
     }
 
 
+    @NotNull
     @Override
     public String getNotInMessage() {
         return "No matches found";
     }
 
 
+    @NotNull
     @Override
     public String getNotFoundMessage() {
         return "No matches found";
@@ -71,7 +73,7 @@ public class GotoRouteMethodModel extends FilteringGotoByModel<RequestMethod> {
 
     @Nullable
     @Override
-    public String getFullName(Object element) {
+    public String getFullName(@NotNull Object element) {
         return ((Route) element).getPath();
     }
 

@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * @author Basil Gren
  */
-public class PostRequestMethod extends RequestMethod {
+public class PostRequestMethod implements RequestMethod {
     @Override
     public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_POST;

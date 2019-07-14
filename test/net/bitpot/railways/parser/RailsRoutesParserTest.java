@@ -2,9 +2,9 @@ package net.bitpot.railways.parser;
 
 
 import net.bitpot.railways.models.RailsEngine;
+import net.bitpot.railways.models.RequestMethods;
 import net.bitpot.railways.models.Route;
 import net.bitpot.railways.models.RouteList;
-import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.models.routes.RedirectRoute;
 import net.bitpot.railways.models.routes.SimpleRoute;
 import net.bitpot.railways.utils.TestUtils;
@@ -118,7 +118,7 @@ public class RailsRoutesParserTest
 
 
         // Test first route
-        Route expected = new SimpleRoute(null, RequestMethod.GET,
+        Route expected = new SimpleRoute(null, RequestMethods.GET,
                 "/test(.:format)", "test", "clients", "show");
         Route actual = routes.get(0);
 
@@ -126,7 +126,7 @@ public class RailsRoutesParserTest
 
 
         // Test second route
-        expected = new SimpleRoute(null, RequestMethod.POST,
+        expected = new SimpleRoute(null, RequestMethods.POST,
                 "/test(.:format)", "test", "clients", "show");
         actual = routes.get(1);
 
@@ -223,7 +223,7 @@ public class RailsRoutesParserTest
         String line = "do bundle exec /home/dauser/.rvm/rubies/ruby-2.2.7/bin/ruby /home/dauser/test-app/bin/rake routes --trace ";
 
         List<Route> routes = parser.parseLine(line);
-        assertNull("Line should not be treated as valid route line", routes);
+        assertTrue("Line should not be treated as valid route line", routes.isEmpty());
     }
 
     private String readFile( String file ) throws IOException {

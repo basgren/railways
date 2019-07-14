@@ -13,8 +13,7 @@ import java.util.List;
  */
 public class ChooseByRouteRegistry {
 
-    private List<RouteItemsContributor> myContributors =
-            new ArrayList<>();
+    private List<RouteItemsContributor> myContributors = new ArrayList<>();
 
 
     public static ChooseByRouteRegistry getInstance(Project project) {
@@ -46,8 +45,7 @@ public class ChooseByRouteRegistry {
     }
 
     public RouteItemsContributor[] getRouteContributors() {
-        return myContributors.toArray(
-                new RouteItemsContributor[myContributors.size()]);
+        return myContributors.toArray(new RouteItemsContributor[0]);
     }
 
 }

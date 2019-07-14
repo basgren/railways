@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * @author Basil Gren
  */
-public class PatchRequestMethod extends RequestMethod {
+public class PatchRequestMethod implements RequestMethod {
     @Override
     public Icon getIcon() {
         return RailwaysIcons.HTTP_METHOD_PUT;

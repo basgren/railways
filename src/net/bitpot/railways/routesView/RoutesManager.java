@@ -129,7 +129,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
      * config files were externally changed while IDEA running.
      */
     @Override
-    public void loadState(State state) {
+    public void loadState(@NotNull State state) {
         myModuleSettings = state;
     }
 
@@ -347,8 +347,12 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
      */
     private void cacheOutput(String output) {
         try {
+            String fileName = getCacheFileName();
+            if (fileName == null)
+                return;
+
             // Cache output
-            File f = new File(getCacheFileName());
+            File f = new File(fileName);
             FileUtil.writeToFile(f, output.getBytes(), false);
 
             // Set cache file modification date/time the same as for routes.rb
@@ -391,6 +395,9 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private String getCachedOutput() {
         try {
             String fileName = getCacheFileName();
+            if (fileName == null)
+                return null;
+
             File f = new File(fileName);
 
             // Check if cached file still contains actual data. Cached file and routes.rb file should have the same
@@ -411,6 +418,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
      *
      * @return Name of the cache file.
      */
+    @Nullable
     private String getCacheFileName() {
         // TODO: check where cache file is placed in IntelliJ IDEA
         VirtualFile moduleFile = getModule().getModuleFile();

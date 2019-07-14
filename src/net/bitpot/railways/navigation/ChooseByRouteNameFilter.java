@@ -5,6 +5,7 @@ import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopup;
 import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.openapi.project.Project;
+import net.bitpot.railways.models.RequestMethods;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +49,6 @@ public class ChooseByRouteNameFilter extends ChooseByNameFilter<RequestMethod> {
     @NotNull
     @Override
     protected Collection<RequestMethod> getAllFilterValues() {
-        return RequestMethod.getAllRequestMethods();
+        return RequestMethods.getAllRequestMethods();
     }
 }

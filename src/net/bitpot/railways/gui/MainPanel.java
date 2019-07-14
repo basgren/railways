@@ -17,6 +17,7 @@ import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import net.bitpot.railways.routesView.RoutesViewPane;
 import net.bitpot.railways.utils.RailwaysUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -180,22 +181,19 @@ public class MainPanel {
      * Hides routes panel and shows panel with error message and with link that shows dialog with error details
      */
     private void showErrorPanel(int parserError) {
-        switch (parserError) {
-            case RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND:
-                RoutesManager.State settings = myDataSource.getRoutesManager().getState();
-                infoLbl.setText("Rake task '" + settings.routesTaskName + "' is not found.");
-                infoLink.setHyperlinkText("Configure");
-                infoLinkAction = LINK_OPEN_SETTINGS;
+        if (parserError == RailsRoutesParser.ERROR_RAKE_TASK_NOT_FOUND) {
+            RoutesManager.State settings = myDataSource.getRoutesManager().getState();
+            infoLbl.setText("Rake task '" + settings.routesTaskName + "' is not found.");
+            infoLink.setHyperlinkText("Configure");
+            infoLinkAction = LINK_OPEN_SETTINGS;
 
-                AnAction act = ActionManager.getInstance().getAction("railways.settingsAction");
-                infoLink.setIcon(act.getTemplatePresentation().getIcon());
-                break;
-
-            default:
-                infoLbl.setText("Failed to load routes");
-                infoLink.setHyperlinkText("Show details");
-                infoLinkAction = LINK_SHOW_STACKTRACE;
-                infoLink.setIcon(null);
+            AnAction act = ActionManager.getInstance().getAction("railways.settingsAction");
+            infoLink.setIcon(act.getTemplatePresentation().getIcon());
+        } else {
+            infoLbl.setText("Failed to load routes");
+            infoLink.setHyperlinkText("Show details");
+            infoLinkAction = LINK_SHOW_STACKTRACE;
+            infoLink.setIcon(null);
         }
 
 
@@ -227,7 +225,7 @@ public class MainPanel {
         // When filter field text is changed, routes table will be refiltered.
         pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(DocumentEvent e) {
+            protected void textChanged(@NotNull DocumentEvent e) {
                 myTableModel.getFilter().setFilterText(pathFilterField.getText());
             }
         });
@@ -264,13 +262,10 @@ public class MainPanel {
             if (rm == null)
                 return;
 
-            switch (infoLinkAction) {
-                case LINK_OPEN_SETTINGS:
-                    RailwaysUtils.invokeAction("railways.settingsAction", project);
-                    break;
-
-                default:
-                    RailwaysUtils.showErrorInfo(rm);
+            if (infoLinkAction == LINK_OPEN_SETTINGS) {
+                RailwaysUtils.invokeAction("railways.settingsAction", project);
+            } else {
+                RailwaysUtils.showErrorInfo(rm);
             }
         });
 
