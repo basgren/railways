@@ -22,11 +22,16 @@
     <a href="https://github.com/basgren/railways">GitHub plugin page</a>.
     ]]></description>
 
-    <version>0.8.14</version>
+    <version>0.8.15</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.15</b><br/>
+        <ul>
+            <li>Add support of IDE version 2019.2</li>
+        </ul></p>
 
         <p><b>0.8.14</b><br/>
         <ul>
@@ -119,7 +124,7 @@
     </change-notes>
 
 
-    <idea-version since-build="191" until-build="191.*"/>
+    <idea-version since-build="192" />
 
 
     <depends>com.intellij.modules.ultimate</depends>
@@ -182,7 +187,6 @@
                 description="Open Railways settings dialog."
                 icon="AllIcons.Actions.Properties">
         </action>
-
 
         <action id="railways.hideMountedRoutes"
                 class="net.bitpot.railways.actions.HideMountedRoutesAction"
