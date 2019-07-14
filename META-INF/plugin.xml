@@ -9,7 +9,9 @@
     <ul>
         <li>Displays routes of Ruby On Rails application/engine in a separate "Routes" panel</li>
         <li>Adds quick navigation to action implementation from "Routes" panel or
-            "Go to route action" popup available in code editor (invoked by **Ctrl + Shift + G**)</li>
+            "Go to route action" popup available in code editor, invoked by
+            <b>Ctrl + Shift + G</b> (<b>Cmd + Shift + G</b> on Mac).
+            </li>
         <li>Provides quick routes filtering by route path, controller/action or route name</li>
     </ul>
 

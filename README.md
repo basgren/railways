@@ -9,6 +9,7 @@ Features:
 * Displays routes of Ruby On Rails application/engine in a separate "Routes" panel
 * Adds quick navigation to action implementation from routes panel or
   "Goto route action" popup available in code editor by pressing **Ctrl + Shift + G**
+  (or **Cmd + Shift + G** on Mac)
 * Provides quick routes filtering by route path, controller/action or route name
 
 Current release is tested on RubyMine 2016.1, RubyMine 2016.2, IntelliJ IDEA 2016.2.
