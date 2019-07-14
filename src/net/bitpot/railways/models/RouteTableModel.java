@@ -70,9 +70,9 @@ public class RouteTableModel extends AbstractTableModel {
 
         switch (columnIndex) {
             case COL_PATH:
-                return route;
             case COL_ACTION:
                 return route;
+
             case COL_NAME:
                 return route.getRouteName();
         }

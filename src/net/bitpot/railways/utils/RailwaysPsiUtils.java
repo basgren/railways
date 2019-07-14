@@ -124,7 +124,7 @@ public class RailwaysPsiUtils {
                 name = ((RModule)item).getQualifiedName();
 
             // Perform case insensitive comparison to avoid mess with acronyms.
-            if ((name != null) && (qualifiedName.equalsIgnoreCase(name)))
+            if (qualifiedName.equalsIgnoreCase(name))
                 return (RContainer)item;
         }
 
@@ -144,11 +144,11 @@ public class RailwaysPsiUtils {
      */
     @NotNull
     public static Collection findClassesAndModules(String name, Project project) {
-        Object scope = new RubyProjectAndLibrariesScope(project);
+        GlobalSearchScope scope = new RubyProjectAndLibrariesScope(project);
 
         // StubIndex.getElements was introduced in 134.231 build (RubyMine 6.3)
         return StubIndex.getElements(RubyClassModuleNameIndex.KEY,
-                name, project, (GlobalSearchScope) scope, RContainer.class);
+                name, project, scope, RContainer.class);
     }
 
 

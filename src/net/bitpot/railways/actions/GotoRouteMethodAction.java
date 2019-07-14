@@ -38,7 +38,6 @@ public class GotoRouteMethodAction extends GotoActionBase {
 
         showNavigationPopup(e, model, new GotoActionCallback<RequestMethod>() {
 
-            @Nullable
             @Override
             protected ChooseByNameFilter<RequestMethod> createFilter(@NotNull ChooseByNamePopup popup) {
                 return new ChooseByRouteNameFilter(popup, model,

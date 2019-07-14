@@ -265,9 +265,9 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private class UpdateRoutesTask extends Task.Backgroundable {
 
         public UpdateRoutesTask() {
-            super(module.getProject(), "Rake task", true);
+            super(module.getProject(), "Rake Task", true);
 
-            setCancelText("Cancel task");
+            setCancelText("Cancel Task");
         }
 
 

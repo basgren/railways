@@ -95,7 +95,7 @@ public class RailsActionInfo {
                 // Even if psiMethod is valid, its name can be different - it
                 // usually happens when user edits method name - the psiElement
                 // is just updated.
-                if (!psiMethod.getName().equals(actionName))
+                if (!actionName.equals(psiMethod.getName()))
                     psiMethod = null;
             }
         }
