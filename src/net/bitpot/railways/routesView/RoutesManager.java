@@ -276,6 +276,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
             indicator.setText("Updating route list for module "  +
                     getModule().getName() + "...");
             indicator.setFraction(0.0);
+            indicator.setIndeterminate(false);
 
             // Save indicator to be able to cancel task execution.
             routesUpdateIndicator = indicator;
@@ -351,7 +352,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
             FileUtil.writeToFile(f, output.getBytes(), false);
 
             // Set cache file modification date/time the same as for routes.rb
-            f.setLastModified(getRoutesFileMTime());
+            f.setLastModified(getRoutesFilesMTime());
         } catch (Exception e) {
             // Do nothing
         }
@@ -359,17 +360,22 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
 
     /**
-     * Returns modification time of routes.rb file for Rails project.
+     * Returns modification time of the most recently modified routes file in Rails project.
      *
      * @return Modification time of routes.rb file or 0 if it cannot be retrieved.
      */
-    private long getRoutesFileMTime() {
+    private long getRoutesFilesMTime() {
         RailsApp railsApp = RailsApp.fromModule(module);
-        if (railsApp == null || railsApp.getRoutesFile() == null)
+
+        if (railsApp == null)
             return 0;
 
-        String routesRbPath = railsApp.getRoutesFile().getPresentableUrl();
-        return new File(routesRbPath).lastModified();
+        RailsApp.RoutesFiles<VirtualFile> files = railsApp.getRoutesFiles();
+
+        return files.allFiles()
+                .map((routesFile) -> new File(routesFile.getPresentableUrl()).lastModified())
+                .max((o1, o2) -> (int) (o1 - o2))
+                .orElse((long) 0);
     }
 
 
@@ -389,7 +395,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
             // Check if cached file still contains actual data. Cached file and routes.rb file should have the same
             // modification time.
-            long routesMTime = getRoutesFileMTime();
+            long routesMTime = getRoutesFilesMTime();
             if (routesMTime != f.lastModified())
                 return null;
 

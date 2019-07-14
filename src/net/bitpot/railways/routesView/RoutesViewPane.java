@@ -89,11 +89,11 @@ public class RoutesViewPane implements Disposable {
 
     private class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
         private final Alarm alarm = new Alarm();
-        private VirtualFile routesFile;
+        private RailsApp.RoutesFiles<VirtualFile> routesFiles;
         private ToolWindow myToolWindow;
 
-        public MyPsiTreeChangeListener(VirtualFile routesFile, ToolWindow toolWindow) {
-            this.routesFile = routesFile;
+        MyPsiTreeChangeListener(RailsApp.RoutesFiles<VirtualFile> routesFiles, ToolWindow toolWindow) {
+            this.routesFiles = routesFiles;
             myToolWindow = toolWindow;
         }
 
@@ -105,7 +105,14 @@ public class RoutesViewPane implements Disposable {
 
             // Handle only changes in routes file.
             PsiFile f = event.getFile();
-            if (f == null || !f.getVirtualFile().equals(routesFile))
+
+            if (f == null)
+                return;
+
+            VirtualFile changedFile = f.getVirtualFile();
+
+            boolean anyRouteFileChanged = routesFiles.allFiles().anyMatch(changedFile::equals);
+            if (!anyRouteFileChanged)
                 return;
 
             // Don't perform update if panel or tool window is invisible.
