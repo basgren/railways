@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class TableModelFilterTest
 {
-    RailsRoutesParser parser = null;
-    RouteTableModel model;
+    private RailsRoutesParser parser = null;
+    private RouteTableModel model;
 
 
     @Before

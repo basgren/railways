@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
+import org.jetbrains.plugins.ruby.ruby.codeInsight.resolve.scope.RElementWithFQN;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RPsiElement;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyProjectAndLibrariesScope;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyPsiUtil;
@@ -136,19 +137,17 @@ public class RailwaysPsiUtils {
      * Finds specified ruby class or module in IDE index.
      *
      * @param name Name of class or module to search for. This should be a name
-     *             without any modules, so if we wand to find
-     *             Devise::SessionsController, we should pass only
-     *             SessionsController here.
+     *             without any modules, so to find `Devise::SessionsController`, we should pass
+     *             only "SessionsController".
      * @param project Current project.
      * @return Collection of PSI elements which match specified name.
      */
     @NotNull
-    public static Collection findClassesAndModules(String name, Project project) {
+    private static Collection findClassesAndModules(String name, Project project) {
         GlobalSearchScope scope = new RubyProjectAndLibrariesScope(project);
 
-        // StubIndex.getElements was introduced in 134.231 build (RubyMine 6.3)
         return StubIndex.getElements(RubyClassModuleNameIndex.KEY,
-                name, project, scope, RContainer.class);
+                name, project, scope, RElementWithFQN.class);
     }
 
 
@@ -157,7 +156,7 @@ public class RailwaysPsiUtils {
     }
 
 
-    public static String[] getControllerClassPathByShortName(String shortName) {
+    static String[] getControllerClassPathByShortName(String shortName) {
         // Process namespaces
         String[] classPath = (shortName + "_controller").split("/");
         for(int i = 0; i < classPath.length; i++)

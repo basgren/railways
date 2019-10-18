@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  */
 public class RailsRoutesParserTest
 {
-    RailsRoutesParser parser = null;
+    private RailsRoutesParser parser = null;
 
     @Before
     public void setUp() throws Exception
