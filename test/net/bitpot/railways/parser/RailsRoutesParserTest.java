@@ -220,13 +220,21 @@ public class RailsRoutesParserTest
 
     @Test
     public void testParsingInvalidLines() {
-        String line = "do bundle exec /home/dauser/.rvm/rubies/ruby-2.2.7/bin/ruby /home/dauser/test-app/bin/rake routes --trace ";
+        String line = "do bundle exec /home/user/.rvm/rubies/ruby-2.2.7/bin/ruby /home/user/test-app/bin/rake routes --trace ";
 
         List<Route> routes = parser.parseLine(line);
         assertTrue("Line should not be treated as valid route line", routes.isEmpty());
     }
 
-    private String readFile( String file ) throws IOException {
+    @Test
+    public void testParsingInvalidLines2() {
+        String line = "do /home/user/test-project/bin/bundle exec /home/user/.rvm/rubies/ruby-2.4.1/bin/ruby /home/user/test-project/bin/rake routes --trace";
+
+        List<Route> routes = parser.parseLine(line);
+        assertTrue("Line should not be treated as valid route line", routes.isEmpty());
+    }
+
+    private String readFile(String file) throws IOException {
         BufferedReader reader = new BufferedReader( new FileReader (file));
         StringBuilder  stringBuilder = new StringBuilder();
         String         ls = System.getProperty("line.separator");

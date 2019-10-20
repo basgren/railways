@@ -217,6 +217,10 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     public List<Route> parseLine(String line) {
         List<Route> result = new ArrayList<>();
 
+        // Ignore line with specific substrings - this is to avoid making overcomplicated regexes
+        if (line.contains("bin/bundle exec"))
+            return result;
+
         // 1. Break line into 3 groups - [name]+[verb], path, conditions(action, controller)
         Matcher groups = ROUTE_LINE_PATTERN.matcher(line.trim());
 
