@@ -150,24 +150,18 @@
             all objects. -->
         <moduleRendererFactory implementation="net.bitpot.railways.navigation.RouteModuleRendererFactory" order="first"/>
 
-        <projectService serviceInterface="net.bitpot.railways.routesView.RoutesView"
-                        serviceImplementation="net.bitpot.railways.routesView.RoutesView"/>
+        <projectService serviceImplementation="net.bitpot.railways.routesView.RoutesView"/>
+        <projectService serviceImplementation="net.bitpot.railways.navigation.ChooseByRouteRegistry"/>
+        <projectService serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
 
-        <projectService serviceInterface="net.bitpot.railways.navigation.ChooseByRouteRegistry"
-                        serviceImplementation="net.bitpot.railways.navigation.ChooseByRouteRegistry"/>
-
-        <projectService serviceInterface="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"
-                        serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
-
-        <moduleService  serviceInterface="net.bitpot.railways.routesView.RoutesManager"
-                        serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
+        <moduleService serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
     </extensions>
 
 
     <actions>
         <action id="railways.UpdateRoutesList"
                 class="net.bitpot.railways.actions.UpdateRoutesListAction"
-                text="Update route list"
+                text="Update Route List"
                 description="Update the list of routes"
                 icon="/actions/sync.png">
             <keyboard-shortcut first-keystroke="shift control BACK_SLASH" keymap="$default" />
@@ -176,7 +170,7 @@
 
         <action id="railways.gotoRouteAction"
                 class="net.bitpot.railways.actions.GotoRouteMethodAction"
-                text="Goto route action"
+                text="Goto Route Action"
                 description="Navigate to route action." >
             <keyboard-shortcut first-keystroke="control shift G" keymap="$default" />
         </action>
@@ -191,7 +185,7 @@
 
         <action id="railways.hideMountedRoutes"
                 class="net.bitpot.railways.actions.HideMountedRoutesAction"
-                text="Hide mounted routes"
+                text="Hide Mounted Routes"
                 description="Hide routes of mounted engines."
                 icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
         </action>
