@@ -35,7 +35,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private static final Pattern ACTION_PATTERN = Pattern.compile(":action\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern CONTROLLER_PATTERN = Pattern.compile(":controller\\s*=>\\s*['\"](.+?)['\"]");
     private static final Pattern REQUIREMENTS_PATTERN = Pattern.compile("(\\{.+?}\\s*$)");
-    private static final Pattern REDIRECT_PATTERN = Pattern.compile("redirect\\(\\d+(?:,\\s*(.+?))?\\)");
+    private static final Pattern REDIRECT_PATTERN = Pattern.compile("redirect\\(\\d+(?:,\\s*(.+?))?\\).*");
 
     private static final String EXCEPTION_REGEX = "(?s)rake aborted!\\s*(.+?)Tasks:";
 
@@ -235,8 +235,11 @@ public class RailsRoutesParser extends AbstractRoutesParser {
         String engineClass = "";
         String redirectPath = null; // null - when it's not redirect
 
+        Matcher redirectMatcher = REDIRECT_PATTERN.matcher(conditions);
+        if (redirectMatcher.matches())
+            redirectPath = getGroup(redirectMatcher, 1);
         // Process new format of output: 'controller#action'
-        if (actionInfo.length == 2) {
+        else if (actionInfo.length == 2) {
             routeController = actionInfo[0];
 
             // In this case second part can contain additional requirements. Example:
@@ -244,24 +247,19 @@ public class RailsRoutesParser extends AbstractRoutesParser {
             routeAction = extractRouteRequirements(actionInfo[1]);
         } else {
 
-            Matcher redirectMatcher = REDIRECT_PATTERN.matcher(conditions);
-            if (redirectMatcher.matches())
-                redirectPath = getGroup(redirectMatcher, 1);
-            else {
-                // Older format - all route requirements are specified in ruby hash:
-                // {:controller => 'users', :action => 'index'}
-                routeController = captureGroup(CONTROLLER_PATTERN, conditions);
-                routeAction = captureGroup(ACTION_PATTERN, conditions);
+            // Older format - all route requirements are specified in ruby hash:
+            // {:controller => 'users', :action => 'index'}
+            routeController = captureGroup(CONTROLLER_PATTERN, conditions);
+            routeAction = captureGroup(ACTION_PATTERN, conditions);
 
-                // Check reference to mounted engine.
-                if (routeController.isEmpty() && routeAction.isEmpty())
-                    engineClass = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
+            // Check reference to mounted engine.
+            if (routeController.isEmpty() && routeAction.isEmpty())
+                engineClass = captureGroup(RACK_CONTROLLER_PATTERN, conditions);
 
-                // Else just set action to provided text.
-                if (routeAction.isEmpty() && routeController.isEmpty() &&
-                        engineClass.isEmpty())
-                    routeAction = conditions;
-            }
+            // Else just set action to provided text.
+            if (routeAction.isEmpty() && routeController.isEmpty() &&
+                    engineClass.isEmpty())
+                routeAction = conditions;
         }
 
 
