@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.JBSplitter;
+import com.intellij.ui.SearchTextField;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -34,7 +35,7 @@ import java.awt.event.MouseEvent;
 public class MainPanel {
 
     @SuppressWarnings("unused")
-    private static Logger log = Logger.getInstance(MainPanel.class.getName());
+    private static final Logger log = Logger.getInstance(MainPanel.class.getName());
 
     // Names of cards for main panel that contains several pages.
     // Names should be the same as specified in GUI designer for appropriate panels.
@@ -47,11 +48,10 @@ public class MainPanel {
     private static final int LINK_SHOW_STACKTRACE = 2;
 
 
-    private RouteTableModel myTableModel;
+    private final RouteTableModel myTableModel;
 
     private JPanel rootPanel;
     private JBTable routesTable;
-    private JTextField pathFilterField;
     private JPanel cardsPanel;
     private HyperlinkLabel infoLink;
     private JLabel infoLbl;
@@ -68,13 +68,14 @@ public class MainPanel {
     private JBScrollPane routesScrollPane;
     private JPanel mainRoutePanel;
     private JBLabel environmentLbl;
+    private SearchTextField searchField;
 
 
-    private CardLayout cardLayout;
+    private final CardLayout cardLayout;
     private boolean routesHidden = false;
 
 
-    private Project project;
+    private final Project project;
 
     // A pane that is used as a data source for the Routes panel.
     private RoutesViewPane myDataSource = null;
@@ -126,6 +127,8 @@ public class MainPanel {
 
         routeLbl = new LabelWithCopy();
         ((LabelWithCopy)routeLbl).setCopyFormatter(RailwaysUtils.STRIP_REQUEST_FORMAT);
+
+        this.searchField = new SearchTextField(false);
     }
 
 
@@ -223,10 +226,10 @@ public class MainPanel {
 
     private void initHandlers() {
         // When filter field text is changed, routes table will be refiltered.
-        pathFilterField.getDocument().addDocumentListener(new DocumentAdapter() {
+        searchField.addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@NotNull DocumentEvent e) {
-                myTableModel.getFilter().setFilterText(pathFilterField.getText());
+                myTableModel.getFilter().setFilterText(searchField.getText());
             }
         });
 
@@ -290,7 +293,7 @@ public class MainPanel {
 
 
     private void setControlsEnabled(boolean value) {
-        pathFilterField.setEnabled(value);
+        searchField.setEnabled(value);
         routesCounterLbl.setEnabled(value);
     }
 
@@ -432,7 +435,7 @@ public class MainPanel {
 
 
     private class RouteSelectionListener implements ListSelectionListener {
-        private JTable table;
+        private final JTable table;
 
 
         public RouteSelectionListener(JTable table) {
