@@ -205,6 +205,16 @@ public class RailsRoutesParserTest
         assertEquals("/books", actual.getActionTitle());
     }
 
+    @Test
+    public void testParsingRedirectWithOptions() {
+        List<Route> routes = parser.parseLine(
+                "      stories GET    /stories(.:format)  redirect(301, /posts#test)");
+        Route actual = routes.get(0);
+
+        assertEquals(RedirectRoute.class, actual.getClass());
+        assertEquals("/posts#test", actual.getActionTitle());
+    }
+
 
     @Test
     public void testParsingProcRedirect() {
