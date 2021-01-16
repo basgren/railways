@@ -81,7 +81,7 @@ public class RailwaysUtils {
             railsEnv = (railsEnv == null) ? "" : "RAILS_ENV=" + railsEnv;
 
             // Will work on IntelliJ platform since 2017.3
-            return RubyGemExecutionContext.create(sdk, "rake")
+            return RubyGemExecutionContext.create(sdk, "rails")
                     .withModule(module)
                     .withWorkingDirPath(moduleContentRoot)
                     .withExecutionMode(new ExecutionModes.SameThreadMode())
