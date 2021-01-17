@@ -3,10 +3,7 @@ package net.bitpot.railways.parser.route;
 import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Basil Gren
- *         on 11.12.2014.
- */
+
 public abstract class TextChunk {
 
     private final String text;

@@ -15,10 +15,7 @@ import org.jetbrains.plugins.ruby.tasks.rake.task.RakeTask;
 import javax.swing.*;
 import java.util.List;
 
-/**
- * @author Basil Gren
- *         on 28.10.14.
- */
+
 public class RailwaysSettingsForm {
     private JPanel rootPanel;
 

@@ -4,10 +4,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import net.bitpot.railways.gui.RailwaysColors;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Basil Gren
- *         on 21.02.14.
- */
+
 public class RoutePathChunk extends TextChunk {
     public final static int PLAIN = 0;
     public final static int PARAMETER = 1;

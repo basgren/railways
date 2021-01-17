@@ -6,10 +6,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 
-/**
- * @author Basil Gren
- *         on 23.11.2014.
- */
 public class RailwaysUtilsTest {
 
 

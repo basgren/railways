@@ -14,10 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 
-/**
- * @author Basil Gren
- *         on 21.02.14.
- */
+
 public class RouteCellRenderer extends FilterHighlightRenderer {
 
 

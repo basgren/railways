@@ -1,9 +1,6 @@
 package net.bitpot.railways.models;
 
-/**
- * @author Basil Gren
- *         on 08.11.2014.
- */
+
 public class RailsEngine {
 
     private final String myEngineClassName;

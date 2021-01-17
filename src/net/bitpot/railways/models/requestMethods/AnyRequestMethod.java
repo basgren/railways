@@ -5,9 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-/**
- * @author Basil Gren
- */
 public class AnyRequestMethod implements RequestMethod {
     @Override
     public Icon getIcon() {

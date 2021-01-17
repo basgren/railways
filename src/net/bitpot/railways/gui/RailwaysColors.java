@@ -7,11 +7,7 @@ import com.intellij.ui.SimpleTextAttributes;
 
 import java.awt.*;
 
-/**
- *
- * @author Basil Gren
- *         on 23.02.14.
- */
+
 public class RailwaysColors {
 
     // Color of selection.

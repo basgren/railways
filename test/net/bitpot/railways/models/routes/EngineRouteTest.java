@@ -7,10 +7,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Basil Gren
- *         on 16.12.2014.
- */
 public class EngineRouteTest {
 
     @Test

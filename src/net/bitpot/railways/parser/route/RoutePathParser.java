@@ -9,9 +9,6 @@ import java.util.regex.Pattern;
 
 /**
  * Parses a single route to break it down into tokens.
- *
- * @author Basil Gren
- *         on 21.02.14.
  */
 public class RoutePathParser extends TextChunkHighlighter {
 

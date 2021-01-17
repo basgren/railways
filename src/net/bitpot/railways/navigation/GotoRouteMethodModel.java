@@ -8,9 +8,7 @@ import net.bitpot.railways.models.requestMethods.RequestMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Basil Gren
- */
+
 public class GotoRouteMethodModel extends FilteringGotoByModel<RequestMethod> {
 
     public GotoRouteMethodModel(Project project) {

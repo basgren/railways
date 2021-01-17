@@ -9,10 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-/**
- * @author Basil Gren
- *         on 14.12.2014.
- */
+
 public class RedirectRoute extends Route {
 
     @NotNull

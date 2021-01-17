@@ -13,9 +13,6 @@ import java.util.Objects;
 
 /**
  * Contains information about controller action.
- *
- * @author Basil Gren
- *         on 23.11.2014.
  */
 public class RailsActionInfo {
 

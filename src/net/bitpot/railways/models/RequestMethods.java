@@ -7,9 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * @author Basil Gren
- */
+
 public class RequestMethods {
     public static final RequestMethod GET = new GetRequestMethod();
     public static final RequestMethod POST = new PostRequestMethod();

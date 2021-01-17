@@ -7,10 +7,6 @@ import net.bitpot.railways.routesView.RoutesManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Basil Gren
- *         on 12.02.14.
- */
 public class ChooseByRouteRegistry {
 
     private final List<RouteItemsContributor> myContributors = new ArrayList<>();

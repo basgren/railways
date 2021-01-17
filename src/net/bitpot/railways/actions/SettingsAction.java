@@ -9,10 +9,7 @@ import net.bitpot.railways.routesView.RoutesManager;
 import net.bitpot.railways.routesView.RoutesView;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Basil Gren
- *         on 28.10.14.
- */
+
 public class SettingsAction extends AnAction {
 
     /**

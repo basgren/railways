@@ -7,10 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-/**
- * @author Basil Gren
- *         on 28.10.14.
- */
+
 public class RailwaysSettingsDialog extends DialogWrapper {
 
     private final RailwaysSettingsForm myPanel;

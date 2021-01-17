@@ -7,9 +7,7 @@ import net.bitpot.railways.models.RouteList;
 import net.bitpot.railways.routesView.RoutesManager;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Basil Gren
- */
+
 public class RouteItemsContributor implements ChooseByNameContributor {
 
     private final RoutesManager myRoutesManager;

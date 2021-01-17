@@ -10,10 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Basil Gren
- *         on 09.12.2014.
- */
+
 @RunWith(Parameterized.class)
 public class RouteActionParseTest {
 

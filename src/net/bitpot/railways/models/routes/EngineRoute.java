@@ -9,10 +9,6 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer;
 
 import javax.swing.*;
 
-/**
- * @author Basil Gren
- *         on 14.12.2014.
- */
 public class EngineRoute extends Route {
 
     private final String engineClass;

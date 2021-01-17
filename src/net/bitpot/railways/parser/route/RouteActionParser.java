@@ -7,9 +7,6 @@ import java.util.List;
 
 /**
  * Simple route action parser.
- *
- * @author Basil Gren
- *         on 21.02.14.
  */
 public class RouteActionParser extends TextChunkHighlighter {
 

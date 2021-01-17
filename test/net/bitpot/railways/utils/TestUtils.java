@@ -4,10 +4,7 @@ import net.bitpot.railways.models.Route;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Basil Gren
- *         on 25.02.14.
- */
+
 public class TestUtils {
 
     public static void assertRouteEquals(Route expected, Route actual) {

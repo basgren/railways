@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author Basil Gren
- *         on 09.12.2014.
- */
+
 public abstract class TextChunkHighlighter {
 
 

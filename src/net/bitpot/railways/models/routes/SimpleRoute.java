@@ -12,10 +12,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass
 
 import javax.swing.*;
 
-/**
- * @author Basil Gren
- *         on 14.12.2014.
- */
+
 public class SimpleRoute extends Route {
 
     private final String controllerName;

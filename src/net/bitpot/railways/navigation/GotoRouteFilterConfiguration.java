@@ -8,9 +8,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.models.requestMethods.RequestMethod;
 
-/**
- * @author Basil Gren
- */
+
 @State(
         name = "GotoRouteFilterConfiguration",
         storages = {@Storage(value = StoragePathMacros.WORKSPACE_FILE)})

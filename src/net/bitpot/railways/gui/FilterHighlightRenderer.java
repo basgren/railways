@@ -9,12 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-/**
- *
- *
- * @author Basil Gren
- *         on 02.11.14.
- */
 public class FilterHighlightRenderer extends ColoredTableCellRenderer {
 
     // Contains formatted text.
