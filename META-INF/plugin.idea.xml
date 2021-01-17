@@ -23,11 +23,19 @@
     <a href="https://github.com/basgren/railways">GitHub plugin page</a>.
     ]]></description>
 
-    <version>0.8.16</version>
+    <version>0.8.17</version>
     <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[
+
+        <p><b>0.8.17</b><br/>
+        <ul>
+            <li>Fix crash on loading routes in Rails 6 application</li>
+            <li>Make search field wider</li>
+            <li>Enhance parsing of with redirect</li>
+            <li>Rework usages of deprecated API</li>
+        </ul></p>
 
         <p><b>0.8.16</b><br/>
         <ul>
@@ -130,7 +138,7 @@
     </change-notes>
 
 
-    <idea-version since-build="193" />
+    <idea-version since-build="203" />
 
 
     <depends>com.intellij.modules.ultimate</depends>

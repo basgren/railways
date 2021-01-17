@@ -32,7 +32,6 @@
     <!-- JDK definitions -->
     <property name="jdk.bin" value="${jdk.home}/bin"/>
     <path id="jdk.classpath.rubymine">
-        <fileset dir="${jdk.home}/jre/lib" />
         <fileset dir="${plugin.sdk.home}/lib" />
         <fileset dir="${plugin.sdk.home}/plugins/ruby/lib" />
     </path>

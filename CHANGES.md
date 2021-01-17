@@ -1,6 +1,70 @@
 Railways - Change Notes
 =======================
 
+### 0.8.17 (2021-01-17)
+
+* Fix crash on loading routes in Rails 6 application
+* Make search field wider
+* Enhance parsing of with redirect
+* Rework usages of deprecated API
+
+
+### 0.8.16 (2019-10-21)
+
+* Fix exception in IDE version 2019.3
+
+
+### 0.8.15 (2019-07-14)
+
+* Add support of IDE version 2019.2
+
+
+### 0.8.14 (2019-07-13)
+
+* Add support of IDE version 2019.1
+
+
+### 0.8.13 (2019-01-18)
+
+* Enhance route parsing: allow route path starting with '('
+
+
+### 0.8.12 (2018-11-23)
+
+* Add support of IDE version 2018.3.1 (version 2018.3 is not supported due to issue in RubyMine)
+* Update rake routes parser to avoid capturing warnings in output
+
+
+### 0.8.11
+
+* Add support of IDE version 2018.2
+
+
+### 0.8.10
+
+* Add support of IDE version 2018.1
+
+
+### 0.8.9
+
+* Add ability to filter routes using wildcard (*)
+
+
+### 0.8.8
+
+* Add support of IDE version 2017.3 (@hurricup)
+
+
+### 0.8.7
+
+* Fix plugin crash in RubyMine 2017.1
+
+
+### 0.8.6
+
+* Add plugin compatibility with RubyMine 2016.2 and (liekly) with following releases of
+  Ruby plugin for IDEA
+
 ### 0.8.5 (2016-03-07)
 
 * Fix compatibility with previous version of IDEA and RubyMine
