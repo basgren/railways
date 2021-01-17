@@ -22,11 +22,10 @@ import java.util.List;
  */
 public class Route implements NavigationItem {
 
-    private Module module;
-
-    private RequestMethod requestMethod;
-    private String path;
-    private String routeName;
+    private final Module module;
+    private final RequestMethod requestMethod;
+    private final String path;
+    private final String routeName;
 
     @Nullable
     private RailsEngine myParentEngine = null;

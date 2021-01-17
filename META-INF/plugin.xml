@@ -148,8 +148,7 @@
         <toolWindow id="Routes"
                     icon="/net/bitpot/railways/icons/railways_toolwindow.png"
                     anchor="right"
-                    factoryClass="net.bitpot.railways.routesView.RoutesViewToolWindowFactory"
-                    conditionClass="net.bitpot.railways.routesView.RoutesViewToolWindowCondition"/>
+                    factoryClass="net.bitpot.railways.routesView.RoutesViewToolWindowFactory"/>
 
         <!-- Register own ModuleRenderingFactory to render module names for Route objects in navigation popups
             We set order="first" to insert extension BEFORE DefaultModuleRenderingFactory, which handles

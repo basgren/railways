@@ -13,7 +13,7 @@ import java.util.Vector;
 public class RouteList extends Vector<Route> {
     // Route name is a key, array of routes with this name is a value.
     // This hash is used for quick lookup in navigation dialogs.
-    private HashMap<String, ArrayList<Route>> namesIndex = new HashMap<>();
+    private final HashMap<String, ArrayList<Route>> namesIndex = new HashMap<>();
 
 
     @Override

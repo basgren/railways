@@ -15,7 +15,7 @@ import java.util.Collection;
 
 public class LabelWithCopy extends JBLabel implements DataProvider {
 
-    private CopyProvider copyProvider = new MyCopyProvider(this);
+    private final CopyProvider copyProvider = new MyCopyProvider(this);
 
     @Nullable
     private StringFormatter formatter;
@@ -51,7 +51,7 @@ public class LabelWithCopy extends JBLabel implements DataProvider {
 
     private class MyCopyProvider extends TextCopyProvider {
 
-        private LabelWithCopy label;
+        private final LabelWithCopy label;
 
         public MyCopyProvider(LabelWithCopy label) {
             this.label = label;

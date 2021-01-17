@@ -13,14 +13,12 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
 import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.ContentManagerAdapter;
-import com.intellij.ui.content.ContentManagerEvent;
+import com.intellij.ui.content.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
@@ -55,12 +53,12 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
     @NotNull private final Project myProject;
     private ContentManager myContentManager;
 
-    private MainPanel mainPanel;
+    private final MainPanel mainPanel;
 
-    private ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
+    private final ArrayList<RoutesViewPane> myPanes = new ArrayList<>();
     private RoutesViewPane currentPane = null;
     private ToolWindow myToolWindow;
-    private MessageBusConnection myConnection;
+    private final MessageBusConnection myConnection;
 
     private State myState = new State();
 
@@ -116,7 +114,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
 
         // Add listener to update mainPanel when a module is selected from
         // tool window header.
-        myContentManager.addContentManagerListener(new ContentManagerAdapter() {
+        myContentManager.addContentManagerListener(new ContentManagerListener() {
             @Override
             public void selectionChanged(@NotNull ContentManagerEvent event) {
                 // When user selects a module from tool window combo,
@@ -145,7 +143,7 @@ public class RoutesView implements PersistentStateComponent<RoutesView.State>,
              * expanded/collapsed, docked to another panel, etc.
              */
             @Override
-            public void stateChanged() {
+            public void stateChanged(@NotNull ToolWindowManager toolWindowManager) {
                 // We have to check if our tool window is still registered, as
                 // otherwise it will raise an exception when project is closed.
                 if (ToolWindowManagerEx.getInstanceEx(myProject).getToolWindow("Routes") == null)

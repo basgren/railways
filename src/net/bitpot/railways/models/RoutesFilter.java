@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Class that contains all parameters of routes filtration.
  */
 public class RoutesFilter {
-    private RouteTableModel tableModel;
+    private final RouteTableModel tableModel;
     private String filterText = "";
     @NotNull private Pattern filterPattern = Pattern.compile("");
     private boolean mountedRoutesVisible = true;

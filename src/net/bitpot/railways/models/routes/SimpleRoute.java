@@ -18,11 +18,11 @@ import javax.swing.*;
  */
 public class SimpleRoute extends Route {
 
-    private String controllerName;
-    private String actionName;
+    private final String controllerName;
+    private final String actionName;
 
     @NotNull
-    private RailsActionInfo actionInfo = new RailsActionInfo();
+    private final RailsActionInfo actionInfo = new RailsActionInfo();
 
 
     public SimpleRoute(Module myModule, RequestMethod requestMethod,

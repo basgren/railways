@@ -27,8 +27,7 @@ public class RailsRoutesParserTest
     private RailsRoutesParser parser = null;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() {
         parser = new RailsRoutesParser();
     }
 

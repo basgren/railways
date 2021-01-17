@@ -18,8 +18,8 @@ import static org.junit.Assert.assertEquals;
 public class RoutePathParseTest
 {
 
-    private String myRouteStr;
-    private RoutePathChunk[] expectedTokens;
+    private final String myRouteStr;
+    private final RoutePathChunk[] expectedTokens;
 
     public RoutePathParseTest(String routeStr, RoutePathChunk[] tokens) {
         myRouteStr = routeStr;

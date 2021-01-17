@@ -138,8 +138,8 @@ public abstract class TextChunkHighlighter {
 
 
     private static class TextRegion {
-        public int startOffset;
-        public int endOffset;
+        public final int startOffset;
+        public final int endOffset;
 
         public TextRegion(int startOffset, int endOffset) {
             this.startOffset = startOffset;

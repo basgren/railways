@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class RoutesCopyProvider extends TextCopyProvider {
 
-    private Route[] routes;
+    private final Route[] routes;
 
     public RoutesCopyProvider(Route[] routes) {
         this.routes = routes;

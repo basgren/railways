@@ -19,7 +19,7 @@ public class RequestMethods {
     public static final RequestMethod ANY = new AnyRequestMethod();
 
 
-    private static List<RequestMethod> requestMethods = createRequestMethods();
+    private static final List<RequestMethod> requestMethods = createRequestMethods();
 
 
     private static List<RequestMethod> createRequestMethods() {

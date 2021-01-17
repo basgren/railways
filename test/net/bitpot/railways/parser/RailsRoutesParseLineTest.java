@@ -27,12 +27,15 @@ public class RailsRoutesParseLineTest
 {
     private RailsRoutesParser parser = null;
 
-    private String line, name, path, actionTitle;
-    private Class routeClass;
-    private RequestMethod rType;
+    private final String line;
+    private final String name;
+    private final String path;
+    private final String actionTitle;
+    private final Class<Route> routeClass;
+    private final RequestMethod rType;
 
 
-    public RailsRoutesParseLineTest(String line, Class routeClass, String name,
+    public RailsRoutesParseLineTest(String line, Class<Route> routeClass, String name,
                                     RequestMethod rType, String path, String actionTitle) {
         this.line = line;
         this.routeClass = routeClass;

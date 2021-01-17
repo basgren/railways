@@ -6,10 +6,9 @@ package net.bitpot.railways.models;
  */
 public class RailsEngine {
 
-    private String myEngineClassName;
-    private String myRootPath;
-    private String myNamespace;
-
+    private final String myEngineClassName;
+    private final String myRootPath;
+    private final String myNamespace;
 
     public RailsEngine(String engineClassName, String rootPath, String namespace) {
         myEngineClassName = engineClassName;
@@ -21,7 +20,6 @@ public class RailsEngine {
     public String getRubyClassName() {
         return myEngineClassName;
     }
-
 
     public String getRootPath() {
         return myRootPath;

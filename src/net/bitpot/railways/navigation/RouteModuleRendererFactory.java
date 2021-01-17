@@ -31,7 +31,7 @@ public class RouteModuleRendererFactory extends ModuleRendererFactory {
      * Provides a component for rendering Route module in Go To Route navigation
      * list.
      */
-    private class RouteModuleRenderer extends DefaultListCellRenderer {
+    private static class RouteModuleRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component component = super.getListCellRendererComponent(list,

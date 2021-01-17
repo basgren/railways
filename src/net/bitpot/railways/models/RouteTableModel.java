@@ -15,8 +15,8 @@ public class RouteTableModel extends AbstractTableModel {
     public final static int COL_NAME        = 2;
 
     private RouteList myRouteList;
-    private RouteList filteredRoutes;
-    private RoutesFilter filter;
+    private final RouteList filteredRoutes;
+    private final RoutesFilter filter;
 
 
     public RouteTableModel() {

@@ -5,7 +5,6 @@ import com.intellij.ide.util.gotoByName.ChooseByNameFilter;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopup;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import net.bitpot.railways.models.Route;
@@ -20,10 +19,6 @@ import org.jetbrains.annotations.NotNull;
  * Action opens popup with list of all routes.
  */
 public class GotoRouteMethodAction extends GotoActionBase {
-
-    @SuppressWarnings("unused")
-    private static Logger log = Logger.getInstance(GotoRouteMethodAction.class.getName());
-
 
     @Override
     protected void gotoActionPerformed(AnActionEvent e) {

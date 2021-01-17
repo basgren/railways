@@ -1,7 +1,6 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;
@@ -24,8 +23,6 @@ import java.awt.event.MouseEvent;
  * pass our own data to the action handler.
  */
 public class RoutesTable extends JBTable implements DataProvider {
-    @SuppressWarnings("unused")
-    private static Logger log = Logger.getInstance(RoutesTable.class.getName());
 
     /**
      * Constructs a default <code>JTable</code> that is initialized with a default

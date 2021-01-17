@@ -1,6 +1,5 @@
 package net.bitpot.railways.parser;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import net.bitpot.railways.models.RailsEngine;
 import net.bitpot.railways.models.RequestMethods;
@@ -22,8 +21,6 @@ import java.util.regex.Pattern;
  * Class parses text and retrieves RouteNode
  */
 public class RailsRoutesParser extends AbstractRoutesParser {
-    @SuppressWarnings("unused")
-    private static Logger log = Logger.getInstance(RailsRoutesParser.class.getName());
 
     // Errors
     public static final int NO_ERRORS = 0;
@@ -48,7 +45,7 @@ public class RailsRoutesParser extends AbstractRoutesParser {
     private String stacktrace;
 
     //private final Project project;
-    private Module myModule;
+    private final Module myModule;
     private int errorCode;
 
     private List<RailsEngine> mountedEngines;

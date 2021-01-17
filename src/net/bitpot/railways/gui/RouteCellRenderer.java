@@ -29,7 +29,7 @@ public class RouteCellRenderer extends FilterHighlightRenderer {
 
 
     @Override
-    protected void customizeCellRenderer(JTable table, @Nullable Object value,
+    protected void customizeCellRenderer(@NotNull JTable table, @Nullable Object value,
                                          boolean selected, boolean hasFocus, int row, int column) {
         // Value can be null in older JDKs (below 1.7, I suppose).
         // Info: http://stackoverflow.com/questions/3054775/jtable-strange-behavior-from-getaccessiblechild-method-resulting-in-null-point

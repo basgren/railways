@@ -2,7 +2,6 @@ package net.bitpot.railways;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
@@ -14,10 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * required initialization to Railways.
  */
 public class RailwaysProjectComp implements ProjectComponent {
-    @SuppressWarnings("unused")
-    private final static Logger log = Logger.getInstance(RailwaysProjectComp.class.getName());
-
-    private Project myProject;
+    private final Project myProject;
 
 
     public RailwaysProjectComp(Project project) {

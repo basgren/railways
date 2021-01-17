@@ -4,7 +4,6 @@ import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.*;
@@ -20,9 +19,9 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 public class RoutesViewPane implements Disposable {
 
     private final Module myModule;
-    private Content myContent;
-    private RoutesManager myRoutesManager;
-    private PsiTreeChangeListener myRoutesChangeListener;
+    private final Content myContent;
+    private final RoutesManager myRoutesManager;
+    private final PsiTreeChangeListener myRoutesChangeListener;
     private boolean isInvalidated = false;
 
 
@@ -36,13 +35,13 @@ public class RoutesViewPane implements Disposable {
         myModule = railsApp.getModule();
         myContent = content;
 
-        myRoutesManager = ModuleServiceManager.getService(myModule, RoutesManager.class);
+        myRoutesManager = myModule.getService(RoutesManager.class);
         myRoutesManager.initRouteList();
 
         myRoutesChangeListener = new MyPsiTreeChangeListener(railsApp.getRoutesFiles(), toolWindow);
 
         PsiManager.getInstance(myModule.getProject())
-                .addPsiTreeChangeListener(myRoutesChangeListener);
+                .addPsiTreeChangeListener(myRoutesChangeListener, this);
     }
 
 
@@ -89,8 +88,8 @@ public class RoutesViewPane implements Disposable {
 
     private class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
         private final Alarm alarm = new Alarm();
-        private RailsApp.RoutesFiles<VirtualFile> routesFiles;
-        private ToolWindow myToolWindow;
+        private final RailsApp.RoutesFiles<VirtualFile> routesFiles;
+        private final ToolWindow myToolWindow;
 
         MyPsiTreeChangeListener(RailsApp.RoutesFiles<VirtualFile> routesFiles, ToolWindow toolWindow) {
             this.routesFiles = routesFiles;

@@ -15,7 +15,7 @@ import javax.swing.*;
  */
 public class EngineRoute extends Route {
 
-    private String engineClass;
+    private final String engineClass;
 
     public EngineRoute(Module myModule, RequestMethod requestMethod,
                        String routePath, String routeName, String engineClass) {

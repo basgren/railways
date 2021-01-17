@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class TextChunk {
 
-    private String text;
-    private int type;
-    private int startPos;
+    private final String text;
+    private final int type;
+    private final int startPos;
     private boolean isHighlighted = false;
 
 

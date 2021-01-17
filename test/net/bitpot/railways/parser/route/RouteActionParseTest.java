@@ -17,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class RouteActionParseTest {
 
-    private String myActionStr;
-    private RouteActionChunk[] expectedChunks;
+    private final String myActionStr;
+    private final RouteActionChunk[] expectedChunks;
 
     public RouteActionParseTest(String routeStr, RouteActionChunk[] chunks) {
         myActionStr = routeStr;

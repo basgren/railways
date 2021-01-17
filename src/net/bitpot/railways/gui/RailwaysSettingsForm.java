@@ -1,7 +1,6 @@
 package net.bitpot.railways.gui;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.TextFieldWithAutoCompletion;
@@ -41,7 +40,6 @@ public class RailwaysSettingsForm {
 
         TextFieldWithAutoCompletionListProvider<RakeTask> listProvider =
                 new TextFieldWithAutoCompletionListProvider<RakeTask>(null) {
-                    @Nullable
                     @Override
                     protected Icon getIcon(@NotNull RakeTask rakeTask) {
                         return RailwaysIcons.RAKE;
@@ -56,7 +54,6 @@ public class RailwaysSettingsForm {
                         return rakeTask.getFullCommand();
                     }
 
-                    @Nullable
                     @Override
                     protected String getTailText(@NotNull RakeTask rakeTask) {
                         return " " + rakeTask.getDescription();
@@ -133,7 +130,7 @@ public class RailwaysSettingsForm {
 
 
     private RoutesManager.State getSettings() {
-        RoutesManager mgr = ModuleServiceManager.getService(myModule, RoutesManager.class);
+        RoutesManager mgr = myModule.getService(RoutesManager.class);
         return mgr.getState();
     }
 

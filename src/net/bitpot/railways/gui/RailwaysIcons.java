@@ -13,7 +13,7 @@ public class RailwaysIcons {
     private static final String PLUGIN_ICONS_PATH = "/net/bitpot/railways/icons/";
 
     private static Icon pluginIcon(String name) {
-        return IconLoader.getIcon(PLUGIN_ICONS_PATH + name);
+        return IconLoader.getIcon(PLUGIN_ICONS_PATH + name, RailwaysIcons.class);
     }
 
     public static final Icon HTTP_METHOD_ANY = pluginIcon("method_any.png");
@@ -24,7 +24,7 @@ public class RailwaysIcons {
     public static final Icon RAKE = RubyIcons.Rake.Rake_runConfiguration;
 
     // Icons for table items
-    public static final Icon NODE_CONTROLLER = RubyIcons.Ruby.Nodes.Controllernode;
+    public static final Icon NODE_CONTROLLER = AllIcons.Nodes.Class;
     public static final Icon NODE_ERROR = AllIcons.General.Error;
     public static final Icon NODE_METHOD = AllIcons.Nodes.Method;
     public static final Icon NODE_MOUNTED_ENGINE = AllIcons.Nodes.Plugin;
@@ -32,8 +32,6 @@ public class RailwaysIcons {
     public static final Icon NODE_ROUTE_ACTION = RubyIcons.Rails.ProjectView.Action_method;
     public static final Icon NODE_UNKNOWN = pluginIcon("unknown.png");
     
-    
-
-    public static final Icon UPDATE = IconLoader.getIcon("/actions/sync.png");
-    public static final Icon SUSPEND = IconLoader.getIcon("/actions/suspend.png");
+    public static final Icon UPDATE = IconLoader.getIcon("/actions/sync.png", RailwaysIcons.class);
+    public static final Icon SUSPEND = IconLoader.getIcon("/actions/suspend.png", RailwaysIcons.class);
 }

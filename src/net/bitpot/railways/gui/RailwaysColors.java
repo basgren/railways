@@ -15,25 +15,24 @@ import java.awt.*;
 public class RailwaysColors {
 
     // Color of selection.
-    public static Color HIGHLIGHT_BG_COLOR =
+    public static final Color HIGHLIGHT_BG_COLOR =
             EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES.getDefaultAttributes()
                     .getBackgroundColor();
 
     // Route token colors
     // Scheme color names can be taken in RubyMine/lib/resources.jar!/colorSchemes directory.
-    public static Color PARAM_TOKEN_COLOR = schemeColor("RUBY_SYMBOL");
-    public static Color METHOD_COLOR = schemeColor("RUBY_METHOD_NAME");
-    public static Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
+    public static final Color PARAM_TOKEN_COLOR = schemeColor("RUBY_SYMBOL");
+    public static final Color METHOD_COLOR = schemeColor("RUBY_METHOD_NAME");
+    public static final Color OPTIONAL_TOKEN_COLOR = JBColor.GRAY;
 
     // Color of the nonexistent action that's referenced by a route.
-    public static Color DISABLED_ITEM_COLOR = JBColor.GRAY;
+    public static final Color DISABLED_ITEM_COLOR = JBColor.GRAY;
 
 
 
     // Text attributes
 
-    public static final SimpleTextAttributes REGULAR_HL_ATTR =
-            plainTextAttr(null, HIGHLIGHT_BG_COLOR);
+    public static final SimpleTextAttributes REGULAR_HL_ATTR = plainTextAttr(null, HIGHLIGHT_BG_COLOR);
 
     public static final SimpleTextAttributes PARAM_TOKEN_ATTR = plainTextAttr(PARAM_TOKEN_COLOR, null);
     public static final SimpleTextAttributes PARAM_TOKEN_HL_ATTR = plainTextAttr(PARAM_TOKEN_COLOR, HIGHLIGHT_BG_COLOR);

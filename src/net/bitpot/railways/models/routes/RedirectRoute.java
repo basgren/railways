@@ -16,7 +16,7 @@ import javax.swing.*;
 public class RedirectRoute extends Route {
 
     @NotNull
-    private String redirectPath;
+    private final String redirectPath;
 
     public RedirectRoute(@Nullable Module module, RequestMethod requestMethod,
                          String path, String name, @Nullable String redirectPath) {

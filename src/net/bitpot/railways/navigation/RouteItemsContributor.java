@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RouteItemsContributor implements ChooseByNameContributor {
 
-    private RoutesManager myRoutesManager;
+    private final RoutesManager myRoutesManager;
 
     public RouteItemsContributor(RoutesManager routesManager) {
         myRoutesManager = routesManager;

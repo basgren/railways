@@ -2,7 +2,6 @@ package net.bitpot.railways.routesView;
 
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -58,18 +57,18 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
 
     private int myRoutesState = DEFAULT;
 
-    private LinkedList<RoutesManagerListener> listeners = new LinkedList<>();
+    private final LinkedList<RoutesManagerListener> listeners = new LinkedList<>();
 
     // This field is set only when route update task is being executed.
     private ProgressIndicator routesUpdateIndicator = null;
 
     private ProcessOutput output;
 
-    private RailsRoutesParser parser;
+    private final RailsRoutesParser parser;
     private RouteList routeList = new RouteList();
 
     // Rails module
-    private Module module;
+    private final Module module;
 
     private State myModuleSettings = new State();
 
@@ -214,10 +213,8 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
         setState(UPDATING);
 
         // Save all documents to make sure that requestMethods will be collected using actual files.
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             FileDocumentManager.getInstance().saveAllDocuments();
-
-            // Start background task.
             (new UpdateRoutesTask()).queue();
         });
 
@@ -265,7 +262,7 @@ public class RoutesManager implements PersistentStateComponent<RoutesManager.Sta
     private class UpdateRoutesTask extends Task.Backgroundable {
 
         public UpdateRoutesTask() {
-            super(module.getProject(), "Rake Task", true);
+            super(module.getProject(), "Retrieving application routes...", true);
 
             setCancelText("Cancel Task");
         }

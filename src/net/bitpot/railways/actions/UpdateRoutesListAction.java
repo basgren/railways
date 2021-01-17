@@ -3,7 +3,6 @@ package net.bitpot.railways.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import net.bitpot.railways.gui.RailwaysIcons;
 import net.bitpot.railways.routesView.RoutesManager;
@@ -14,9 +13,6 @@ import org.jetbrains.annotations.NotNull;
  * Updates the list of routes.
  */
 public class UpdateRoutesListAction extends AnAction {
-    @SuppressWarnings("unused")
-    private static Logger log = Logger.getInstance(UpdateRoutesListAction.class.getName());
-
     // Presentation is stored to be used when asynchronous action icon needs to be updated.
     private static Presentation updateBtnPresentation = null;
 

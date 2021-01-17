@@ -14,14 +14,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class TableModelFilterTest
 {
-    private RailsRoutesParser parser = null;
     private RouteTableModel model;
 
 
     @Before
     public void setUp() throws Exception
     {
-        parser = new RailsRoutesParser();
+        RailsRoutesParser parser = new RailsRoutesParser();
         FileInputStream is = new FileInputStream("test/data/TableModelFilterTest.data.txt");
         RouteList routes = parser.parse(is);
 

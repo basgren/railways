@@ -114,7 +114,7 @@ public class RailwaysPsiUtils {
         String[] classPath = qualifiedName.split("::");
         String className = classPath[classPath.length - 1];
 
-        Collection items = findClassesAndModules(className, project);
+        Collection<RElementWithFQN> items = findClassesAndModules(className, project);
 
         for (Object item: items) {
             String name = null;
@@ -143,7 +143,7 @@ public class RailwaysPsiUtils {
      * @return Collection of PSI elements which match specified name.
      */
     @NotNull
-    private static Collection findClassesAndModules(String name, Project project) {
+    private static Collection<RElementWithFQN> findClassesAndModules(String name, Project project) {
         GlobalSearchScope scope = new RubyProjectAndLibrariesScope(project);
 
         return StubIndex.getElements(RubyClassModuleNameIndex.KEY,
