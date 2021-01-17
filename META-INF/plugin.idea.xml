@@ -137,12 +137,6 @@
     <depends>org.jetbrains.plugins.ruby</depends>
 
 
-    <project-components>
-        <component>
-            <implementation-class>net.bitpot.railways.RailwaysProjectComp</implementation-class>
-        </component>
-    </project-components>
-
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Routes"
                     icon="/net/bitpot/railways/icons/railways_toolwindow.png"
@@ -157,6 +151,8 @@
         <projectService serviceImplementation="net.bitpot.railways.routesView.RoutesView"/>
         <projectService serviceImplementation="net.bitpot.railways.navigation.ChooseByRouteRegistry"/>
         <projectService serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
+
+        <postStartupActivity implementation="net.bitpot.railways.RailwaysPostStartupActivity"/>
 
         <moduleService serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
     </extensions>
