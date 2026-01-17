@@ -1,50 +1,112 @@
-Railways
-========
+# Railways
 
-Railways is a plugin for RubyMine and IntelliJ IDEA Ultimate (with Ruby plugin)
-that provides convenient way to navigate between route actions.
+Railways is a plugin for RubyMine that provides a convenient way to navigate between route actions.
 
-Features:
+## Features
 
 * Displays routes of Ruby On Rails application/engine in a separate "Routes" panel
-* Adds quick navigation to action implementation from routes panel or
-  "Goto route action" popup available in code editor by pressing **Ctrl + Shift + G**
-  (or **Cmd + Shift + G** on Mac)
+* Adds quick navigation to action implementation from routes panel or "Go to route action" popup available in code editor by pressing **Ctrl + Shift + G** (or **Cmd + Shift + G** on Mac)
 * Provides quick routes filtering by route path, controller/action or route name
 
-Current release is tested on RubyMine 2016.1, RubyMine 2016.2, IntelliJ IDEA 2016.2.
+## Compatibility
 
-## Development Environment
+* **RubyMine:** 2024.1 - 2025.3
+* **Java:** 17+
 
-1. Fork Railways repository and clone it to your local machine.
+## Installation
+
+### From JetBrains Marketplace (Coming Soon)
+
+1. Open RubyMine
+2. Go to **Settings → Plugins → Marketplace**
+3. Search for "Railways"
+4. Click **Install**
+
+### Manual Installation
+
+1. Download the latest release from [Releases](https://github.com/mp3063/railways-2026/releases)
+2. Open RubyMine
+3. Go to **Settings → Plugins → ⚙️ → Install Plugin from Disk...**
+4. Select the downloaded `.zip` file
+5. Restart RubyMine
+
+## Usage
+
+1. Open a Ruby on Rails project in RubyMine
+2. Open the **Routes** tool window (usually on the right side panel)
+3. Click the refresh button to load routes from your application
+4. Use the search field to filter routes by path, controller/action, or route name
+5. Double-click a route to navigate to its controller action
+6. Use **Ctrl + Shift + G** (or **Cmd + Shift + G** on Mac) to open the "Go to route action" popup from anywhere
+
+## Development
+
+### Prerequisites
+
+* JDK 17+
+* IntelliJ IDEA (Community or Ultimate)
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/mp3063/railways-2026.git
+   cd railways-2026
+   ```
 
 2. Open the project in IntelliJ IDEA
 
-3. Set up a JDK if it's not set (File > Project Structure > SDKs > Add New JDK).
-   Select JDK 1.8.
+3. The project uses Gradle with the IntelliJ Platform Gradle Plugin 2.x. Dependencies will be downloaded automatically.
 
-4. Set up IntelliJ plugin SDK. You should have RubyMine 2016.2 installed.
-   Go to File > Project Structure > SDKs > Add new IntelliJ IDEA Plugin SDK,
-   name it "RubyMine 2016.2 SDK" and select path to your RubyMine installation.
-   When you are asked to select JDK, specify JDK from previous step.
+### Building
 
-5. Select a project SDK for your project using "File > Project Structure >
-   Project > Project SDK". Choose the plugin SDK you have created at the
-   previous step.
+```bash
+./gradlew buildPlugin
+```
 
-6. Use "Run > Run 'Railways'" menu to test plugin inside RubyMine.
+The plugin will be built to `build/distributions/railways-2026-*.zip`
 
-7. Use "Run > Run 'All tests'" menu to run all tests for Railways.
+### Running/Debugging
 
+```bash
+./gradlew runIde
+```
 
-## Building the Plugin
+This will launch a sandboxed RubyMine instance with the plugin installed.
 
-1. Copy and rename file `build.properties.example` to `build.properties`.
+### Testing
 
-2. Edit this file and edit properties to match your environment (see comments
-   in `build.properties` file).
+```bash
+./gradlew test
+```
 
-3. Open Ant tool window in IntelliJ IDEA and run 'all' task. Plugin jars will
-   be placed into `release/railways-[version]/` directory. There are two
-   versions of plugin: `railways.jar` for RubyMine and `railways-idea.jar` for
-   IntelliJ IDEA.
+## Version History
+
+### 0.9.0
+* Migrate to Gradle build system with IntelliJ Platform Gradle Plugin 2.x
+* Add compatibility with RubyMine 2024.1 - 2025.3
+* Fix Ruby plugin API changes (RubyProjectAndLibrariesScope, getQualifiedName)
+* Replace deprecated ServiceManager API
+
+### 0.8.17 and earlier
+See [CHANGES.md](CHANGES.md) for full version history.
+
+## Credits
+
+Originally created by [Basil Gren](https://github.com/basgren/railways).
+
+Currently maintained by [Srdjan Sin Jovanovic](https://github.com/mp3063).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
