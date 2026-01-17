@@ -1,0 +1,51 @@
+package net.bitpot.railways.parser.route;
+
+import com.intellij.ui.SimpleTextAttributes;
+import org.jetbrains.annotations.NotNull;
+
+
+public abstract class TextChunk {
+
+    private final String text;
+    private final int type;
+    private final int startPos;
+    private boolean isHighlighted = false;
+
+
+    public TextChunk(@NotNull String text, int chunkType, int startPos) {
+        this.type = chunkType;
+        this.text = text;
+        this.startPos = startPos;
+    }
+
+    public int getEndOffset() {
+        return startPos + text.length();
+    }
+
+    public int getBeginOffset() {
+        return startPos;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    @NotNull
+    public String getText() {
+        return text;
+    }
+
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+
+    public void setHighlighted(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
+    }
+
+    public abstract SimpleTextAttributes getTextAttrs();
+
+
+}

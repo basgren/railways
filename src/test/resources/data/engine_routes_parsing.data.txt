@@ -1,0 +1,12 @@
+     Prefix Verb         URI Pattern                 Controller#Action
+      rails_admin        /admin                      RailsAdmin::Engine
+rails_settings_ui        /settings                   RailsSettingsUi::Engine
+          clients GET    /clients(.:format)          clients#index
+
+Routes for RailsSettingsUi::Engine:
+   settings GET  /                     rails_settings_ui/settings#index
+ update_all PUT  /update_all(.:format) rails_settings_ui/settings#update_all
+
+Routes for RailsAdmin::Engine:
+  dashboard GET         /                                      rails_admin/main#dashboard
+      index GET         /:model_name(.:format)                 rails_admin/main#index

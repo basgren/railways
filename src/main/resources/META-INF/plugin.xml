@@ -1,0 +1,251 @@
+<idea-plugin>
+    <name>Railways</name>
+    <category>Navigation</category>
+    <description><![CDATA[
+    Railways is a plugin for RubyMine that makes navigation between route
+    actions much quicker.<br/>
+
+    Features:
+    <ul>
+        <li>Displays routes of Ruby On Rails application/engine in a separate "Routes" panel</li>
+        <li>Adds quick navigation to action implementation from "Routes" panel or
+            "Go to route action" popup available in code editor, invoked by
+            <b>Ctrl + Shift + G</b> (<b>Cmd + Shift + G</b> on Mac).
+            </li>
+        <li>Provides quick routes filtering by route path, controller/action or route name</li>
+    </ul>
+
+    If you want to use Railways in IntelliJ IDEA, please use 'Railways for IDEA'
+    plugin version.
+
+    <br/>
+    Please feel free to report a bug or a suggestion on
+    <a href="https://github.com/basgren/railways">GitHub plugin page</a> or
+    via e-mail provided on the
+    <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
+    ]]></description>
+
+    <version>0.9.0</version>
+    <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
+
+
+    <change-notes><![CDATA[
+
+        <p><b>0.9.0</b><br/>
+        <ul>
+            <li>Migrate to Gradle build system with intellij-platform-gradle-plugin 2.x</li>
+            <li>Add compatibility with RubyMine 2024.1 and later</li>
+            <li>Replace deprecated ServiceManager API</li>
+        </ul></p>
+
+        <p><b>0.8.17</b><br/>
+        <ul>
+            <li>Fix crash on loading routes in Rails 6 application</li>
+            <li>Make search field wider</li>
+            <li>Enhance parsing of with redirect</li>
+            <li>Rework usages of deprecated API</li>
+        </ul></p>
+
+        <p><b>0.8.16</b><br/>
+        <ul>
+            <li>Fix exception in IDE version 2019.3</li>
+        </ul></p>
+
+        <p><b>0.8.15</b><br/>
+        <ul>
+            <li>Add support of IDE version 2019.2</li>
+        </ul></p>
+
+        <p><b>0.8.14</b><br/>
+        <ul>
+            <li>Add support of IDE version 2019.1</li>
+        </ul></p>
+
+        <p><b>0.8.13</b><br/>
+        <ul>
+            <li>Enhance route parsing: allow route path starting with '('</li>
+        </ul></p>
+
+        <p><b>0.8.12</b><br/>
+        <ul>
+            <li>Add support of IDE version 2018.3.1 (version 2018.3 is not supported
+                due to issue in RubyMine)</li>
+            <li>Update rake routes parser to avoid capturing warnings in output</li>
+        </ul></p>
+
+        <p><b>0.8.11</b><br/>
+        <ul>
+            <li>Add support of IDE version 2018.2</li>
+        </ul></p>
+
+        <p><b>0.8.10</b><br/>
+        <ul>
+            <li>Add support of IDE version 2018.1</li>
+        </ul></p>
+
+        <p><b>0.8.9</b><br/>
+        <ul>
+            <li>Add ability to filter routes using wildcard (*)</li>
+        </ul></p>
+
+        <p><b>0.8.8</b><br/>
+        <ul>
+            <li>Add support of IDE version 2017.3 (@hurricup)</li>
+        </ul></p>
+
+        <p><b>0.8.7</b><br/>
+        <ul>
+            <li>Fix plugin crash in RubyMine 2017.1</li>
+        </ul></p>
+
+        <p><b>0.8.6</b><br/>
+        <ul>
+            <li>Add plugin compatibility with RubyMine 2016.2 and (liekly)
+                with following releases of Ruby plugin for IDEA</li>
+        </ul></p>
+
+        <p><b>0.8.5</b><br/>
+        <ul>
+            <li>Fix compatibility with previous version of IDEA and RubyMine</li>
+        </ul></p>
+
+        <p><b>0.8.4</b><br/>
+        <ul>
+            <li>Add ability to copy route path with http method</li>
+            <li>Add ability to copy data from multiple selected rows</li>
+            <li>Make right-click behavior more intuitive for the routes table</li>
+        </ul></p>
+
+        <p><b>0.8.3</b><br/>
+        <ul>
+            <li>Optimize performance of route action availability check.</li>
+            <li>Add option to disable live check of route action implementation.</li>
+            <li>Fix NPE when non-rails project is opened.</li>
+        </ul></p>
+
+        <p><b>0.8.2</b><br/>
+        <ul>
+            <li>New feature - autorefresh route list when routes.rb is changed
+                (enable it in the plugin settings)</li>
+            <li>Add toggle button to hide routes from mounted engines.</li>
+            <li>Minor UI fixes.</li>
+        </ul></p>
+
+        <p><b>0.8.1</b><br/>
+        <ul>
+            <li>Highlight route action in list depending on its availability.</li>
+            <li>Add setting to specify Rails environment for which routes are collected.</li>
+            <li>Parse redirect routes.</li>
+            <li>Fix parsing - routes with unknown action format weren't added to list.</li>
+        </ul></p>
+
+        <p>
+        Full list of changes can be found
+        <a href="https://github.com/basgren/railways/blob/master/CHANGES.md">here</a>.
+        </p>
+    ]]>
+    </change-notes>
+
+
+    <idea-version since-build="241" until-build="253.*" />
+
+
+    <depends>com.intellij.modules.ruby</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Routes"
+                    icon="/net/bitpot/railways/icons/railways_toolwindow.png"
+                    anchor="right"
+                    factoryClass="net.bitpot.railways.routesView.RoutesViewToolWindowFactory"/>
+
+        <!-- Register own ModuleRenderingFactory to render module names for Route objects in navigation popups
+            We set order="first" to insert extension BEFORE DefaultModuleRenderingFactory, which handles
+            all objects. -->
+        <moduleRendererFactory implementation="net.bitpot.railways.navigation.RouteModuleRendererFactory" order="first"/>
+
+        <projectService serviceImplementation="net.bitpot.railways.routesView.RoutesView"/>
+        <projectService serviceImplementation="net.bitpot.railways.navigation.ChooseByRouteRegistry"/>
+        <projectService serviceImplementation="net.bitpot.railways.navigation.GotoRouteFilterConfiguration"/>
+
+        <postStartupActivity implementation="net.bitpot.railways.RailwaysPostStartupActivity"/>
+
+        <moduleService serviceImplementation="net.bitpot.railways.routesView.RoutesManager"/>
+    </extensions>
+
+
+    <actions>
+        <action id="railways.UpdateRoutesList"
+                class="net.bitpot.railways.actions.UpdateRoutesListAction"
+                text="Update Route List"
+                description="Update the list of routes"
+                icon="/actions/sync.png">
+            <keyboard-shortcut first-keystroke="shift control BACK_SLASH" keymap="$default" />
+        </action>
+
+
+        <action id="railways.gotoRouteAction"
+                class="net.bitpot.railways.actions.GotoRouteMethodAction"
+                text="Goto Route Action"
+                description="Navigate to route action." >
+            <keyboard-shortcut first-keystroke="control shift G" keymap="$default" />
+        </action>
+
+
+        <action id="railways.settingsAction"
+                class="net.bitpot.railways.actions.SettingsAction"
+                text="Settings"
+                description="Open Railways settings dialog."
+                icon="AllIcons.Actions.Properties">
+        </action>
+
+        <action id="railways.hideMountedRoutes"
+                class="net.bitpot.railways.actions.HideMountedRoutesAction"
+                text="Hide Mounted Routes"
+                description="Hide routes of mounted engines."
+                icon="/net/bitpot/railways/icons/hideMountedRoutes.png">
+        </action>
+
+        <action id="railways.copyRouteName"
+                class="net.bitpot.railways.actions.CopyRouteNameAction"
+                text="Copy Name"
+                description="Copy route name to clipboard"
+                icon="AllIcons.Actions.Copy">
+            <keyboard-shortcut keymap="$default" first-keystroke="control C"/>
+        </action>
+
+        <action id="railways.copyRoutePath"
+                class="net.bitpot.railways.actions.CopyRoutePathAction"
+                text="Copy Path"
+                description="Copy route path to clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift alt C"/>
+        </action>
+
+        <action id="railways.copyFullRoutePath"
+                class="net.bitpot.railways.actions.CopyFullRoutePathAction"
+                text="Copy Full Path"
+                description="Copy route path with HTTP method to clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift C"/>
+        </action>
+
+
+        <group id="railways.MainToolbar">
+            <reference ref="railways.UpdateRoutesList"/>
+            <reference ref="railways.settingsAction"/>
+            <separator/>
+            <reference ref="railways.hideMountedRoutes"/>
+        </group>
+
+
+        <group id="railways.PopupMenu">
+            <reference ref="railways.copyRouteName"/>
+            <reference ref="railways.copyFullRoutePath"/>
+            <reference ref="railways.copyRoutePath"/>
+        </group>
+
+        <group id="railways.CopyMenu">
+            <reference ref="$Copy"/>
+        </group>
+
+    </actions>
+</idea-plugin>

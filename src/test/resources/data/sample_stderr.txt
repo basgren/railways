@@ -1,0 +1,65 @@
+** Invoke routes (first_time)
+** Invoke environment (first_time)
+** Execute environment
+rake aborted!
+undefined local variable or method `ffffffff' for #<ActionDispatch::Routing::Mapper:0x58be388>
+F:/Work/Ruby/plugin_test/config/routes.rb:4
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/actionpack-3.1.0/lib/action_dispatch/routing/route_set.rb:257:in `instance_exec'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/actionpack-3.1.0/lib/action_dispatch/routing/route_set.rb:257:in `eval_block'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/actionpack-3.1.0/lib/action_dispatch/routing/route_set.rb:234:in `draw'
+F:/Work/Ruby/plugin_test/config/routes.rb:1
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/dependencies.rb:234:in `load'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/dependencies.rb:234:in `load'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/dependencies.rb:223:in `load_dependency'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/dependencies.rb:640:in `new_constants_in'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/dependencies.rb:223:in `load_dependency'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/dependencies.rb:234:in `load'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/routes_reloader.rb:29:in `load_paths'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/routes_reloader.rb:29:in `each'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/routes_reloader.rb:29:in `load_paths'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/routes_reloader.rb:13:in `reload!'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/routes_reloader.rb:7:in `initialize'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/file_update_checker.rb:32:in `call'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/activesupport-3.1.0/lib/active_support/file_update_checker.rb:32:in `execute_if_updated'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/finisher.rb:63
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/finisher.rb:64:in `call'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application/finisher.rb:64
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/initializable.rb:25:in `instance_exec'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/initializable.rb:25:in `run'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/initializable.rb:50:in `run_initializers'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/initializable.rb:49:in `each'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/initializable.rb:49:in `run_initializers'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application.rb:92:in `initialize!'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/railtie/configurable.rb:30:in `send'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/railtie/configurable.rb:30:in `method_missing'
+F:/Work/Ruby/plugin_test/config/environment.rb:5
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application.rb:78:in `require'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application.rb:78:in `require_environment!'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/railties-3.1.0/lib/rails/application.rb:189:in `initialize_tasks'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:205:in `call'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:205:in `execute'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:200:in `each'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:200:in `execute'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:158:in `invoke_with_call_chain'
+D:/Dev/Ruby187/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:151:in `invoke_with_call_chain'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:176:in `invoke_prerequisites'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:174:in `each'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:174:in `invoke_prerequisites'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:157:in `invoke_with_call_chain'
+D:/Dev/Ruby187/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:151:in `invoke_with_call_chain'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/task.rb:144:in `invoke'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:116:in `invoke_task'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:94:in `top_level'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:94:in `each'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:94:in `top_level'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:133:in `standard_exception_handling'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:88:in `top_level'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:66:in `run'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:133:in `standard_exception_handling'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/lib/rake/application.rb:63:in `run'
+D:/Dev/Ruby187/lib/ruby/gems/1.8/gems/rake-0.9.2.2/bin/rake:33
+D:/Dev/Ruby187/bin/rake:19:in `load'
+D:/Dev/Ruby187/bin/rake:19
+Tasks: TOP => routes => environment
