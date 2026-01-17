@@ -20,13 +20,13 @@
 
     <br/>
     Please feel free to report a bug or a suggestion on
-    <a href="https://github.com/basgren/railways">GitHub plugin page</a> or
+    <a href="https://github.com/mp3063/railways-2026">GitHub plugin page</a> or
     via e-mail provided on the
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
     <version>0.9.0</version>
-    <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
+    <vendor email="mp4065@gmail.com" url="https://github.com/mp3063">Srdjan Sin Jovanovic</vendor>
 
 
     <change-notes><![CDATA[
@@ -34,7 +34,8 @@
         <p><b>0.9.0</b><br/>
         <ul>
             <li>Migrate to Gradle build system with intellij-platform-gradle-plugin 2.x</li>
-            <li>Add compatibility with RubyMine 2024.1 and later</li>
+            <li>Add compatibility with RubyMine 2024.1 - 2025.3</li>
+            <li>Fix Ruby plugin API changes (RubyProjectAndLibrariesScope, getQualifiedName)</li>
             <li>Replace deprecated ServiceManager API</li>
         </ul></p>
 
