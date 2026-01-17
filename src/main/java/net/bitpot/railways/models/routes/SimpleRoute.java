@@ -8,6 +8,7 @@ import net.bitpot.railways.models.requestMethods.RequestMethod;
 import net.bitpot.railways.utils.RailwaysPsiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.ruby.rails.model.RailsApp;
+import org.jetbrains.plugins.ruby.ruby.codeInsight.resolve.scope.RElementWithFQN;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 
 import javax.swing.*;
@@ -52,7 +53,7 @@ public class SimpleRoute extends Route {
 
         RClass ctrlClass = getActionInfo().getPsiClass();
         if (ctrlClass != null)
-            ctrlClassName = ctrlClass.getQualifiedName();
+            ctrlClassName = ((RElementWithFQN)ctrlClass).getFQN().toString();
         else
             ctrlClassName = RailwaysPsiUtils.getControllerClassNameByShortName(controllerName);
 

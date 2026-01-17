@@ -14,7 +14,6 @@ import org.jetbrains.plugins.ruby.rails.model.RailsApp;
 import org.jetbrains.plugins.ruby.rails.model.RailsController;
 import org.jetbrains.plugins.ruby.ruby.codeInsight.resolve.scope.RElementWithFQN;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RPsiElement;
-import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyProjectAndLibrariesScope;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.RubyPsiUtil;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.classes.RClass;
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.methods.RMethod;
@@ -116,13 +115,9 @@ public class RailwaysPsiUtils {
 
         Collection<RElementWithFQN> items = findClassesAndModules(className, project);
 
-        for (Object item: items) {
-            String name = null;
-
-            if (item instanceof RClass)
-                name = ((RClass)item).getQualifiedName();
-            else if (item instanceof RModule)
-                name = ((RModule)item).getQualifiedName();
+        for (RElementWithFQN item: items) {
+            // Use the FQN from the interface - getFQN() returns an FQN object
+            String name = item.getFQN().toString();
 
             // Perform case insensitive comparison to avoid mess with acronyms.
             if (qualifiedName.equalsIgnoreCase(name))
@@ -144,7 +139,7 @@ public class RailwaysPsiUtils {
      */
     @NotNull
     private static Collection<RElementWithFQN> findClassesAndModules(String name, Project project) {
-        GlobalSearchScope scope = new RubyProjectAndLibrariesScope(project);
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
         return StubIndex.getElements(RubyClassModuleNameIndex.KEY,
                 name, project, scope, RElementWithFQN.class);
@@ -219,8 +214,8 @@ public class RailwaysPsiUtils {
             if (elem instanceof PsiNamedElement) {
                 System.out.println(elem.getClass().getName() + " --> Name: " + ((PsiNamedElement)elem).getName());
 
-                if (elem instanceof RClass)
-                    System.out.println(" ----- Class qualified name: " + ((RClass)elem).getQualifiedName());
+                if (elem instanceof RElementWithFQN)
+                    System.out.println(" ----- Class qualified name: " + ((RElementWithFQN)elem).getFQN().toString());
 
             } else
                 System.out.println(elem.getClass().getName() + " --> No name");
