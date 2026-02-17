@@ -20,13 +20,13 @@
 
     <br/>
     Please feel free to report a bug or a suggestion on
-    <a href="https://github.com/mp3063/railways-2026">GitHub plugin page</a> or
+    <a href="https://github.com/basgren/railways">GitHub plugin page</a> or
     via e-mail provided on the
     <a href="http://plugins.jetbrains.com/plugin/7110">plugin page</a>.
     ]]></description>
 
     <version>0.9.0</version>
-    <vendor email="mp4065@gmail.com" url="https://github.com/mp3063">Srdjan Sin Jovanovic</vendor>
+    <vendor email="bas.gren@gmail.com">Basil Gren</vendor>
 
 
     <change-notes><![CDATA[

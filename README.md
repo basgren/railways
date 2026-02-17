@@ -24,7 +24,7 @@ Railways is a plugin for RubyMine that provides a convenient way to navigate bet
 
 ### Manual Installation
 
-1. Download the latest release from [Releases](https://github.com/mp3063/railways-2026/releases)
+1. Download the latest release from [Releases](https://github.com/basgren/railways/releases)
 2. Open RubyMine
 3. Go to **Settings → Plugins → ⚙️ → Install Plugin from Disk...**
 4. Select the downloaded `.zip` file
@@ -50,8 +50,8 @@ Railways is a plugin for RubyMine that provides a convenient way to navigate bet
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/mp3063/railways-2026.git
-   cd railways-2026
+   git clone https://github.com/basgren/railways.git
+   cd railways
    ```
 
 2. Open the project in IntelliJ IDEA
@@ -64,7 +64,7 @@ Railways is a plugin for RubyMine that provides a convenient way to navigate bet
 ./gradlew buildPlugin
 ```
 
-The plugin will be built to `build/distributions/railways-2026-*.zip`
+The plugin will be built to `build/distributions/railways-*.zip`
 
 ### Running/Debugging
 
@@ -93,9 +93,9 @@ See [CHANGES.md](CHANGES.md) for full version history.
 
 ## Credits
 
-Originally created by [Basil Gren](https://github.com/basgren/railways).
+Created by [Basil Gren](https://github.com/basgren/railways).
 
-Currently maintained by [Srdjan Sin Jovanovic](https://github.com/mp3063).
+0.9.0 modernization by [Srdjan Sin Jovanovic](https://github.com/mp3063).
 
 ## License
 
