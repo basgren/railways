@@ -180,7 +180,7 @@
                 class="net.bitpot.railways.actions.UpdateRoutesListAction"
                 text="Update Route List"
                 description="Update the list of routes"
-                icon="/actions/sync.png">
+                icon="AllIcons.Actions.Refresh">
             <keyboard-shortcut first-keystroke="shift control BACK_SLASH" keymap="$default" />
         </action>
 
