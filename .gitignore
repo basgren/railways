@@ -1,5 +1,13 @@
+# Gradle
+.gradle/
+build/
+.intellijPlatform/
 
+# IDE
 .idea/
+*.iml
+out/
+
+# Old Ant build
 build.properties
-release/*
-out/*
+release/
